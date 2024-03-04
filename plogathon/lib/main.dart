@@ -18,3 +18,7 @@ class MainApp extends StatelessWidget {
     );
   }
 }
+
+class Environment {
+  static const MAPS_API_KEY = String.fromEnvironment('MAPS_API_KEY');
+}

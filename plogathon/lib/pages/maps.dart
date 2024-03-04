@@ -18,7 +18,7 @@ class _MapPageState extends State<MapPage> {
   final Set<Polyline> polyline = {};
   final Location _location = Location();
   late GoogleMapController _mapController;
-  final LatLng _center = const LatLng(0, 0);
+  final LatLng _center = const LatLng(1.3521, 103.8198);
   List<LatLng> route = [];
 
   double _dist = 0;
@@ -77,7 +77,6 @@ class _MapPageState extends State<MapPage> {
           startCap: Cap.roundCap,
           endCap: Cap.roundCap,
           color: Colors.deepOrange));
-
       setState(() {});
     });
   }
@@ -99,7 +98,7 @@ class _MapPageState extends State<MapPage> {
           child: Container(
             width: double.infinity,
             margin: const EdgeInsets.fromLTRB(10, 0, 10, 40),
-            height: 140,
+            height: 150,
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(10)),

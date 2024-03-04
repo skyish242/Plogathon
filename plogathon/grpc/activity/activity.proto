@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service ActivityService {
+    rpc CreateActivity (Activity) returns (Activity);
+    rpc GetActivityById (GetActivityRequest) returns (Activity);
+    rpc UpdateActivity (Activity) returns (Activity);
+    rpc DeleteActivity (DeleteActivityRequest) returns (google.protobuf.Empty);
+}
+
+message Activity {
+    int32 ActivityID = 1;
+    int32 UserID = 2;
+    string Name = 3;
+    string Type = 4;
+    string Description = 5;
+    google.protobuf.Timestamp Datetime = 6;
+    google.protobuf.Timestamp StartDatetime = 7;
+    google.protobuf.Timestamp EndDatetime = 8;
+    string RouteMap = 9;
+    float Distance = 10;
+    int32 Steps = 11;
+    int32 WasteCount = 12;
+}
+
+message GetActivityRequest {
+    int32 ActivityID = 1;
+}
+
+message DeleteActivityRequest {
+    int32 ActivityID = 1;
+}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plogathon/pages/home.dart';
+import 'package:plogathon/pages/onboarding.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MainApp());
@@ -8,13 +10,64 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+  final colorScheme = const ColorScheme(
+    primary: Color(0xFFBFECC6),
+    onPrimary: Color(0xFF202020),
+    secondary: Color(0xFF101C17),
+    onSecondary: Color(0xFFFCFCFC),
+    tertiary: Color(0xFF67B274),
+    primaryContainer: Color(0xFFBFECC6),
+    secondaryContainer: Color(0xFFF7FFD6),
+    tertiaryContainer: Color(0xFFEDFAFF),
+    background: Color(0xFF101C17),
+    onBackground: Color(0xFFFFFFFF),
+    surface: Color(0xFFF5F8EF),
+    onSurface: Color(0xFF202020),
+    error: Colors.red,
+    onError: Colors.red,
+    brightness: Brightness.light,
+  );
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
-      home: const HomePage(),
+          colorScheme: colorScheme,
+          textTheme: TextTheme(
+            displayLarge: GoogleFonts.zenTokyoZoo(
+                fontSize: 40,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFFEDFB92)),
+            bodyLarge: GoogleFonts.poppins(
+                fontSize: 24,
+                fontWeight: FontWeight.w400,
+                color: Color.fromARGB(255, 84, 83, 83)),
+            bodyMedium: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF202020)),
+            bodySmall: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF202020)),
+            titleLarge: GoogleFonts.poppins(
+                fontSize: 36,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF67B274)),
+            titleMedium: GoogleFonts.poppins(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF67B274)),
+            titleSmall: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFFEEEEEE)),
+            labelMedium: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF747474)),
+          )),
+      home: const OnboardingPage(),
     );
   }
 }

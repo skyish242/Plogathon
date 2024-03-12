@@ -1,39 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:plogathon/model/entry.dart';
 
 class EntryCard extends StatelessWidget {
+  /// Entry should include:
+  /// * Name
+  /// * Time
+  /// * eco-effort
+  /// * mileage
+  /// * duration
+
   final Entry? entry;
-  const EntryCard({super.key, this.entry});
+  final Color? cardColor;
+  const EntryCard({super.key, this.entry, this.cardColor});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(10),
+      color: cardColor ?? Color(0xFFFFFFFF),
+      margin: const EdgeInsets.all(12),
       child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(entry?.date ?? 'No Date',
-                      style: GoogleFonts.montserrat(fontSize: 18)),
-                  Text("${(entry?.distance ?? 0 / 1000).toStringAsFixed(2)} km",
-                      style: GoogleFonts.montserrat(fontSize: 18)),
-                ],
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Dinie Aziz", style: Theme.of(context).textTheme.bodySmall),
+            Text("12 minutes ago",
+                style: Theme.of(context).textTheme.labelMedium),
+            Container(
+              padding: const EdgeInsets.only(top: 20),
+              child: IntrinsicHeight(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Eco-effort",
+                            style: Theme.of(context).textTheme.bodySmall),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text("+10",
+                              style: Theme.of(context).textTheme.titleMedium),
+                        )
+                      ],
+                    ),
+                    const VerticalDivider(
+                      width: 20,
+                      thickness: 0.5,
+                      endIndent: 0,
+                      color: Colors.grey,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Mileage",
+                            style: Theme.of(context).textTheme.bodySmall),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text("2.5km",
+                              style: Theme.of(context).textTheme.titleMedium),
+                        )
+                      ],
+                    ),
+                    const VerticalDivider(
+                      width: 20,
+                      thickness: 0.5,
+                      endIndent: 0,
+                      color: Colors.grey,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Time",
+                            style: Theme.of(context).textTheme.bodySmall),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text("20:32",
+                              style: Theme.of(context).textTheme.titleMedium),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(entry?.duration ?? '',
-                      style: GoogleFonts.montserrat(fontSize: 14)),
-                  Text("${(entry?.speed ?? 0.0).toStringAsFixed(2)} km/h",
-                      style: GoogleFonts.montserrat(fontSize: 14)),
-                ],
-              )
-            ],
-          )),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

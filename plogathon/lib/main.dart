@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/pages/onboarding.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -37,11 +36,11 @@ class MainApp extends StatelessWidget {
             displayLarge: GoogleFonts.zenTokyoZoo(
                 fontSize: 40,
                 fontWeight: FontWeight.w400,
-                color: Color(0xFFEDFB92)),
+                color: const Color(0xFFEDFB92)),
             bodyLarge: GoogleFonts.poppins(
                 fontSize: 24,
                 fontWeight: FontWeight.w400,
-                color: Color.fromARGB(255, 84, 83, 83)),
+                color: const Color(0xFF202020)),
             bodyMedium: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -62,6 +61,10 @@ class MainApp extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFFEEEEEE)),
+            labelLarge: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF202020)),
             labelMedium: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
@@ -73,5 +76,6 @@ class MainApp extends StatelessWidget {
 }
 
 class Environment {
+  // ignore: constant_identifier_names
   static const MAPS_API_KEY = String.fromEnvironment('MAPS_API_KEY');
 }

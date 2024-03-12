@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/pages/login.dart';
 
 class OnboardingPage extends StatefulWidget {

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:plogathon/db/db.dart';
 import 'package:plogathon/model/entry.dart';
-import 'package:plogathon/pages/login.dart';
-import 'package:plogathon/pages/maps.dart';
+import 'package:plogathon/pages/nearby.dart';
 import 'package:plogathon/widgets/entry_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -95,6 +93,8 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             width: 170,
                             child: Card(
+                                margin: const EdgeInsets.only(
+                                    left: 0, right: 0, top: 12),
                                 color: Colors.white,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -125,6 +125,8 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             width: 170,
                             child: Card(
+                                margin: const EdgeInsets.only(
+                                    left: 0, right: 0, top: 12),
                                 color: Colors.white,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -163,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const HomePage())),
+                                    builder: (context) => const NearbyPage())),
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
                               Theme.of(context).primaryColor,

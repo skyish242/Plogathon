@@ -44,3 +44,43 @@ flutter pub get
 ```
 flutter run --dart-define-from-file env/config.json
 ```
+
+### Activity Service (runs on port 5001)
+
+1. `cd` into `activity-service` folder
+
+```
+cd activity-service
+```
+
+2. Install dependencies
+
+```
+npm install
+```
+
+3. Run `server.js` referencing `.env` file
+
+```
+node --env-file=.env server.js
+```
+
+### User Service (runs on port 5002)
+
+1. `cd` into `user-service` folder
+
+```
+cd user-service
+```
+
+2. Install dependencies
+
+```
+npm install
+```
+
+3. Run `server.js` referencing `.env` file
+
+```
+node --env-file=.env server.js
+```

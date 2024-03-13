@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:plogathon/model/location.dart';
 import 'package:plogathon/widgets/nearbyListView.dart';
 import 'package:plogathon/widgets/nearbyMapView.dart';
+import 'dart:convert';
 
 class NearbyPage extends StatefulWidget {
   const NearbyPage({Key key = const Key('defaultKey')}) : super(key: key);
@@ -12,23 +14,68 @@ class NearbyPage extends StatefulWidget {
 }
 
 class _NearbyPageState extends State<NearbyPage> {
-  final List<Location> _locations = [
-    Location(
-        locationName: "Bedok North Road", long: 1.0, lat: 2.0, distance: 2.5),
-    Location(
-        locationName: "Upper Changi Road", long: 4.0, lat: 5.0, distance: 3.5),
-    Location(locationName: "Kembangan", long: 4.0, lat: 5.0, distance: 4.0),
-    Location(locationName: "Eunos", long: 4.0, lat: 5.0, distance: 6.2),
-    Location(locationName: "Paya Lebar", long: 4.0, lat: 5.0, distance: 7.9),
-    Location(locationName: "Aljunied", long: 4.0, lat: 5.0, distance: 8.9),
-  ];
+    final List<Location> _locations = [];
   bool _listView = true;
+  bool _locationServiceEnabled = false;
 
   void setListView(bool state) {
     setState(() {
       _listView = state;
     });
   }
+
+  //Check for permission
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationPermission();
+  }
+
+  Future<void> _checkLocationPermission() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool permissionGranted = await _requestLocationPermission();
+
+    setState(() {
+      _locationServiceEnabled = serviceEnabled && permissionGranted;
+    });
+
+    if (serviceEnabled && permissionGranted) {
+      _fetchNearbyBins();
+    }
+  }
+
+  Future<bool> _requestLocationPermission() async {
+    final permission = await Geolocator.requestPermission();
+    return permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse;
+  }
+
+
+ Future<void> _fetchNearbyBins() async {
+  Position userCurrentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  
+  String binsJson = await DefaultAssetBundle.of(context).loadString('assets/CashForTrashGEOJSON.geojson');
+  Map<String, dynamic> binsData = jsonDecode(binsJson);
+
+  binsData['features'].forEach((bin) {
+    double lat = bin['geometry']['coordinates'][1];
+    double long = bin['geometry']['coordinates'][0];
+    String descriptionHtml = bin['properties']['Description'];
+    RegExp regExp = RegExp(r'<th>ADDRESSSTREETNAME<\/th>\s*<td>([^<]+)<\/td>');
+    Match? match = regExp.firstMatch(descriptionHtml);
+    String locationName = match?.group(1) ?? 'Unknown Location';
+    double distance = double.parse((Geolocator.distanceBetween(userCurrentPosition.latitude, userCurrentPosition.longitude, lat, long) / 1000).toStringAsFixed(2));
+    
+    print('Location: $locationName, Latitude: $lat, Longitude: $long, Distance: $distance');
+    print('User location: $userCurrentPosition');
+
+    if (distance <= 2) {
+      setState(() {
+        _locations.add(Location(locationName: locationName, long: long, lat: lat, distance: distance));
+      });
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -116,9 +163,15 @@ class _NearbyPageState extends State<NearbyPage> {
               ],
             ),
           ),
-          _listView
+          _locationServiceEnabled
+              ? (_locations.isNotEmpty
+              ? _listView
               ? NearbyListView(locationData: _locations)
               : NearbyMapView(locationData: _locations)
+              : Center(child: CircularProgressIndicator()))
+              : Center(
+            child: Text('Location services are disabled.'),
+          ),
         ],
       ),
     );

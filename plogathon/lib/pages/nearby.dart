@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plogathon/model/location.dart';
-import 'package:plogathon/widgets/nearbyListView.dart';
-import 'package:plogathon/widgets/nearbyMapView.dart';
+import 'package:plogathon/widgets/nearby_list_view.dart';
+import 'package:plogathon/widgets/nearby_map_view.dart';
 
 class NearbyPage extends StatefulWidget {
   const NearbyPage({Key key = const Key('defaultKey')}) : super(key: key);

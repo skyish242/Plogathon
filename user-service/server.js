@@ -21,7 +21,7 @@ const userProto = grpc.loadPackageDefinition(packageDefinition);
 // Implement your gRPC service
 const server = new grpc.Server();
 
-server.addService(userProto.UserService.service, {
+server.addService(userProto.user.UserService.service, {
   // Create User
   CreateUser: async (call, callback) => {
     let newUser = call.request;
@@ -66,8 +66,13 @@ server.addService(userProto.UserService.service, {
 
     callback(null, createResponse.dataValues);
   },
-  // Get user by ID
-  GetUserById: async (call, callback) => {
+  // Find all users
+  FindAllUsers: async (call, callback) => {
+    const getResponse = await User.findAll();
+    callback(null, { users: getResponse });
+  },
+  // Find one user by ID
+  FindOneUser: async (call, callback) => {
     const getResponse = await User.findOne({
       where: { UserID: call.request.UserID },
     });
@@ -98,6 +103,14 @@ server.addService(userProto.UserService.service, {
     const userID = call.request.UserID;
     await User.destroy({ where: { UserID: userID } });
     callback(null, null);
+  },
+  // Login user
+  LoginUser: async (call, callback) => {
+    const user = call.request;
+    const loginResponse = await User.findOne({
+      where: { Username: user.Username, Password: user.Password },
+    });
+    callback(null, loginResponse);
   },
 });
 

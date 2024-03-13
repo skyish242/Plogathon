@@ -148,10 +148,71 @@ class _ActivityPageState extends State<ActivityPage> {
                         SizedBox(
                           width: 150,
                           child: ElevatedButton(
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const EndPage())),
+                            onPressed: () => showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  contentPadding: const EdgeInsets.only(
+                                      top: 30.0, bottom: 24.0),
+                                  backgroundColor: Colors.white,
+                                  content: Text(
+                                    "End the Session?",
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: [
+                                    SizedBox(
+                                      width: 118,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Resume",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 118,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
+                                        onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EndPage(),
+                                          ),
+                                        ),
+                                        child: Text("End",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge
+                                                ?.copyWith(
+                                                    color: Colors.white)),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                 Theme.of(context).colorScheme.secondary,

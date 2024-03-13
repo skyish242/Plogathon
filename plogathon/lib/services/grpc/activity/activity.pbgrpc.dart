@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: activity/activity.proto
+//  source: activity.proto
 //
 // @dart = 2.12
 
@@ -15,8 +15,8 @@ import 'dart:core' as $core;
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../google/protobuf/empty.pb.dart' as $1;
 import 'activity.pb.dart' as $0;
+import '../protobuf/empty.pb.dart' as $1;
 
 export 'activity.pb.dart';
 

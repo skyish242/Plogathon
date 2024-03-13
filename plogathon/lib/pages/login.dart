@@ -59,9 +59,9 @@ class _LoginPageState extends State<LoginPage> {
                                     .textTheme
                                     .bodyMedium
                                     ?.copyWith(
-                                      color: Color(0xFFB3B3B3),
+                                      color: const Color(0xFFB3B3B3),
                                     ),
-                                fillColor: Color(0xFFEEEEEE),
+                                fillColor: const Color(0xFFEEEEEE),
                                 filled: true,
                                 hintText: 'Email',
                                 border: OutlineInputBorder(
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                                     .textTheme
                                     .bodyMedium
                                     ?.copyWith(
-                                      color: Color(0xFFFCFCFC),
+                                      color: const Color(0xFFFCFCFC),
                                     ),
                               ),
                             ),

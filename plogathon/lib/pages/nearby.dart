@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:plogathon/model/location.dart';
-import 'package:plogathon/widgets/nearbyListView.dart';
-import 'package:plogathon/widgets/nearbyMapView.dart';
+import 'package:plogathon/widgets/nearby_list_view.dart';
+import 'package:plogathon/widgets/nearby_map_view.dart';
 import 'dart:convert';
 
 class NearbyPage extends StatefulWidget {

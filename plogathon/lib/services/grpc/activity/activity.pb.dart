@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: activity/activity.proto
+//  source: activity.proto
 //
 // @dart = 2.12
 
@@ -13,7 +13,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../google/protobuf/timestamp.pb.dart' as $2;
+import '../protobuf/timestamp.pb.dart' as $2;
 
 class Activity extends $pb.GeneratedMessage {
   factory Activity({

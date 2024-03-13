@@ -14,7 +14,7 @@ class NearbyPage extends StatefulWidget {
 }
 
 class _NearbyPageState extends State<NearbyPage> {
-    final List<Location> _locations = [];
+  final List<Location> _locations = [];
   bool _listView = true;
   bool _locationServiceEnabled = false;
 
@@ -50,32 +50,45 @@ class _NearbyPageState extends State<NearbyPage> {
         permission == LocationPermission.whileInUse;
   }
 
+  Future<void> _fetchNearbyBins() async {
+    Position userCurrentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
- Future<void> _fetchNearbyBins() async {
-  Position userCurrentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  
-  String binsJson = await DefaultAssetBundle.of(context).loadString('assets/CashForTrashGEOJSON.geojson');
-  Map<String, dynamic> binsData = jsonDecode(binsJson);
+    String binsJson = await DefaultAssetBundle.of(context)
+        .loadString('assets/CashForTrashGEOJSON.geojson');
+    Map<String, dynamic> binsData = jsonDecode(binsJson);
 
-  binsData['features'].forEach((bin) {
-    double lat = bin['geometry']['coordinates'][1];
-    double long = bin['geometry']['coordinates'][0];
-    String descriptionHtml = bin['properties']['Description'];
-    RegExp regExp = RegExp(r'<th>ADDRESSSTREETNAME<\/th>\s*<td>([^<]+)<\/td>');
-    Match? match = regExp.firstMatch(descriptionHtml);
-    String locationName = match?.group(1) ?? 'Unknown Location';
-    double distance = double.parse((Geolocator.distanceBetween(userCurrentPosition.latitude, userCurrentPosition.longitude, lat, long) / 1000).toStringAsFixed(2));
-    
-    print('Location: $locationName, Latitude: $lat, Longitude: $long, Distance: $distance');
-    print('User location: $userCurrentPosition');
+    binsData['features'].forEach((bin) {
+      double lat = bin['geometry']['coordinates'][1];
+      double long = bin['geometry']['coordinates'][0];
+      String descriptionHtml = bin['properties']['Description'];
+      RegExp regExp =
+          RegExp(r'<th>ADDRESSSTREETNAME<\/th>\s*<td>([^<]+)<\/td>');
+      Match? match = regExp.firstMatch(descriptionHtml);
+      String locationName = match?.group(1) ?? 'Unknown Location';
+      double distance = double.parse((Geolocator.distanceBetween(
+                  userCurrentPosition.latitude,
+                  userCurrentPosition.longitude,
+                  lat,
+                  long) /
+              1000)
+          .toStringAsFixed(2));
 
-    if (distance <= 2) {
-      setState(() {
-        _locations.add(Location(locationName: locationName, long: long, lat: lat, distance: distance));
-      });
-    }
-  });
-}
+      print(
+          'Location: $locationName, Latitude: $lat, Longitude: $long, Distance: $distance');
+      print('User location: $userCurrentPosition');
+
+      if (distance <= 2) {
+        setState(() {
+          _locations.add(Location(
+              locationName: locationName,
+              long: long,
+              lat: lat,
+              distance: distance));
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +126,12 @@ class _NearbyPageState extends State<NearbyPage> {
                       width: 160,
                       child: ElevatedButton(
                         onPressed: () => setListView(true),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                          _listView
+                        style: ElevatedButton.styleFrom(
+                          elevation: 5,
+                          backgroundColor: _listView
                               ? Theme.of(context).colorScheme.secondary
                               : Colors.white,
-                        )),
+                        ),
                         child: Text(
                           "List View",
                           style: Theme.of(context)
@@ -136,12 +149,12 @@ class _NearbyPageState extends State<NearbyPage> {
                       width: 160,
                       child: ElevatedButton(
                         onPressed: () => setListView(false),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                          _listView
+                        style: ElevatedButton.styleFrom(
+                          elevation: 5,
+                          backgroundColor: _listView
                               ? Colors.white
                               : Theme.of(context).colorScheme.secondary,
-                        )),
+                        ),
                         child: Text(
                           "Map View",
                           style: Theme.of(context)
@@ -165,13 +178,13 @@ class _NearbyPageState extends State<NearbyPage> {
           ),
           _locationServiceEnabled
               ? (_locations.isNotEmpty
-              ? _listView
-              ? NearbyListView(locationData: _locations)
-              : NearbyMapView(locationData: _locations)
-              : Center(child: CircularProgressIndicator()))
+                  ? _listView
+                      ? NearbyListView(locationData: _locations)
+                      : NearbyMapView(locationData: _locations)
+                  : Center(child: CircularProgressIndicator()))
               : Center(
-            child: Text('Location services are disabled.'),
-          ),
+                  child: Text('Location services are disabled.'),
+                ),
         ],
       ),
     );

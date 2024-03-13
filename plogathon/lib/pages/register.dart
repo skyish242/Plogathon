@@ -145,10 +145,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             const LoginPage())),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).primaryColor,
-                                )),
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 5,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                ),
                                 child: Text("Register",
                                     style:
                                         Theme.of(context).textTheme.bodyMedium),
@@ -163,9 +164,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => const LoginPage())),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Theme.of(context).colorScheme.secondary)),
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 5,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.secondary),
                               child: Text(
                                 "Already Have An Account?",
                                 style: Theme.of(context)

@@ -48,11 +48,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const LoginPage())),
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                      Theme.of(context)
+                    style: ElevatedButton.styleFrom(
+                      elevation: 5,
+                      backgroundColor: Theme.of(context)
                           .primaryColor, // Use the primary color from the theme
-                    )),
+                    ),
                     child: Text("Get Started",
                         style: Theme.of(context).textTheme.bodyMedium),
                   ),

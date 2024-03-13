@@ -132,14 +132,11 @@ class _ActivityPageState extends State<ActivityPage> {
                           width: 150,
                           child: ElevatedButton(
                               onPressed: () => (/** Open camera */),
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).primaryColor,
-                                ),
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0)),
-                                ),
+                              style: ElevatedButton.styleFrom(
+                                elevation: 5,
+                                backgroundColor: Theme.of(context).primaryColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0)),
                               ),
                               child: Text("Take Picture",
                                   style:
@@ -166,13 +163,11 @@ class _ActivityPageState extends State<ActivityPage> {
                                     SizedBox(
                                       width: 118,
                                       child: ElevatedButton(
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                          ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          elevation: 5,
                                         ),
                                         onPressed: () {
                                           Navigator.of(context).pop();
@@ -186,13 +181,11 @@ class _ActivityPageState extends State<ActivityPage> {
                                     SizedBox(
                                       width: 118,
                                       child: ElevatedButton(
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                          ),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          elevation: 5,
                                         ),
                                         onPressed: () => Navigator.push(
                                           context,
@@ -213,14 +206,12 @@ class _ActivityPageState extends State<ActivityPage> {
                                 );
                               },
                             ),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).colorScheme.secondary,
-                              ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0)),
-                              ),
+                            style: ElevatedButton.styleFrom(
+                              elevation: 5,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
                             ),
                             child: Text(
                               "End",

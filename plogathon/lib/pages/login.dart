@@ -117,10 +117,11 @@ class _LoginPageState extends State<LoginPage> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             const HomePage())),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).primaryColor,
-                                )),
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 5,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                ),
                                 child: Text("Log in",
                                     style:
                                         Theme.of(context).textTheme.bodyMedium),
@@ -136,9 +137,10 @@ class _LoginPageState extends State<LoginPage> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           const RegisterPage())),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Theme.of(context).colorScheme.secondary)),
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 5,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.secondary),
                               child: Text(
                                 "Don't Have An Account?",
                                 style: Theme.of(context)

@@ -91,14 +91,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: 170,
+                            width: 150,
                             child: Card(
                                 margin: const EdgeInsets.only(
                                     left: 0, right: 0, top: 12),
                                 color: Colors.white,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 18, vertical: 20),
+                                      horizontal: 12, vertical: 20),
                                   child: Column(children: <Widget>[
                                     Text(
                                       "Eco-Effort",
@@ -123,14 +123,14 @@ class _HomePageState extends State<HomePage> {
                                 )),
                           ),
                           SizedBox(
-                            width: 170,
+                            width: 150,
                             child: Card(
                                 margin: const EdgeInsets.only(
                                     left: 0, right: 0, top: 12),
                                 color: Colors.white,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 18, vertical: 20),
+                                      horizontal: 12, vertical: 20),
                                   child: Column(children: <Widget>[
                                     Text(
                                       "Mileage",
@@ -166,10 +166,10 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const NearbyPage())),
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor,
-                            )),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              elevation: 5,
+                            ),
                             child: Text("Start Plogging",
                                 style: Theme.of(context).textTheme.bodyMedium),
                           ),

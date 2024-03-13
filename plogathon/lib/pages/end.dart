@@ -175,10 +175,10 @@ class _EndPageState extends State<EndPage> {
                         MaterialPageRoute(
                             builder: (context) => const HomePage()),
                         (Route<dynamic> route) => false),
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                      Theme.of(context).primaryColor,
-                    )),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 5,
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
                     child: Text("Upload",
                         style: Theme.of(context).textTheme.bodyMedium),
                   ),

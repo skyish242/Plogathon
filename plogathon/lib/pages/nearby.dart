@@ -6,6 +6,7 @@ import 'package:plogathon/widgets/nearby_list_view.dart';
 import 'package:plogathon/widgets/nearby_map_view.dart';
 import 'dart:convert';
 
+
 class NearbyPage extends StatefulWidget {
   const NearbyPage({Key key = const Key('defaultKey')}) : super(key: key);
 
@@ -95,13 +96,13 @@ class _NearbyPageState extends State<NearbyPage> {
         binsFound = true;
       }
     });
+    _locations.sort((a, b) => a.distance.compareTo(b.distance));
     if (!binsFound) {
     setState(() {
       _noBinsMessage = 'There are no availabl bins within your current location';
     });
   }
 }
-
   @override
   Widget build(BuildContext context) {
     return Material(

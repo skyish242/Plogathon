@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: activity/activity.proto
+//  source: activity.proto
 //
 // @dart = 2.12
 

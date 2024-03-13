@@ -6,6 +6,7 @@ import 'package:plogathon/widgets/nearby_list_view.dart';
 import 'package:plogathon/widgets/nearby_map_view.dart';
 import 'dart:convert';
 
+
 class NearbyPage extends StatefulWidget {
   const NearbyPage({Key key = const Key('defaultKey')}) : super(key: key);
 
@@ -59,6 +60,8 @@ class _NearbyPageState extends State<NearbyPage> {
         .loadString('assets/CashForTrashGEOJSON.geojson');
     Map<String, dynamic> binsData = jsonDecode(binsJson);
     bool binsFound = false;
+    const double walkingSpeedKmph = 4.5;
+
 
     binsData['features'].forEach((bin) {
       double lat = bin['geometry']['coordinates'][1];
@@ -75,8 +78,10 @@ class _NearbyPageState extends State<NearbyPage> {
                   long) /
               1000)
           .toStringAsFixed(2));
+      //in hours
+      double timeRequired = double.parse((distance/walkingSpeedKmph).toStringAsFixed(2));
 
-      print('Location: $locationName, Latitude: $lat, Longitude: $long, Distance: $distance');
+      print('Location: $locationName, Latitude: $lat, Longitude: $long, Distance: $distance, TimeRequired:$timeRequired');
       print('User location: $userCurrentPosition');
 
       if (distance <= 2) {
@@ -85,18 +90,19 @@ class _NearbyPageState extends State<NearbyPage> {
               locationName: locationName,
               long: long,
               lat: lat,
-              distance: distance));
+              distance: distance,
+              timeRequired: timeRequired,));
         });
         binsFound = true;
       }
     });
+    _locations.sort((a, b) => a.distance.compareTo(b.distance));
     if (!binsFound) {
     setState(() {
       _noBinsMessage = 'There are no availabl bins within your current location';
     });
   }
 }
-
   @override
   Widget build(BuildContext context) {
     return Material(

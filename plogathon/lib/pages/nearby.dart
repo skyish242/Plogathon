@@ -6,6 +6,7 @@ import 'package:plogathon/widgets/nearby_list_view.dart';
 import 'package:plogathon/widgets/nearby_map_view.dart';
 import 'dart:convert';
 
+
 class NearbyPage extends StatefulWidget {
   const NearbyPage({Key key = const Key('defaultKey')}) : super(key: key);
 
@@ -17,6 +18,7 @@ class _NearbyPageState extends State<NearbyPage> {
   final List<Location> _locations = [];
   bool _listView = true;
   bool _locationServiceEnabled = false;
+  String? _noBinsMessage;
 
   void setListView(bool state) {
     setState(() {
@@ -57,6 +59,9 @@ class _NearbyPageState extends State<NearbyPage> {
     String binsJson = await DefaultAssetBundle.of(context)
         .loadString('assets/CashForTrashGEOJSON.geojson');
     Map<String, dynamic> binsData = jsonDecode(binsJson);
+    bool binsFound = false;
+    const double walkingSpeedKmph = 4.5;
+
 
     binsData['features'].forEach((bin) {
       double lat = bin['geometry']['coordinates'][1];
@@ -73,9 +78,10 @@ class _NearbyPageState extends State<NearbyPage> {
                   long) /
               1000)
           .toStringAsFixed(2));
+      //in hours
+      double timeRequired = double.parse((distance/walkingSpeedKmph).toStringAsFixed(2));
 
-      print(
-          'Location: $locationName, Latitude: $lat, Longitude: $long, Distance: $distance');
+      print('Location: $locationName, Latitude: $lat, Longitude: $long, Distance: $distance, TimeRequired:$timeRequired');
       print('User location: $userCurrentPosition');
 
       if (distance <= 2) {
@@ -84,12 +90,19 @@ class _NearbyPageState extends State<NearbyPage> {
               locationName: locationName,
               long: long,
               lat: lat,
-              distance: distance));
+              distance: distance,
+              timeRequired: timeRequired,));
         });
+        binsFound = true;
       }
     });
+    _locations.sort((a, b) => a.distance.compareTo(b.distance));
+    if (!binsFound) {
+    setState(() {
+      _noBinsMessage = 'There are no availabl bins within your current location';
+    });
   }
-
+}
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -171,22 +184,30 @@ class _NearbyPageState extends State<NearbyPage> {
                   ],
                 ),
                 const SizedBox(
-                  height: 12,
-                ),
-              ],
-            ),
+                height: 12,
+              ),
+            ],
           ),
-          _locationServiceEnabled
-              ? (_locations.isNotEmpty
-                  ? _listView
-                      ? NearbyListView(locationData: _locations)
-                      : NearbyMapView(locationData: _locations)
-                  : Center(child: CircularProgressIndicator()))
-              : Center(
-                  child: Text('Location services are disabled.'),
-                ),
-        ],
-      ),
-    );
+        ),
+        _locationServiceEnabled
+            ? (_locations.isNotEmpty
+                ? _listView
+                    ? NearbyListView(locationData: _locations)
+                    : NearbyMapView(locationData: _locations)
+                : _noBinsMessage != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _noBinsMessage!,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      )
+                    : Center(child: CircularProgressIndicator()))
+            : Center(
+                child: Text('Location services are disabled.'),
+              ),
+      ],
+    ),
+  );
   }
 }

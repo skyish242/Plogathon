@@ -17,7 +17,8 @@ class NearbyListView extends StatelessWidget {
                     name: location.locationName,
                     distance: location.distance,
                     long: location.long,
-                    lat: location.lat))
+                    lat: location.lat,
+                    time: location.timeRequired))
                 .toList()
             : [],
       ),

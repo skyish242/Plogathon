@@ -1,67 +1,69 @@
+import 'package:grpc/grpc.dart';
+import 'package:plogathon/services/grpc/protobuf/empty.pb.dart';
 import 'grpc/activity/activity.pbgrpc.dart';
-import '../../config.dart';
 
-class ActivityService extends ActivityServiceBase {
-  @override
-  Future<Activity> createActivity(ServiceCall call, Activity request) {
-    // TODO: implement createActivity
-    throw UnimplementedError();
+class ActivityService {
+  final ClientChannel channel;
+  final ActivityServiceClient client;
+  
+  ActivityService(): channel = ClientChannel(
+        '127.0.0.1',
+        port: 5001,
+        options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
+      ),
+      client = ActivityServiceClient(ClientChannel(
+        '127.0.0.1',
+        port: 5001,
+        options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
+      ));
+
+  // Create Activity
+  Future<ProtoActivity> createActivity(Activity request) async {
+    try {  
+      return await client.createActivity(request);
+    } catch (e) {
+      throw const GrpcError.internal('Failed to create activity');
+    }
   }
 
-  @override
-  Future<ActivityList> getAllActivities(ServiceCall call, Empty request) {
-    throw UnimplementedError();
+  // Find all activities
+  Future<Activities> findAllActivities() {
+   try {
+      return client.findAllActivities(Empty());
+    } catch (e) {
+      throw const GrpcError.internal('Failed to find all activities');
+    }
   }
 
-  @override
-  Future<Empty> deleteActivity(ServiceCall call, DeleteActivityRequest request) {
-    // TODO: implement deleteActivity
-    throw UnimplementedError();
+  // Find one activity by ID
+  Future<ProtoActivity> findOneActivity(int activityID) async{
+    try {
+      OneActivity request = OneActivity()..activityID = activityID;
+    
+      return client.findOneActivity(request);
+    } catch (e) {
+      throw const GrpcError.internal('Failed to find one activity');
+    }
+  }
+  
+  // Update activity by ID
+  Future<ProtoActivity> updateActivity(UpdateOneActivity payload) async {
+     try {
+      return client.updateActivity(payload);
+    } catch (e) {
+      throw const GrpcError.internal('Failed to update activity');
+    }
   }
 
-  @override
-  Future<Activity> getActivityById(ServiceCall call, GetActivityRequest request) {
-    // TODO: implement getActivityById
-    throw UnimplementedError();
-  }
+  // Delete activity by ID
+  Future<Empty> deleteActivity(int activityID) {
+    try {  
+      OneActivity request = OneActivity()..activityID = activityID;
 
-  @override
-  Future<Activity> updateActivity(ServiceCall call, Activity request) {
-    // TODO: implement updateActivity
-    throw UnimplementedError();
+      return client.deleteActivity(request);
+    } catch (e) {
+      throw const GrpcError.internal('Failed to delete activity');
+    }
   }
 }
 
-void main() async {
-  final client = ActivityServiceClient(DatabaseConfig.host, DatabaseConfig.port);
-
-  final newActivity = Activity()
-    ..activityID = 1
-    ..userID = 1
-    ..name = 'Running'
-    ..type = 'Outdoor'
-    ..description = 'Morning jog'
-    ..datetime = DateTime.now().toUtc().toProto3Timestamp()
-    ..startDatetime = DateTime.now().toUtc().toProto3Timestamp()
-    ..endDatetime = DateTime.now().add(Duration(hours: 1)).toUtc().toProto3Timestamp()
-    ..routeMap = 'encoded_polyline_data'
-    ..distance = 5.0
-    ..steps = 10000
-    ..wasteCount = 2;
-
-  try {
-    final createdActivity = await client.createActivity(newActivity);
-    print('Activity created: $createdActivity');
-
-    final fetchedActivity = await client.getActivityById(1);
-    print('Fetched activity: $fetchedActivity');
-
-    final updatedActivity = await client.updateActivity(createdActivity);
-    print('Updated activity: $updatedActivity');
-
-    await client.deleteActivity(updatedActivity.activityID);
-    print('Activity deleted');
-  } finally {
-    await client.close();
-  }
-}

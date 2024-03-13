@@ -1,34 +1,65 @@
 syntax = "proto3";
 
-import "../../../plogathon/grpc/activity/google/protobuf/timestamp.proto";
-import "../../../plogathon/grpc/activity/google/protobuf/empty.proto";
+package activity;
+
+import "google/protobuf/empty.proto";
 
 service ActivityService {
-    rpc CreateActivity (Activity) returns (Activity);
-    rpc GetActivityById (GetActivityRequest) returns (Activity);
-    rpc UpdateActivity (Activity) returns (Activity);
-    rpc DeleteActivity (DeleteActivityRequest) returns (google.protobuf.Empty);
+    rpc CreateActivity (Activity) returns (ProtoActivity);
+    rpc FindAllActivities (google.protobuf.Empty) returns (Activities);
+    rpc FindOneActivity (OneActivity) returns (ProtoActivity);
+    rpc UpdateActivity (UpdateOneActivity) returns (ProtoActivity);
+    rpc DeleteActivity (OneActivity) returns (google.protobuf.Empty);
 }
 
 message Activity {
+    int32 UserID = 1;
+    string Name = 2;
+    string Type = 3;
+    string Description = 4;
+    string Datetime = 5;
+    string StartDatetime = 6;
+    string EndDatetime = 7;
+    string RouteMap = 8;
+    float Distance = 9;
+    int32 Steps = 10;
+    int32 WasteCount = 11;
+}
+
+message ProtoActivity {
     int32 ActivityID = 1;
     int32 UserID = 2;
     string Name = 3;
     string Type = 4;
     string Description = 5;
-    google.protobuf.Timestamp Datetime = 6;
-    google.protobuf.Timestamp StartDatetime = 7;
-    google.protobuf.Timestamp EndDatetime = 8;
+    string Datetime = 6;
+    string StartDatetime = 7;
+    string EndDatetime = 8;
     string RouteMap = 9;
     float Distance = 10;
     int32 Steps = 11;
     int32 WasteCount = 12;
 }
 
-message GetActivityRequest {
+message Activities {
+    repeated ProtoActivity activities = 1;
+}
+
+message OneActivity {
     int32 ActivityID = 1;
 }
 
-message DeleteActivityRequest {
+message UpdateOneActivity {
     int32 ActivityID = 1;
+    int32 UserID = 2;
+    optional string Name = 3;
+    optional string Type = 4;
+    optional string Description = 5;
+    optional string Datetime = 6;
+    optional string StartDatetime = 7;
+    optional string EndDatetime = 8;
+    optional string RouteMap = 9;
+    optional float Distance = 10;
+    optional int32 Steps = 11;
+    optional int32 WasteCount = 12;
 }

@@ -37,7 +37,7 @@ function dateToTimestamp(date) {
   };
 }
 
-server.addService(activityProto.ActivityService.service, {
+server.addService(activityProto.activity.ActivityService.service, {
   CreateActivity: async (call, callback) => {
     let newActivity = call.request;
 
@@ -90,30 +90,29 @@ server.addService(activityProto.ActivityService.service, {
 
     const activityResponse = await Activity.create({
       ...newActivity,
-      Datetime: timestampToDate(newActivity.Datetime),
-      StartDatetime: timestampToDate(newActivity.StartDatetime),
-      EndDatetime: timestampToDate(newActivity.EndDatetime),
+      // Datetime: timestampToDate(newActivity.Datetime),
+      // StartDatetime: timestampToDate(newActivity.StartDatetime),
+      // EndDatetime: timestampToDate(newActivity.EndDatetime),
     });
 
     const responseValues = activityResponse.dataValues;
 
     callback(null, {
       ...responseValues,
-      Datetime: dateToTimestamp(responseValues.Datetime),
-      StartDatetime: dateToTimestamp(responseValues.StartDatetime),
-      EndDatetime: dateToTimestamp(responseValues.EndDatetime),
+      // Datetime: dateToTimestamp(responseValues.Datetime),
+      // StartDatetime: dateToTimestamp(responseValues.StartDatetime),
+      // EndDatetime: dateToTimestamp(responseValues.EndDatetime),
     });
   },
-  GetActivityById: async (call, callback) => {
+  FindAllActivities: async (call, callback) => {
+    const response = await Activity.findAll();
+    callback(null, { activities: response });
+  },
+  FindOneActivity: async (call, callback) => {
     const getResponse = await Activity.findOne({
       where: { ActivityID: call.request.ActivityID },
     });
-    callback(null, {
-      ...getResponse.dataValues,
-      Datetime: dateToTimestamp(getResponse.dataValues.Datetime),
-      StartDatetime: dateToTimestamp(getResponse.dataValues.StartDatetime),
-      EndDatetime: dateToTimestamp(getResponse.dataValues.EndDatetime),
-    });
+    callback(null, getResponse.dataValues);
   },
   UpdateActivity: async (call, callback) => {
     const activity = call.request;
@@ -146,12 +145,7 @@ server.addService(activityProto.ActivityService.service, {
       where: { ActivityID: activity.ActivityID },
     });
 
-    callback(null, {
-      ...updateResponse.dataValues,
-      Datetime: dateToTimestamp(updateResponse.dataValues.Datetime),
-      StartDatetime: dateToTimestamp(updateResponse.dataValues.StartDatetime),
-      EndDatetime: dateToTimestamp(updateResponse.dataValues.EndDatetime),
-    });
+    callback(null, updateResponse.dataValues);
   },
   DeleteActivity: async (call, callback) => {
     const activityID = call.request.ActivityID;

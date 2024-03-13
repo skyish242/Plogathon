@@ -10,12 +10,14 @@ class ActivityPage extends StatefulWidget {
   final double destLongitude;
   final double destLatitude;
   final String destName;
+  final double destTime;
 
   const ActivityPage({
     Key key = const Key('defaultKey'),
     required this.destLongitude,
     required this.destLatitude,
     required this.destName,
+    required this.destTime
   }) : super(key: key);
 
   @override
@@ -30,6 +32,7 @@ class _ActivityPageState extends State<ActivityPage> {
     double longitude = widget.destLongitude;
     double latitude = widget.destLatitude;
     String name = widget.destName;
+    double time = widget.destTime;
   }
 
   Future<void> openCamera(BuildContext context) async {

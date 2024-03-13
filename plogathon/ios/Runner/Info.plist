@@ -30,6 +30,10 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Plogathon stalks your location</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Send nudes</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>What The Hell Oh My God No Way</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

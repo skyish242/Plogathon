@@ -45,6 +45,8 @@ dependencies:
   flutter_svg: ^2.0.10
   grpc: ^3.2.4
   protobuf: ^3.1.0
+  camera: ^0.10.5+9
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +76,7 @@ flutter:
     - assets/navigation.svg
     - assets/right-arrow.svg
     - assets/time.svg
+    - assets/camera.svg
     - assets/CashForTrashGEOJSON.geojson
 
   # An image asset can refer to one or more resolution-specific "variants", see

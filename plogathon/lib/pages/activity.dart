@@ -1,7 +1,10 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:plogathon/pages/camera.dart';
 import 'package:plogathon/pages/end.dart';
+import 'package:plogathon/widgets/end_session_dialog.dart';
 
 class ActivityPage extends StatefulWidget {
   final double destLongitude;
@@ -23,9 +26,25 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   void initState() {
     super.initState();
+
     double longitude = widget.destLongitude;
     double latitude = widget.destLatitude;
     String name = widget.destName;
+  }
+
+  Future<void> openCamera(BuildContext context) async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    final cameras = await availableCameras();
+    final firstCamera = cameras.first;
+
+    if (context.mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => CameraPage(camera: firstCamera),
+        ),
+      );
+    }
   }
 
   @override
@@ -131,7 +150,7 @@ class _ActivityPageState extends State<ActivityPage> {
                         SizedBox(
                           width: 150,
                           child: ElevatedButton(
-                              onPressed: () => (/** Open camera */),
+                              onPressed: () => openCamera(context),
                               style: ElevatedButton.styleFrom(
                                 elevation: 5,
                                 backgroundColor: Theme.of(context).primaryColor,
@@ -148,62 +167,7 @@ class _ActivityPageState extends State<ActivityPage> {
                             onPressed: () => showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AlertDialog(
-                                  actionsAlignment: MainAxisAlignment.center,
-                                  contentPadding: const EdgeInsets.only(
-                                      top: 30.0, bottom: 24.0),
-                                  backgroundColor: Colors.white,
-                                  content: Text(
-                                    "End the Session?",
-                                    style:
-                                        Theme.of(context).textTheme.labelLarge,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  actions: [
-                                    SizedBox(
-                                      width: 118,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          elevation: 5,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text("Resume",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelLarge),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 118,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                          elevation: 5,
-                                        ),
-                                        onPressed: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const EndPage(),
-                                          ),
-                                        ),
-                                        child: Text("End",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelLarge
-                                                ?.copyWith(
-                                                    color: Colors.white)),
-                                      ),
-                                    ),
-                                  ],
-                                );
+                                return const EndSessionDialog();
                               },
                             ),
                             style: ElevatedButton.styleFrom(

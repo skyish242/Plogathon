@@ -67,11 +67,17 @@ class UserService {
   }
 
   // Login user
-  Future<LoginResponse> login(ServiceCall call, LoginRequest request) {
+  Future<int> login(String username, String password) async {
      try {
-      return client.login(request);
+      final request = LoginRequest()
+        ..username = username
+        ..password = password;
+
+      OneUser response = await client.login(request);
+
+      return response.userID;
     } catch (e) {
-      throw const GrpcError.internal('Failed to delete user');
+      throw const GrpcError.internal('Failed to login user');
     }
   }
 }

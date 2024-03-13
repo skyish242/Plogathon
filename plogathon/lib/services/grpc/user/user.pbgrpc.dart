@@ -42,10 +42,10 @@ class UserServiceClient extends $grpc.Client {
       '/user.UserService/DeleteUser',
       ($0.OneUser value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $1.Empty.fromBuffer(value));
-  static final _$login = $grpc.ClientMethod<$0.LoginRequest, $0.LoginResponse>(
+  static final _$login = $grpc.ClientMethod<$0.LoginRequest, $0.OneUser>(
       '/user.UserService/Login',
       ($0.LoginRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.LoginResponse.fromBuffer(value));
+      ($core.List<$core.int> value) => $0.OneUser.fromBuffer(value));
 
   UserServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -73,7 +73,7 @@ class UserServiceClient extends $grpc.Client {
     return $createUnaryCall(_$deleteUser, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.LoginResponse> login($0.LoginRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.OneUser> login($0.LoginRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$login, request, options: options);
   }
 }
@@ -118,13 +118,13 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.OneUser.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.LoginRequest, $0.LoginResponse>(
+    $addMethod($grpc.ServiceMethod<$0.LoginRequest, $0.OneUser>(
         'Login',
         login_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.LoginRequest.fromBuffer(value),
-        ($0.LoginResponse value) => value.writeToBuffer()));
+        ($0.OneUser value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.ProtoUser> createUser_Pre($grpc.ServiceCall call, $async.Future<$0.User> request) async {
@@ -147,7 +147,7 @@ abstract class UserServiceBase extends $grpc.Service {
     return deleteUser(call, await request);
   }
 
-  $async.Future<$0.LoginResponse> login_Pre($grpc.ServiceCall call, $async.Future<$0.LoginRequest> request) async {
+  $async.Future<$0.OneUser> login_Pre($grpc.ServiceCall call, $async.Future<$0.LoginRequest> request) async {
     return login(call, await request);
   }
 
@@ -156,5 +156,5 @@ abstract class UserServiceBase extends $grpc.Service {
   $async.Future<$0.ProtoUser> findOneUser($grpc.ServiceCall call, $0.OneUser request);
   $async.Future<$0.ProtoUser> updateUser($grpc.ServiceCall call, $0.UpdateOneUser request);
   $async.Future<$1.Empty> deleteUser($grpc.ServiceCall call, $0.OneUser request);
-  $async.Future<$0.LoginResponse> login($grpc.ServiceCall call, $0.LoginRequest request);
+  $async.Future<$0.OneUser> login($grpc.ServiceCall call, $0.LoginRequest request);
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/pages/register.dart';
+import 'package:plogathon/services/userservice.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key = const Key('defaultKey')}) : super(key: key);
@@ -10,6 +11,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _userService = UserService();
+
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controllers when the widget is disposed
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -51,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: double.infinity,
                             height: 64,
                             child: TextField(
+                              controller: _usernameController,
                               cursorColor:
                                   Theme.of(context).colorScheme.onPrimary,
                               style: Theme.of(context).textTheme.bodyMedium,
@@ -63,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                 fillColor: const Color(0xFFEEEEEE),
                                 filled: true,
-                                hintText: 'Email',
+                                hintText: 'Username',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: const BorderSide(
@@ -81,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                               width: double.infinity,
                               height: 64,
                               child: TextField(
+                                controller: _passwordController,
                                 cursorColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 style: Theme.of(context).textTheme.bodyMedium,
@@ -106,17 +122,19 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                          // Login Button 
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20.0),
                             child: SizedBox(
                               width: double.infinity,
                               height: 50.0,
                               child: ElevatedButton(
-                                onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const HomePage())),
+                                onPressed: _handleLogin,
+                                // onPressed: () => Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             const HomePage())),
                                 style: ElevatedButton.styleFrom(
                                   elevation: 5,
                                   backgroundColor:
@@ -128,6 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                          // Sign Up Button 
                           SizedBox(
                             width: double.infinity,
                             height: 50.0,
@@ -159,5 +178,21 @@ class _LoginPageState extends State<LoginPage> {
             ],
           )
         ]));
+  }
+  Future<void> _handleLogin() async {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    try {
+      int userID = await _userService.login(username, password);
+      
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } catch (e) {
+      // Handle login failure
+      print('Login failed: $e');
+    }
   }
 }

@@ -10,7 +10,7 @@ service UserService {
     rpc FindOneUser (OneUser) returns (ProtoUser);
     rpc UpdateUser (UpdateOneUser) returns (ProtoUser);
     rpc DeleteUser (OneUser) returns (google.protobuf.Empty);
-    rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc Login (LoginRequest) returns (OneUser);
 }
 
 message User {
@@ -52,10 +52,4 @@ message UpdateOneUser {
 message LoginRequest {
     string Username = 1;    
     string Password = 2; 
-}
-
-message LoginResponse {
-    bool Validated =  1;
-    string AccessToken = 2;
-    int32 UserID = 3;
 }

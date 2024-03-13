@@ -122,18 +122,3 @@ final $typed_data.Uint8List loginRequestDescriptor = $convert.base64Decode(
     'CgxMb2dpblJlcXVlc3QSGgoIVXNlcm5hbWUYASABKAlSCFVzZXJuYW1lEhoKCFBhc3N3b3JkGA'
     'IgASgJUghQYXNzd29yZA==');
 
-@$core.Deprecated('Use loginResponseDescriptor instead')
-const LoginResponse$json = {
-  '1': 'LoginResponse',
-  '2': [
-    {'1': 'Validated', '3': 1, '4': 1, '5': 8, '10': 'Validated'},
-    {'1': 'AccessToken', '3': 2, '4': 1, '5': 9, '10': 'AccessToken'},
-    {'1': 'UserID', '3': 3, '4': 1, '5': 5, '10': 'UserID'},
-  ],
-};
-
-/// Descriptor for `LoginResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List loginResponseDescriptor = $convert.base64Decode(
-    'Cg1Mb2dpblJlc3BvbnNlEhwKCVZhbGlkYXRlZBgBIAEoCFIJVmFsaWRhdGVkEiAKC0FjY2Vzc1'
-    'Rva2VuGAIgASgJUgtBY2Nlc3NUb2tlbhIWCgZVc2VySUQYAyABKAVSBlVzZXJJRA==');
-

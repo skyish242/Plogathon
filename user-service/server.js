@@ -68,49 +68,100 @@ server.addService(userProto.user.UserService.service, {
   },
   // Find all users
   FindAllUsers: async (call, callback) => {
-    const getResponse = await User.findAll();
-    callback(null, { users: getResponse });
+    try {
+      const getResponse = await User.findAll();
+      callback(null, { users: getResponse });
+    } catch (error) {
+      console.error("Error finding all users:", error);
+      callback({
+        code: grpc.status.INTERNAL,
+        details: "Internal server error",
+      });
+    }
   },
   // Find one user by ID
   FindOneUser: async (call, callback) => {
-    const getResponse = await User.findOne({
-      where: { UserID: call.request.UserID },
-    });
-    callback(null, getResponse);
+    try {
+      const getResponse = await User.findOne({
+        where: { UserID: call.request.UserID },
+      });
+      if (getResponse) {
+        callback(null, getResponse);
+      } else {
+        callback({
+          code: grpc.status.NOT_FOUND,
+          details: "User not found",
+        });
+      }
+    } catch (error) {
+      console.error("Error finding one user:", error);
+      callback({
+        code: grpc.status.INTERNAL,
+        details: "Internal server error",
+      });
+    }
   },
   // Update user
   UpdateUser: async (call, callback) => {
-    const user = call.request;
-
-    // Remove empty keys
-    Object.keys(user).forEach((key) => {
-      if (user[key] === "") {
-        delete user[key];
-      }
-    });
-
-    await User.update(user, {
-      where: { UserID: user.UserID },
-    });
-
-    const updateResponse = await User.findOne({
-      where: { UserID: user.UserID },
-    });
-    callback(null, updateResponse);
+    try {
+      const user = call.request;
+      // Remove empty keys
+      Object.keys(user).forEach((key) => {
+        if (user[key] === "") {
+          delete user[key];
+        }
+      });
+      await User.update(user, {
+        where: { UserID: user.UserID },
+      });
+      const updateResponse = await User.findOne({
+        where: { UserID: user.UserID },
+      });
+      callback(null, updateResponse);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      callback({
+        code: grpc.status.INTERNAL,
+        details: "Internal server error",
+      });
+    }
   },
   // Delete user by ID
   DeleteUser: async (call, callback) => {
-    const userID = call.request.UserID;
-    await User.destroy({ where: { UserID: userID } });
-    callback(null, null);
+    try {
+      const userID = call.request.UserID;
+      await User.destroy({ where: { UserID: userID } });
+      callback(null, null);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      callback({
+        code: grpc.status.INTERNAL,
+        details: "Internal server error",
+      });
+    }
   },
   // Login user
-  LoginUser: async (call, callback) => {
+  Login: async (call, callback) => {
     const user = call.request;
-    const loginResponse = await User.findOne({
-      where: { Username: user.Username, Password: user.Password },
-    });
-    callback(null, loginResponse);
+    try {
+      const loginResponse = await User.findOne({
+        where: { Username: user.Username, Password: user.Password },
+      });
+      if (loginResponse) {
+        callback(null, loginResponse.dataValues);
+      } else {
+        callback({
+          code: grpc.status.NOT_FOUND,
+          details: "User not found or invalid credentials",
+        });
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      callback({
+        code: grpc.status.INTERNAL,
+        details: "Internal server error",
+      });
+    }
   },
 });
 

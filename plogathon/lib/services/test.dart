@@ -78,6 +78,9 @@ void main() async {
     // final oneUser = await userService.findOneUser(1);
     // print('One user: \n$oneUser');  
 
+    final response = await userService.login('iShowMeat', 'Testest1');
+    print('Response: $response');  
+
     /*****************/
     /* ACTIVITY CRUD */
     /*****************/

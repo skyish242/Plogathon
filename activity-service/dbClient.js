@@ -1,11 +1,11 @@
 import { Sequelize, DataTypes } from "sequelize";
 
 export const sequelize = new Sequelize(
-  process.env.DATABASE,
-  process.env.USER,
-  process.env.PASSWORD,
+  process.env.database,
+  process.env.user,
+  process.env.password,
   {
-    host: process.env.HOST,
+    host: process.env.host,
     port: 3306,
     dialect: "mysql",
   }

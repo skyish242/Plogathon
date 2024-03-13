@@ -3,19 +3,19 @@ import 'package:plogathon/services/grpc/protobuf/empty.pb.dart';
 import 'grpc/user/user.pbgrpc.dart';
 
 class UserService {
-    final ClientChannel channel;
-    final UserServiceClient client;
-    
-    UserService(): channel = ClientChannel(
-          '127.0.0.1',
-          port: 5002,
-          options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
-        ),
-        client = UserServiceClient(ClientChannel(
-          '127.0.0.1',
-          port: 5002,
-          options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
-        ));
+  final ClientChannel channel;
+  final UserServiceClient client;
+  
+  UserService(): channel = ClientChannel(
+        '127.0.0.1',
+        port: 5002,
+        options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
+      ),
+      client = UserServiceClient(ClientChannel(
+        '127.0.0.1',
+        port: 5002,
+        options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
+      ));
 
   // Create User
   Future<ProtoUser> createUser(User request) async {
@@ -46,19 +46,10 @@ class UserService {
     }
   }
   
-  // Update user
+  // Update user by ID
   Future<ProtoUser> updateUser(UpdateOneUser payload) {
     try {
-      UpdateOneUser request = UpdateOneUser()
-        ..userID = payload.userID
-        ..username = payload.username
-        ..firstName = payload.firstName
-        ..lastName = payload.lastName
-        ..email = payload.email
-        ..stravaEmail = payload.stravaEmail
-        ..password = payload.password;
-
-      return client.updateUser(request);
+      return client.updateUser(payload);
     } catch (e) {
       throw const GrpcError.internal('Failed to update user');
     }

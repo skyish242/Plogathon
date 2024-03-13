@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Flexible(
               child: ListView(
-                padding: EdgeInsets.only(bottom: 20.0),
+                padding: const EdgeInsets.only(bottom: 20.0),
                 children: _cards,
               ),
             )

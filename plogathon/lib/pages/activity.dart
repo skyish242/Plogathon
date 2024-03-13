@@ -153,8 +153,8 @@ class _ActivityPageState extends State<ActivityPage> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   actionsAlignment: MainAxisAlignment.center,
-                                  contentPadding:
-                                      EdgeInsets.only(top: 30.0, bottom: 24.0),
+                                  contentPadding: const EdgeInsets.only(
+                                      top: 30.0, bottom: 24.0),
                                   backgroundColor: Colors.white,
                                   content: Text(
                                     "End the Session?",

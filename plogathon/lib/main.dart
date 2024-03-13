@@ -69,6 +69,8 @@ class MainApp extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFF747474)),
+            labelSmall: GoogleFonts.poppins(
+                fontSize: 8, fontWeight: FontWeight.w400, color: Colors.white),
           )),
       home: const OnboardingPage(),
     );

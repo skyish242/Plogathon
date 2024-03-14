@@ -6,6 +6,8 @@ import 'package:pedometer/pedometer.dart';
 import 'package:plogathon/pages/camera.dart';
 import 'package:plogathon/pages/end.dart';
 import 'package:plogathon/widgets/end_session_dialog.dart';
+import 'package:plogathon/widgets/non_recylable_dialog.dart';
+import 'package:plogathon/widgets/recylable_dialog.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -37,15 +39,17 @@ class _ActivityPageState extends State<ActivityPage> {
   int? _initialSteps;
 
   int _wasteCount = 0;
-  double _distance = 0;
+  double _distanceLeft = 0;
+  double _distanceTravelled = 0;
   int _time = 0;
+  int _latestSteps = 0;
   String _displayedSteps = "0";
 
   @override
   void initState() {
     super.initState();
 
-    _distance = widget.distance;
+    _distanceLeft = widget.distance;
     double longitude = widget.destLongitude;
     double latitude = widget.destLatitude;
     String name = widget.destName;
@@ -60,26 +64,49 @@ class _ActivityPageState extends State<ActivityPage> {
     final firstCamera = cameras.first;
 
     if (context.mounted) {
-      final uploadResult = await Navigator.of(context).push(
+      final result = await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => CameraPage(camera: firstCamera),
         ),
       );
 
-      if (uploadResult) {
-        setState(() {
-          _wasteCount++;
-        });
+      if (context.mounted) {
+        if (result['recylable']) {
+          bool reroute = await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return RecylableDialog(instruction: result['instruction']);
+            },
+          );
+          setState(() {
+            _wasteCount++;
+          });
+
+          if (reroute) {
+            // Find nearest bin
+            // Add waypoint and update polyline
+            // Update distance left
+            // Thanks jr
+          }
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const NonRecylableDialog();
+            },
+          );
+        }
       }
     }
   }
 
+  // Step counter functions
   void onStepCount(StepCount event) {
     _initialSteps ??= event.steps;
 
-    int updatedSteps = event.steps - _initialSteps!;
+    _latestSteps = event.steps - _initialSteps!;
     setState(() {
-      _displayedSteps = updatedSteps.toString();
+      _displayedSteps = _latestSteps.toString();
     });
   }
 
@@ -115,10 +142,37 @@ class _ActivityPageState extends State<ActivityPage> {
     if (!mounted) return;
   }
 
+  void showEndPrompt() async {
+    bool endSession = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const EndSessionDialog();
+      },
+    );
+
+    if (endSession) {
+      // Save in database
+      if (mounted) {
+        await Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EndPage(
+              distance: _distanceTravelled,
+              time: _time,
+              wasteCount: _wasteCount,
+              stepCount: _latestSteps,
+            ),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      }
+    }
+  }
+
   @override
   void dispose() async {
     super.dispose();
-    await _stopWatchTimer.dispose(); // Need to call dispose function.
+    await _stopWatchTimer.dispose();
   }
 
   @override
@@ -188,7 +242,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                           semanticsLabel: 'Distance',
                                         ),
                                       ),
-                                      Text("$_distance km left",
+                                      Text("$_distanceLeft km left",
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelMedium)
@@ -274,12 +328,7 @@ class _ActivityPageState extends State<ActivityPage> {
                         SizedBox(
                           width: 150,
                           child: ElevatedButton(
-                            onPressed: () => showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const EndSessionDialog();
-                              },
-                            ),
+                            onPressed: () => showEndPrompt(),
                             style: ElevatedButton.styleFrom(
                               elevation: 5,
                               backgroundColor:

@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 
-class EndSessionDialog extends StatelessWidget {
-  const EndSessionDialog({super.key});
+class RecylableDialog extends StatelessWidget {
+  final String instruction;
+  const RecylableDialog({super.key, required this.instruction});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       actionsAlignment: MainAxisAlignment.center,
-      contentPadding: const EdgeInsets.only(top: 30.0, bottom: 24.0),
+      title: Text("Good job! Item is recylable!",
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w600)),
+      contentPadding:
+          const EdgeInsets.only(top: 30.0, bottom: 24.0, left: 24, right: 24),
       backgroundColor: Colors.white,
       content: Text(
-        "End the Session?",
+        instruction,
         style: Theme.of(context).textTheme.labelLarge,
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.start,
       ),
       actions: [
         SizedBox(
@@ -23,10 +30,11 @@ class EndSessionDialog extends StatelessWidget {
               elevation: 5,
             ),
             onPressed: () {
-              Navigator.pop(context, false);
+              Navigator.pop(context, true);
             },
-            child:
-                Text("Resume", style: Theme.of(context).textTheme.labelLarge),
+            child: Text("Nearest Bin",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.labelLarge),
           ),
         ),
         SizedBox(
@@ -37,9 +45,9 @@ class EndSessionDialog extends StatelessWidget {
               elevation: 5,
             ),
             onPressed: () {
-              Navigator.pop(context, true);
+              Navigator.pop(context, false);
             },
-            child: Text("End",
+            child: Text("Resume",
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge

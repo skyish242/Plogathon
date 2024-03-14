@@ -49,9 +49,13 @@ class LocationCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset(
-                    "assets/navigation.svg",
-                    semanticsLabel: 'Navigation',
+                  SizedBox(
+                    width: 18,
+                    height: 13,
+                    child: SvgPicture.asset(
+                      "assets/navigation.svg",
+                      semanticsLabel: 'Distance',
+                    ),
                   ),
                   Text(
                     '$distance km away',
@@ -61,9 +65,11 @@ class LocationCard extends StatelessWidget {
               ),
               Row(
                 children: [
-                  SvgPicture.asset(
-                    "assets/time.svg",
-                    semanticsLabel: 'Time',
+                  SizedBox(
+                    width: 18,
+                    height: 13,
+                    child: SvgPicture.asset("assets/time.svg",
+                        semanticsLabel: 'Time'),
                   ),
                   Text(
                     timeText,

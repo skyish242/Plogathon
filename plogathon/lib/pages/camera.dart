@@ -79,15 +79,16 @@ class CameraPageState extends State<CameraPage> {
                   future: _initializeControllerFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      return Container(
+                      return SizedBox(
                           width: size.width,
                           height: size.height,
                           child: FittedBox(
                             fit: BoxFit.cover,
-                            child: Container(
-                                width: 100, child: CameraPreview(_controller)),
+                            child: SizedBox(
+                              width: 100,
+                              child: CameraPreview(_controller),
+                            ),
                           ));
-                      // return CameraPreview(_controller);
                     } else {
                       return const Center(child: CircularProgressIndicator());
                     }
@@ -154,20 +155,6 @@ class CameraPageState extends State<CameraPage> {
   }
 }
 
-class _MediaSizeClipper extends CustomClipper<Rect> {
-  final Size mediaSize;
-  const _MediaSizeClipper(this.mediaSize);
-  @override
-  Rect getClip(Size size) {
-    return Rect.fromLTWH(0, 0, mediaSize.width, mediaSize.height);
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) {
-    return true;
-  }
-}
-
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
 
@@ -213,7 +200,8 @@ class DisplayPictureScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                    padding: EdgeInsets.only(bottom: 64, left: 64, right: 64),
+                    padding:
+                        const EdgeInsets.only(bottom: 64, left: 64, right: 64),
                     child: SizedBox(
                       width: double.infinity,
                       height: 50.0,
@@ -222,10 +210,14 @@ class DisplayPictureScreen extends StatelessWidget {
                           File imageFile = File(imagePath);
                           fileToBase64(imageFile).then((base64Str) {
                             // PETERRRR
+                            const uploadResult = true;
+                            Navigator.pop(context);
+                            Navigator.pop(context, uploadResult);
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                            elevation: 5, backgroundColor: Color(0xFFBFECC6)),
+                            elevation: 5,
+                            backgroundColor: const Color(0xFFBFECC6)),
                         child: Text(
                           "Upload",
                           style: Theme.of(context).textTheme.bodyMedium,

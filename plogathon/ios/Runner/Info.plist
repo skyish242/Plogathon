@@ -34,6 +34,12 @@
 	<string>Send nudes</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>What The Hell Oh My God No Way</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Stalking you from behind</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

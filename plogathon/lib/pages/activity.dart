@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pedometer/pedometer.dart';
 import 'package:plogathon/pages/camera.dart';
 import 'package:plogathon/pages/end.dart';
 import 'package:plogathon/widgets/end_session_dialog.dart';
@@ -28,11 +29,17 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
+  final StopWatchTimer _stopWatchTimer = StopWatchTimer();
+  final DateTime startDateTime = DateTime.now();
+
+  late Stream<StepCount> _stepCountStream;
+  late Stream<PedestrianStatus> _pedestrianStatusStream;
+  int? _initialSteps;
+
   int _wasteCount = 0;
   double _distance = 0;
   int _time = 0;
-
-  final StopWatchTimer _stopWatchTimer = StopWatchTimer();
+  String _displayedSteps = "0";
 
   @override
   void initState() {
@@ -43,6 +50,7 @@ class _ActivityPageState extends State<ActivityPage> {
     double latitude = widget.destLatitude;
     String name = widget.destName;
     _stopWatchTimer.onStartTimer();
+    initPlatformState();
   }
 
   Future<void> openCamera(BuildContext context) async {
@@ -52,12 +60,59 @@ class _ActivityPageState extends State<ActivityPage> {
     final firstCamera = cameras.first;
 
     if (context.mounted) {
-      Navigator.of(context).push(
+      final uploadResult = await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => CameraPage(camera: firstCamera),
         ),
       );
+
+      if (uploadResult) {
+        setState(() {
+          _wasteCount++;
+        });
+      }
     }
+  }
+
+  void onStepCount(StepCount event) {
+    _initialSteps ??= event.steps;
+
+    int updatedSteps = event.steps - _initialSteps!;
+    setState(() {
+      _displayedSteps = updatedSteps.toString();
+    });
+  }
+
+  void onPedestrianStatusChanged(PedestrianStatus event) {
+    setState(() {
+      if (event.status == "stopped") {
+        _displayedSteps = 'Stopped';
+      }
+    });
+  }
+
+  void onPedestrianStatusError(error) {
+    setState(() {
+      _displayedSteps = 'Status not available';
+    });
+  }
+
+  void onStepCountError(error) {
+    setState(() {
+      _displayedSteps = 'Step Count not available';
+    });
+  }
+
+  void initPlatformState() {
+    _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
+    _pedestrianStatusStream
+        .listen(onPedestrianStatusChanged)
+        .onError(onPedestrianStatusError);
+
+    _stepCountStream = Pedometer.stepCountStream;
+    _stepCountStream.listen(onStepCount).onError(onStepCountError);
+
+    if (!mounted) return;
   }
 
   @override
@@ -125,8 +180,14 @@ class _ActivityPageState extends State<ActivityPage> {
                                           )),
                                   Row(
                                     children: [
-                                      SvgPicture.asset("assets/navigation.svg",
-                                          semanticsLabel: 'Distance'),
+                                      SizedBox(
+                                        width: 18,
+                                        height: 13,
+                                        child: SvgPicture.asset(
+                                          "assets/navigation.svg",
+                                          semanticsLabel: 'Distance',
+                                        ),
+                                      ),
                                       Text("$_distance km left",
                                           style: Theme.of(context)
                                               .textTheme
@@ -135,8 +196,13 @@ class _ActivityPageState extends State<ActivityPage> {
                                   ),
                                   Row(
                                     children: [
-                                      SvgPicture.asset("assets/time.svg",
-                                          semanticsLabel: 'Time'),
+                                      SizedBox(
+                                        width: 18,
+                                        height: 13,
+                                        child: SvgPicture.asset(
+                                            "assets/time.svg",
+                                            semanticsLabel: 'Time'),
+                                      ),
                                       StreamBuilder<int>(
                                         stream: _stopWatchTimer.rawTime,
                                         initialData: 0,
@@ -151,7 +217,23 @@ class _ActivityPageState extends State<ActivityPage> {
                                         },
                                       )
                                     ],
-                                  )
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 18,
+                                        height: 13,
+                                        child: SvgPicture.asset(
+                                          "assets/run.svg",
+                                          semanticsLabel: 'Steps',
+                                        ),
+                                      ),
+                                      Text(_displayedSteps,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium)
+                                    ],
+                                  ),
                                 ],
                               ),
                               Column(

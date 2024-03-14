@@ -173,7 +173,7 @@ class _EndPageState extends State<EndPage> {
                     onPressed: () => Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomePage()),
+                            builder: (context) => const HomePage(userID: 9)),
                         (Route<dynamic> route) => false),
                     style: ElevatedButton.styleFrom(
                       elevation: 5,

@@ -5,13 +5,16 @@ class EntryCard extends StatelessWidget {
   /// Entry should include:
   /// * Name
   /// * Time
-  /// * eco-effort
+  /// * eco-effort (waste count)
   /// * mileage
   /// * duration
 
   final Entry? entry;
   final Color? cardColor;
-  const EntryCard({super.key, this.entry, this.cardColor});
+  final String? name;
+  final int? wasteCount;
+  final double? distance;
+  const EntryCard({super.key, this.entry, this.name, this.wasteCount, this.distance, this.cardColor});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class EntryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Dinie Aziz", style: Theme.of(context).textTheme.bodySmall),
+            Text(name?? '', style: Theme.of(context).textTheme.bodySmall),
             Text("12 minutes ago",
                 style: Theme.of(context).textTheme.labelMedium),
             Container(
@@ -39,7 +42,7 @@ class EntryCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text("+10",
+                          child: Text("+" + wasteCount.toString(),
                               style: Theme.of(context).textTheme.titleMedium),
                         )
                       ],
@@ -57,7 +60,7 @@ class EntryCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text("2.5km",
+                          child: Text(distance.toString() + "km",
                               style: Theme.of(context).textTheme.titleMedium),
                         )
                       ],

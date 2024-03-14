@@ -45,7 +45,7 @@ void main() async {
     wasteCount: 2,
   );
 
-    final updateActivity = UpdateOneActivity(
+  final updateActivity = UpdateOneActivity(
     activityID: 4,
     userID: 1,
     name: 'Sprinting',
@@ -78,8 +78,8 @@ void main() async {
     // final oneUser = await userService.findOneUser(1);
     // print('One user: \n$oneUser');  
 
-    final response = await userService.login('iShowMeat', 'Testest1');
-    print('Response: $response');  
+    // final response = await userService.login('iShowMeat', 'Testest1');
+    // print('Response: $response');  
 
     /*****************/
     /* ACTIVITY CRUD */

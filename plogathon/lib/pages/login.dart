@@ -13,8 +13,25 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _userService = UserService();
 
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _usernameController = TextEditingController(text: "ishowmeat");
+  final _passwordController = TextEditingController(text: "testest1");
+
+  Future<void> _handleLogin() async {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    try {
+      int userID = await _userService.login(username, password);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(userID: userID)),
+      );
+    } catch (e) {
+      // Handle login failure
+      print('Login failed: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -178,21 +195,5 @@ class _LoginPageState extends State<LoginPage> {
             ],
           )
         ]));
-  }
-  Future<void> _handleLogin() async {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
-
-    try {
-      int userID = await _userService.login(username, password);
-      
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    } catch (e) {
-      // Handle login failure
-      print('Login failed: $e');
-    }
   }
 }

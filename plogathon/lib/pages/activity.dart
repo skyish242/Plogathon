@@ -5,19 +5,22 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:plogathon/pages/camera.dart';
 import 'package:plogathon/pages/end.dart';
 import 'package:plogathon/widgets/end_session_dialog.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class ActivityPage extends StatefulWidget {
   final double destLongitude;
   final double destLatitude;
   final String destName;
   final double destTime;
+  final double distance;
 
   const ActivityPage({
     Key key = const Key('defaultKey'),
     required this.destLongitude,
     required this.destLatitude,
     required this.destName,
-    required this.destTime
+    required this.destTime,
+    required this.distance,
   }) : super(key: key);
 
   @override
@@ -25,14 +28,21 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
+  int _wasteCount = 0;
+  double _distance = 0;
+  int _time = 0;
+
+  final StopWatchTimer _stopWatchTimer = StopWatchTimer();
+
   @override
   void initState() {
     super.initState();
 
+    _distance = widget.distance;
     double longitude = widget.destLongitude;
     double latitude = widget.destLatitude;
     String name = widget.destName;
-    double time = widget.destTime;
+    _stopWatchTimer.onStartTimer();
   }
 
   Future<void> openCamera(BuildContext context) async {
@@ -48,6 +58,12 @@ class _ActivityPageState extends State<ActivityPage> {
         ),
       );
     }
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+    await _stopWatchTimer.dispose(); // Need to call dispose function.
   }
 
   @override
@@ -110,8 +126,8 @@ class _ActivityPageState extends State<ActivityPage> {
                                   Row(
                                     children: [
                                       SvgPicture.asset("assets/navigation.svg",
-                                          semanticsLabel: 'Navigation'),
-                                      Text("2.2km left",
+                                          semanticsLabel: 'Distance'),
+                                      Text("$_distance km left",
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelMedium)
@@ -120,11 +136,20 @@ class _ActivityPageState extends State<ActivityPage> {
                                   Row(
                                     children: [
                                       SvgPicture.asset("assets/time.svg",
-                                          semanticsLabel: 'Navigation'),
-                                      Text(" 1 min 32 sec",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium),
+                                          semanticsLabel: 'Time'),
+                                      StreamBuilder<int>(
+                                        stream: _stopWatchTimer.rawTime,
+                                        initialData: 0,
+                                        builder: (context, snap) {
+                                          _time = snap.data ?? 0;
+                                          String displayTime =
+                                              "${StopWatchTimer.getDisplayTimeHours(_time)}:${StopWatchTimer.getDisplayTimeMinute(_time)}:${StopWatchTimer.getDisplayTimeSecond(_time)}";
+                                          return Text(displayTime,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium);
+                                        },
+                                      )
                                     ],
                                   )
                                 ],
@@ -138,7 +163,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                           ?.copyWith(
                                             color: const Color(0xFF747474),
                                           )),
-                                  Text("2",
+                                  Text(_wasteCount.toString(),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge)

@@ -86,6 +86,7 @@ class LocationCard extends StatelessWidget {
                   destLatitude: lat,
                   destName: name,
                   destTime: time,
+                  distance: distance,
                 ),
               ),
             ),

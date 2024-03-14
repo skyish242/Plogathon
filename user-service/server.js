@@ -6,6 +6,8 @@ import { User } from "./dbClient.js";
 // Define path to .proto file
 const PROTO_PATH = "proto/user.proto";
 
+const SERVER_IP = "192.168.50.48";
+
 // Load the .proto file
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -167,9 +169,9 @@ server.addService(userProto.user.UserService.service, {
 
 // Start server
 server.bindAsync(
-  "127.0.0.1:5002",
+  `${SERVER_IP}:5002`,
   grpc.ServerCredentials.createInsecure(),
   () => {
-    console.log("Server running at http://127.0.0.1:5002");
+    console.log(`Server running at http://${SERVER_IP}:5002`);
   }
 );

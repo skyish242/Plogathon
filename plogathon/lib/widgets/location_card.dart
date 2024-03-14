@@ -7,7 +7,7 @@ class LocationCard extends StatelessWidget {
   final double distance;
   final double long;
   final double lat;
-  final double time; 
+  final double time;
 
   const LocationCard(
       {super.key,
@@ -19,6 +19,20 @@ class LocationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String timeText;
+    if (time > 1) {
+      // More than one hour
+      int noOfHours = time.floor();
+      timeText = "$noOfHours hour${noOfHours > 1 ? "s" : ""}";
+      if (time - noOfHours > 0) {
+        timeText = "$timeText and ${((time - noOfHours) * 60).ceil()} min";
+      }
+    } else {
+      // Less than an hour
+      timeText = "${(time * 60).ceil()} min";
+    }
+
+    timeText += " required";
     return Card(
       color: Colors.white,
       child: Padding(
@@ -52,7 +66,7 @@ class LocationCard extends StatelessWidget {
                     semanticsLabel: 'Time',
                   ),
                   Text(
-                    '$time hours required',
+                    timeText,
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                 ],

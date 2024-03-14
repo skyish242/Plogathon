@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          // Login Button 
+                          // Login Button
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20.0),
                             child: SizedBox(
@@ -130,11 +130,6 @@ class _LoginPageState extends State<LoginPage> {
                               height: 50.0,
                               child: ElevatedButton(
                                 onPressed: _handleLogin,
-                                // onPressed: () => Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const HomePage())),
                                 style: ElevatedButton.styleFrom(
                                   elevation: 5,
                                   backgroundColor:
@@ -146,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          // Sign Up Button 
+                          // Sign Up Button
                           SizedBox(
                             width: double.infinity,
                             height: 50.0,
@@ -179,13 +174,14 @@ class _LoginPageState extends State<LoginPage> {
           )
         ]));
   }
+
   Future<void> _handleLogin() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
 
     try {
       int userID = await _userService.login(username, password);
-      
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),

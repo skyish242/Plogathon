@@ -14,7 +14,14 @@ class EntryCard extends StatelessWidget {
   final String? name;
   final int? wasteCount;
   final double? distance;
-  const EntryCard({super.key, this.entry, this.name, this.wasteCount, this.distance, this.cardColor});
+  final int? duration;
+  const EntryCard({super.key, this.entry, this.name, this.wasteCount, this.distance, this.duration, this.cardColor});
+
+  String formatDuration(int durationInSeconds) {
+    int hours = durationInSeconds ~/ 3600;
+    int minutes = (durationInSeconds ~/ 60) % 60;
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +85,7 @@ class EntryCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text("20:32",
+                          child: Text(formatDuration(duration?? 0),
                               style: Theme.of(context).textTheme.titleMedium),
                         )
                       ],

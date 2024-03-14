@@ -18,12 +18,11 @@ message Activity {
     string Type = 3;
     string Description = 4;
     string Datetime = 5;
-    string StartDatetime = 6;
-    string EndDatetime = 7;
-    string RouteMap = 8;
-    float Distance = 9;
-    int32 Steps = 10;
-    int32 WasteCount = 11;
+    string RouteMap = 6;
+    float Distance = 7;
+    int32 Steps = 8;
+    int32 WasteCount = 9;
+    int32 Duration = 10;
 }
 
 message ProtoActivity {
@@ -33,12 +32,11 @@ message ProtoActivity {
     string Type = 4;
     string Description = 5;
     string Datetime = 6;
-    string StartDatetime = 7;
-    string EndDatetime = 8;
-    string RouteMap = 9;
-    float Distance = 10;
-    int32 Steps = 11;
-    int32 WasteCount = 12;
+    string RouteMap = 7;
+    float Distance = 8;
+    int32 Steps = 9;
+    int32 WasteCount = 10;
+    int32 Duration = 11;
 }
 
 message Activities {
@@ -56,10 +54,9 @@ message UpdateOneActivity {
     optional string Type = 4;
     optional string Description = 5;
     optional string Datetime = 6;
-    optional string StartDatetime = 7;
-    optional string EndDatetime = 8;
-    optional string RouteMap = 9;
-    optional float Distance = 10;
-    optional int32 Steps = 11;
-    optional int32 WasteCount = 12;
+    optional string RouteMap = 7;
+    optional float Distance = 8;
+    optional int32 Steps = 9;
+    optional int32 WasteCount = 10;
+    optional int32 Duration = 11;
 }

@@ -20,12 +20,11 @@ class Activity extends $pb.GeneratedMessage {
     $core.String? type,
     $core.String? description,
     $core.String? datetime,
-    $core.String? startDatetime,
-    $core.String? endDatetime,
     $core.String? routeMap,
     $core.double? distance,
     $core.int? steps,
     $core.int? wasteCount,
+    $core.int? duration,
   }) {
     final $result = create();
     if (userID != null) {
@@ -43,12 +42,6 @@ class Activity extends $pb.GeneratedMessage {
     if (datetime != null) {
       $result.datetime = datetime;
     }
-    if (startDatetime != null) {
-      $result.startDatetime = startDatetime;
-    }
-    if (endDatetime != null) {
-      $result.endDatetime = endDatetime;
-    }
     if (routeMap != null) {
       $result.routeMap = routeMap;
     }
@@ -60,6 +53,9 @@ class Activity extends $pb.GeneratedMessage {
     }
     if (wasteCount != null) {
       $result.wasteCount = wasteCount;
+    }
+    if (duration != null) {
+      $result.duration = duration;
     }
     return $result;
   }
@@ -73,12 +69,11 @@ class Activity extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'Type', protoName: 'Type')
     ..aOS(4, _omitFieldNames ? '' : 'Description', protoName: 'Description')
     ..aOS(5, _omitFieldNames ? '' : 'Datetime', protoName: 'Datetime')
-    ..aOS(6, _omitFieldNames ? '' : 'StartDatetime', protoName: 'StartDatetime')
-    ..aOS(7, _omitFieldNames ? '' : 'EndDatetime', protoName: 'EndDatetime')
-    ..aOS(8, _omitFieldNames ? '' : 'RouteMap', protoName: 'RouteMap')
-    ..a<$core.double>(9, _omitFieldNames ? '' : 'Distance', $pb.PbFieldType.OF, protoName: 'Distance')
-    ..a<$core.int>(10, _omitFieldNames ? '' : 'Steps', $pb.PbFieldType.O3, protoName: 'Steps')
-    ..a<$core.int>(11, _omitFieldNames ? '' : 'WasteCount', $pb.PbFieldType.O3, protoName: 'WasteCount')
+    ..aOS(6, _omitFieldNames ? '' : 'RouteMap', protoName: 'RouteMap')
+    ..a<$core.double>(7, _omitFieldNames ? '' : 'Distance', $pb.PbFieldType.OF, protoName: 'Distance')
+    ..a<$core.int>(8, _omitFieldNames ? '' : 'Steps', $pb.PbFieldType.O3, protoName: 'Steps')
+    ..a<$core.int>(9, _omitFieldNames ? '' : 'WasteCount', $pb.PbFieldType.O3, protoName: 'WasteCount')
+    ..a<$core.int>(10, _omitFieldNames ? '' : 'Duration', $pb.PbFieldType.O3, protoName: 'Duration')
     ..hasRequiredFields = false
   ;
 
@@ -149,58 +144,49 @@ class Activity extends $pb.GeneratedMessage {
   void clearDatetime() => clearField(5);
 
   @$pb.TagNumber(6)
-  $core.String get startDatetime => $_getSZ(5);
+  $core.String get routeMap => $_getSZ(5);
   @$pb.TagNumber(6)
-  set startDatetime($core.String v) { $_setString(5, v); }
+  set routeMap($core.String v) { $_setString(5, v); }
   @$pb.TagNumber(6)
-  $core.bool hasStartDatetime() => $_has(5);
+  $core.bool hasRouteMap() => $_has(5);
   @$pb.TagNumber(6)
-  void clearStartDatetime() => clearField(6);
+  void clearRouteMap() => clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get endDatetime => $_getSZ(6);
+  $core.double get distance => $_getN(6);
   @$pb.TagNumber(7)
-  set endDatetime($core.String v) { $_setString(6, v); }
+  set distance($core.double v) { $_setFloat(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasEndDatetime() => $_has(6);
+  $core.bool hasDistance() => $_has(6);
   @$pb.TagNumber(7)
-  void clearEndDatetime() => clearField(7);
+  void clearDistance() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.String get routeMap => $_getSZ(7);
+  $core.int get steps => $_getIZ(7);
   @$pb.TagNumber(8)
-  set routeMap($core.String v) { $_setString(7, v); }
+  set steps($core.int v) { $_setSignedInt32(7, v); }
   @$pb.TagNumber(8)
-  $core.bool hasRouteMap() => $_has(7);
+  $core.bool hasSteps() => $_has(7);
   @$pb.TagNumber(8)
-  void clearRouteMap() => clearField(8);
+  void clearSteps() => clearField(8);
 
   @$pb.TagNumber(9)
-  $core.double get distance => $_getN(8);
+  $core.int get wasteCount => $_getIZ(8);
   @$pb.TagNumber(9)
-  set distance($core.double v) { $_setFloat(8, v); }
+  set wasteCount($core.int v) { $_setSignedInt32(8, v); }
   @$pb.TagNumber(9)
-  $core.bool hasDistance() => $_has(8);
+  $core.bool hasWasteCount() => $_has(8);
   @$pb.TagNumber(9)
-  void clearDistance() => clearField(9);
+  void clearWasteCount() => clearField(9);
 
   @$pb.TagNumber(10)
-  $core.int get steps => $_getIZ(9);
+  $core.int get duration => $_getIZ(9);
   @$pb.TagNumber(10)
-  set steps($core.int v) { $_setSignedInt32(9, v); }
+  set duration($core.int v) { $_setSignedInt32(9, v); }
   @$pb.TagNumber(10)
-  $core.bool hasSteps() => $_has(9);
+  $core.bool hasDuration() => $_has(9);
   @$pb.TagNumber(10)
-  void clearSteps() => clearField(10);
-
-  @$pb.TagNumber(11)
-  $core.int get wasteCount => $_getIZ(10);
-  @$pb.TagNumber(11)
-  set wasteCount($core.int v) { $_setSignedInt32(10, v); }
-  @$pb.TagNumber(11)
-  $core.bool hasWasteCount() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearWasteCount() => clearField(11);
+  void clearDuration() => clearField(10);
 }
 
 class ProtoActivity extends $pb.GeneratedMessage {
@@ -211,12 +197,11 @@ class ProtoActivity extends $pb.GeneratedMessage {
     $core.String? type,
     $core.String? description,
     $core.String? datetime,
-    $core.String? startDatetime,
-    $core.String? endDatetime,
     $core.String? routeMap,
     $core.double? distance,
     $core.int? steps,
     $core.int? wasteCount,
+    $core.int? duration,
   }) {
     final $result = create();
     if (activityID != null) {
@@ -237,12 +222,6 @@ class ProtoActivity extends $pb.GeneratedMessage {
     if (datetime != null) {
       $result.datetime = datetime;
     }
-    if (startDatetime != null) {
-      $result.startDatetime = startDatetime;
-    }
-    if (endDatetime != null) {
-      $result.endDatetime = endDatetime;
-    }
     if (routeMap != null) {
       $result.routeMap = routeMap;
     }
@@ -254,6 +233,9 @@ class ProtoActivity extends $pb.GeneratedMessage {
     }
     if (wasteCount != null) {
       $result.wasteCount = wasteCount;
+    }
+    if (duration != null) {
+      $result.duration = duration;
     }
     return $result;
   }
@@ -268,12 +250,11 @@ class ProtoActivity extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'Type', protoName: 'Type')
     ..aOS(5, _omitFieldNames ? '' : 'Description', protoName: 'Description')
     ..aOS(6, _omitFieldNames ? '' : 'Datetime', protoName: 'Datetime')
-    ..aOS(7, _omitFieldNames ? '' : 'StartDatetime', protoName: 'StartDatetime')
-    ..aOS(8, _omitFieldNames ? '' : 'EndDatetime', protoName: 'EndDatetime')
-    ..aOS(9, _omitFieldNames ? '' : 'RouteMap', protoName: 'RouteMap')
-    ..a<$core.double>(10, _omitFieldNames ? '' : 'Distance', $pb.PbFieldType.OF, protoName: 'Distance')
-    ..a<$core.int>(11, _omitFieldNames ? '' : 'Steps', $pb.PbFieldType.O3, protoName: 'Steps')
-    ..a<$core.int>(12, _omitFieldNames ? '' : 'WasteCount', $pb.PbFieldType.O3, protoName: 'WasteCount')
+    ..aOS(7, _omitFieldNames ? '' : 'RouteMap', protoName: 'RouteMap')
+    ..a<$core.double>(8, _omitFieldNames ? '' : 'Distance', $pb.PbFieldType.OF, protoName: 'Distance')
+    ..a<$core.int>(9, _omitFieldNames ? '' : 'Steps', $pb.PbFieldType.O3, protoName: 'Steps')
+    ..a<$core.int>(10, _omitFieldNames ? '' : 'WasteCount', $pb.PbFieldType.O3, protoName: 'WasteCount')
+    ..a<$core.int>(11, _omitFieldNames ? '' : 'Duration', $pb.PbFieldType.O3, protoName: 'Duration')
     ..hasRequiredFields = false
   ;
 
@@ -353,58 +334,49 @@ class ProtoActivity extends $pb.GeneratedMessage {
   void clearDatetime() => clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get startDatetime => $_getSZ(6);
+  $core.String get routeMap => $_getSZ(6);
   @$pb.TagNumber(7)
-  set startDatetime($core.String v) { $_setString(6, v); }
+  set routeMap($core.String v) { $_setString(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasStartDatetime() => $_has(6);
+  $core.bool hasRouteMap() => $_has(6);
   @$pb.TagNumber(7)
-  void clearStartDatetime() => clearField(7);
+  void clearRouteMap() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.String get endDatetime => $_getSZ(7);
+  $core.double get distance => $_getN(7);
   @$pb.TagNumber(8)
-  set endDatetime($core.String v) { $_setString(7, v); }
+  set distance($core.double v) { $_setFloat(7, v); }
   @$pb.TagNumber(8)
-  $core.bool hasEndDatetime() => $_has(7);
+  $core.bool hasDistance() => $_has(7);
   @$pb.TagNumber(8)
-  void clearEndDatetime() => clearField(8);
+  void clearDistance() => clearField(8);
 
   @$pb.TagNumber(9)
-  $core.String get routeMap => $_getSZ(8);
+  $core.int get steps => $_getIZ(8);
   @$pb.TagNumber(9)
-  set routeMap($core.String v) { $_setString(8, v); }
+  set steps($core.int v) { $_setSignedInt32(8, v); }
   @$pb.TagNumber(9)
-  $core.bool hasRouteMap() => $_has(8);
+  $core.bool hasSteps() => $_has(8);
   @$pb.TagNumber(9)
-  void clearRouteMap() => clearField(9);
+  void clearSteps() => clearField(9);
 
   @$pb.TagNumber(10)
-  $core.double get distance => $_getN(9);
+  $core.int get wasteCount => $_getIZ(9);
   @$pb.TagNumber(10)
-  set distance($core.double v) { $_setFloat(9, v); }
+  set wasteCount($core.int v) { $_setSignedInt32(9, v); }
   @$pb.TagNumber(10)
-  $core.bool hasDistance() => $_has(9);
+  $core.bool hasWasteCount() => $_has(9);
   @$pb.TagNumber(10)
-  void clearDistance() => clearField(10);
+  void clearWasteCount() => clearField(10);
 
   @$pb.TagNumber(11)
-  $core.int get steps => $_getIZ(10);
+  $core.int get duration => $_getIZ(10);
   @$pb.TagNumber(11)
-  set steps($core.int v) { $_setSignedInt32(10, v); }
+  set duration($core.int v) { $_setSignedInt32(10, v); }
   @$pb.TagNumber(11)
-  $core.bool hasSteps() => $_has(10);
+  $core.bool hasDuration() => $_has(10);
   @$pb.TagNumber(11)
-  void clearSteps() => clearField(11);
-
-  @$pb.TagNumber(12)
-  $core.int get wasteCount => $_getIZ(11);
-  @$pb.TagNumber(12)
-  set wasteCount($core.int v) { $_setSignedInt32(11, v); }
-  @$pb.TagNumber(12)
-  $core.bool hasWasteCount() => $_has(11);
-  @$pb.TagNumber(12)
-  void clearWasteCount() => clearField(12);
+  void clearDuration() => clearField(11);
 }
 
 class Activities extends $pb.GeneratedMessage {
@@ -509,12 +481,11 @@ class UpdateOneActivity extends $pb.GeneratedMessage {
     $core.String? type,
     $core.String? description,
     $core.String? datetime,
-    $core.String? startDatetime,
-    $core.String? endDatetime,
     $core.String? routeMap,
     $core.double? distance,
     $core.int? steps,
     $core.int? wasteCount,
+    $core.int? duration,
   }) {
     final $result = create();
     if (activityID != null) {
@@ -535,12 +506,6 @@ class UpdateOneActivity extends $pb.GeneratedMessage {
     if (datetime != null) {
       $result.datetime = datetime;
     }
-    if (startDatetime != null) {
-      $result.startDatetime = startDatetime;
-    }
-    if (endDatetime != null) {
-      $result.endDatetime = endDatetime;
-    }
     if (routeMap != null) {
       $result.routeMap = routeMap;
     }
@@ -552,6 +517,9 @@ class UpdateOneActivity extends $pb.GeneratedMessage {
     }
     if (wasteCount != null) {
       $result.wasteCount = wasteCount;
+    }
+    if (duration != null) {
+      $result.duration = duration;
     }
     return $result;
   }
@@ -566,12 +534,11 @@ class UpdateOneActivity extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'Type', protoName: 'Type')
     ..aOS(5, _omitFieldNames ? '' : 'Description', protoName: 'Description')
     ..aOS(6, _omitFieldNames ? '' : 'Datetime', protoName: 'Datetime')
-    ..aOS(7, _omitFieldNames ? '' : 'StartDatetime', protoName: 'StartDatetime')
-    ..aOS(8, _omitFieldNames ? '' : 'EndDatetime', protoName: 'EndDatetime')
-    ..aOS(9, _omitFieldNames ? '' : 'RouteMap', protoName: 'RouteMap')
-    ..a<$core.double>(10, _omitFieldNames ? '' : 'Distance', $pb.PbFieldType.OF, protoName: 'Distance')
-    ..a<$core.int>(11, _omitFieldNames ? '' : 'Steps', $pb.PbFieldType.O3, protoName: 'Steps')
-    ..a<$core.int>(12, _omitFieldNames ? '' : 'WasteCount', $pb.PbFieldType.O3, protoName: 'WasteCount')
+    ..aOS(7, _omitFieldNames ? '' : 'RouteMap', protoName: 'RouteMap')
+    ..a<$core.double>(8, _omitFieldNames ? '' : 'Distance', $pb.PbFieldType.OF, protoName: 'Distance')
+    ..a<$core.int>(9, _omitFieldNames ? '' : 'Steps', $pb.PbFieldType.O3, protoName: 'Steps')
+    ..a<$core.int>(10, _omitFieldNames ? '' : 'WasteCount', $pb.PbFieldType.O3, protoName: 'WasteCount')
+    ..a<$core.int>(11, _omitFieldNames ? '' : 'Duration', $pb.PbFieldType.O3, protoName: 'Duration')
     ..hasRequiredFields = false
   ;
 
@@ -651,58 +618,49 @@ class UpdateOneActivity extends $pb.GeneratedMessage {
   void clearDatetime() => clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get startDatetime => $_getSZ(6);
+  $core.String get routeMap => $_getSZ(6);
   @$pb.TagNumber(7)
-  set startDatetime($core.String v) { $_setString(6, v); }
+  set routeMap($core.String v) { $_setString(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasStartDatetime() => $_has(6);
+  $core.bool hasRouteMap() => $_has(6);
   @$pb.TagNumber(7)
-  void clearStartDatetime() => clearField(7);
+  void clearRouteMap() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.String get endDatetime => $_getSZ(7);
+  $core.double get distance => $_getN(7);
   @$pb.TagNumber(8)
-  set endDatetime($core.String v) { $_setString(7, v); }
+  set distance($core.double v) { $_setFloat(7, v); }
   @$pb.TagNumber(8)
-  $core.bool hasEndDatetime() => $_has(7);
+  $core.bool hasDistance() => $_has(7);
   @$pb.TagNumber(8)
-  void clearEndDatetime() => clearField(8);
+  void clearDistance() => clearField(8);
 
   @$pb.TagNumber(9)
-  $core.String get routeMap => $_getSZ(8);
+  $core.int get steps => $_getIZ(8);
   @$pb.TagNumber(9)
-  set routeMap($core.String v) { $_setString(8, v); }
+  set steps($core.int v) { $_setSignedInt32(8, v); }
   @$pb.TagNumber(9)
-  $core.bool hasRouteMap() => $_has(8);
+  $core.bool hasSteps() => $_has(8);
   @$pb.TagNumber(9)
-  void clearRouteMap() => clearField(9);
+  void clearSteps() => clearField(9);
 
   @$pb.TagNumber(10)
-  $core.double get distance => $_getN(9);
+  $core.int get wasteCount => $_getIZ(9);
   @$pb.TagNumber(10)
-  set distance($core.double v) { $_setFloat(9, v); }
+  set wasteCount($core.int v) { $_setSignedInt32(9, v); }
   @$pb.TagNumber(10)
-  $core.bool hasDistance() => $_has(9);
+  $core.bool hasWasteCount() => $_has(9);
   @$pb.TagNumber(10)
-  void clearDistance() => clearField(10);
+  void clearWasteCount() => clearField(10);
 
   @$pb.TagNumber(11)
-  $core.int get steps => $_getIZ(10);
+  $core.int get duration => $_getIZ(10);
   @$pb.TagNumber(11)
-  set steps($core.int v) { $_setSignedInt32(10, v); }
+  set duration($core.int v) { $_setSignedInt32(10, v); }
   @$pb.TagNumber(11)
-  $core.bool hasSteps() => $_has(10);
+  $core.bool hasDuration() => $_has(10);
   @$pb.TagNumber(11)
-  void clearSteps() => clearField(11);
-
-  @$pb.TagNumber(12)
-  $core.int get wasteCount => $_getIZ(11);
-  @$pb.TagNumber(12)
-  set wasteCount($core.int v) { $_setSignedInt32(11, v); }
-  @$pb.TagNumber(12)
-  $core.bool hasWasteCount() => $_has(11);
-  @$pb.TagNumber(12)
-  void clearWasteCount() => clearField(12);
+  void clearDuration() => clearField(11);
 }
 
 

@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   List<EntryCard> _cards = [];
   final userService = UserService();
   final activityService = ActivityService();
-  late String name;
+  String name = '';
 
   @override
   void initState() {
@@ -99,6 +99,7 @@ class _HomePageState extends State<HomePage> {
           name: tempUser.firstName + " " + tempUser.lastName,
           wasteCount: activity.wasteCount,
           distance: activity.distance,
+          duration: activity.duration,
           cardColor: Color(cardColors[colorIndex]),
         ),
       );
@@ -144,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                       ),
                       Text(
-                        "drake",
+                        name,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),

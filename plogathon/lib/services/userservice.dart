@@ -6,17 +6,17 @@ class UserService {
   final ClientChannel channel;
   final UserServiceClient client;
 
-  final String serverIP = "192.168.50.48";
+  final String serverIP = "127.0.0.1";
 
   UserService()
       : channel = ClientChannel(
-          '192.168.50.48',
+          '127.0.0.1',
           port: 5002,
           options:
               const ChannelOptions(credentials: ChannelCredentials.insecure()),
         ),
         client = UserServiceClient(ClientChannel(
-          '192.168.50.48',
+          '127.0.0.1',
           port: 5002,
           options:
               const ChannelOptions(credentials: ChannelCredentials.insecure()),

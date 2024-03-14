@@ -16,8 +16,8 @@ class _RegisterPageState extends State<RegisterPage> {
           Column(
             children: <Widget>[
               Padding(
-                padding:
-                    const EdgeInsets.only(left: 50.0, right: 50.0, top: 100),
+                padding: const EdgeInsets.only(
+                    left: 50.0, right: 50.0, top: 100, bottom: 40),
                 child: Text(
                   "PLOGATHON",
                   style: Theme.of(context).textTheme.displayLarge,
@@ -39,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 80.0),
+                            padding: const EdgeInsets.only(bottom: 38.0),
                             child: Text(
                               "Join The Team",
                               style: Theme.of(context).textTheme.bodyLarge,
@@ -160,10 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             width: double.infinity,
                             height: 50.0,
                             child: ElevatedButton(
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const LoginPage())),
+                              onPressed: () => Navigator.pop(context),
                               style: ElevatedButton.styleFrom(
                                   elevation: 5,
                                   backgroundColor:

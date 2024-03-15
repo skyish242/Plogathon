@@ -13,7 +13,7 @@ _oh ma gawd_
 
 ## System Architecture
 
-_no wayayay_
+
 
 ## Project Setup
 
@@ -25,8 +25,7 @@ _no wayayay_
 cd plogathon
 ```
 
-2. Download `onboarding.gif` into `plogathon/assets`
-3. Copy config file
+2. Copy config file
 
 ```
 cp env/config-example.json env/config.json
@@ -43,6 +42,10 @@ flutter pub get
 
 ```
 flutter run --dart-define-from-file env/config.json
+```
+# To install as an apk
+```
+flutter run --dart-define-from-file env/config.json --release
 ```
 
 ### Activity Service (runs on port 5001)

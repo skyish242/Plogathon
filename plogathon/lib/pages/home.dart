@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:plogathon/db/db.dart';
 import 'package:plogathon/model/entry.dart';
 import 'package:plogathon/pages/nearby.dart';
@@ -28,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting();
     _fetchUser();
     DB.init().then((value) => _fetchEntries());
   }
@@ -71,9 +74,17 @@ class _HomePageState extends State<HomePage> {
         _name = "${user.firstName} ${user.lastName}";
       });
     } catch (e) {
-      // Handle login failure
       print('Fetching user failed: $e');
     }
+  }
+
+  int _calculateTimeDifference(String savedDateTimeString) {
+    DateFormat format = DateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z", 'en');
+    DateTime savedDateTime = format.parse(savedDateTimeString);
+    Duration difference = DateTime.now().difference(savedDateTime);
+    int differenceInMinutes = difference.inMinutes;
+
+    return differenceInMinutes;
   }
 
   void _fetchEntries() async {
@@ -84,7 +95,7 @@ class _HomePageState extends State<HomePage> {
       Activities fetchedActivities = await activityService.findAllActivities();
       List<ProtoActivity> activities = fetchedActivities.activities;
 
-      for (int i = 0; i < activities.length; i++) {
+      for (int i = activities.length - 1; i >= 0; i--) {
         ProtoActivity activity = activities[i];
         ProtoUser tempUser = await userService.findOneUser(activity.userID);
 
@@ -92,6 +103,7 @@ class _HomePageState extends State<HomePage> {
           name: tempUser.firstName + " " + tempUser.lastName,
           wasteCount: activity.wasteCount,
           distance: activity.distance,
+          time: _calculateTimeDifference(activity.datetime),
         );
 
         int colorIndex = i % cardColors.length;
@@ -103,6 +115,7 @@ class _HomePageState extends State<HomePage> {
             wasteCount: activity.wasteCount,
             distance: activity.distance,
             duration: activity.duration,
+            time: _calculateTimeDifference(activity.datetime),
             cardColor: Color(cardColors[colorIndex]),
           ),
         );
@@ -111,7 +124,6 @@ class _HomePageState extends State<HomePage> {
       setState(() {});
     } catch (e) {
       print('Failed to fetch activities: $e');
-      // Handle error fetching activities
     }
   }
 

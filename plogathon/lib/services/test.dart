@@ -20,8 +20,7 @@ void main() async {
     password: 'Testest1',
   );
 
-  final updateUser = UpdateOneUser
-  (
+  final updateUser = UpdateOneUser(
     userID: 9,
     username: 'iShowMeat',
     firstName: 'Darren',
@@ -32,16 +31,16 @@ void main() async {
   );
 
   final newActivity = Activity(
-    userID: 1,
-    name: 'Jogging',
+    userID: 25,
+    name: 'Marathon',
     type: 'Outdoor',
-    description: 'Morning jog',
+    description: 'Run or get runned over',
     datetime: dateTimeToString(DateTime.now()),
     routeMap: 'encoded_polyline_data',
-    distance: 5.0,
-    steps: 10000,
-    wasteCount: 2,
-    duration: 1800,
+    distance: 42.0,
+    steps: 100000,
+    wasteCount: 50,
+    duration: 14400,
   );
 
   final updateActivity = UpdateOneActivity(

@@ -14,6 +14,29 @@ _oh ma gawd_
 ## System Architecture
 
 
+## Project Info
+
+## Ports and IP Addresses
+
+### Recycling Classification Service 
+- **Service Name:** plog-classify-service
+- **IP Address:** 34.73.225.113
+- **Port:** 5000
+
+### Activity Service 
+- **Service Name:** plog-activity-service
+- **IP Address:** 34.23.233.168
+- **Port:** 5001
+
+### User Service 
+- **Service Name:** plog-user-service
+- **IP Address:** 34.73.60.176
+- **Port:** 5002
+
+### Strava Service 
+- **Service Name:** plog-strava-service
+- **IP Address:** 35.237.20.97
+- **Port:** 5003
 
 ## Project Setup
 
@@ -43,10 +66,14 @@ flutter pub get
 ```
 flutter run --dart-define-from-file env/config.json
 ```
-# To install as an apk
+
+_To install as an APK._
 ```
 flutter run --dart-define-from-file env/config.json --release
 ```
+
+# Archive
+_This section contains archived content._
 
 ### Activity Service (runs on port 5001)
 

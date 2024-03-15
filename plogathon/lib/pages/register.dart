@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:plogathon/pages/login.dart';
 import 'package:plogathon/services/userservice.dart';
 import 'package:plogathon/services/grpc/user/user.pb.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key = const Key('defaultKey')}) : super(key: key);

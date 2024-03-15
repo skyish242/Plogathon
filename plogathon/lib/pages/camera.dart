@@ -211,8 +211,15 @@ class DisplayPictureScreen extends StatelessWidget {
                           fileToBase64(imageFile).then((base64Str) {
                             // PETERRRR
                             const uploadResult = true;
+                            const instruction =
+                                "Before recycling a Tetra Pak, ensure that it is empty, rinse it out, and flatten it to save space in the recycling bin.";
+
                             Navigator.pop(context);
-                            Navigator.pop(context, uploadResult);
+
+                            Navigator.pop(context, {
+                              'recylable': uploadResult,
+                              'instruction': instruction
+                            });
                           });
                         },
                         style: ElevatedButton.styleFrom(

@@ -6,8 +6,6 @@ class UserService {
   final ClientChannel channel;
   final UserServiceClient client;
 
-  final String serverIP = "127.0.0.1";
-
   UserService()
       : channel = ClientChannel(
           '127.0.0.1',

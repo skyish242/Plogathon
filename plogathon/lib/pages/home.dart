@@ -11,7 +11,8 @@ import 'package:plogathon/services/userservice.dart';
 class HomePage extends StatefulWidget {
   final int userID;
 
-  const HomePage({Key key = const Key('defaultKey'), required this.userID}) : super(key: key);
+  const HomePage({Key key = const Key('defaultKey'), required this.userID})
+      : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   List<EntryCard> _cards = [];
   final userService = UserService();
   final activityService = ActivityService();
-  String name = '';
+  String _name = '';
 
   @override
   void initState() {
@@ -64,53 +65,55 @@ class _HomePageState extends State<HomePage> {
 
   void _fetchUser() async {
     try {
-        ProtoUser user = await userService.findOneUser(widget.userID);
+      ProtoUser user = await userService.findOneUser(widget.userID);
 
-        name = user.firstName + " " + user.lastName;
+      setState(() {
+        _name = "${user.firstName} ${user.lastName}";
+      });
     } catch (e) {
       // Handle login failure
       print('Fetching user failed: $e');
     }
   }
-  
+
   void _fetchEntries() async {
-  _cards = [];
-  List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
+    _cards = [];
+    List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
 
-  try {
-    Activities fetchedActivities = await activityService.findAllActivities();
-    List<ProtoActivity> activities = fetchedActivities.activities;
+    try {
+      Activities fetchedActivities = await activityService.findAllActivities();
+      List<ProtoActivity> activities = fetchedActivities.activities;
 
-    for (int i = 0; i < activities.length; i++) {
-      ProtoActivity activity = activities[i];
-      ProtoUser tempUser = await userService.findOneUser(activity.userID);
+      for (int i = 0; i < activities.length; i++) {
+        ProtoActivity activity = activities[i];
+        ProtoUser tempUser = await userService.findOneUser(activity.userID);
 
-      Entry entry = Entry(
-        name: tempUser.firstName + " " + tempUser.lastName,
-        wasteCount: activity.wasteCount,
-        distance: activity.distance,
-      );
-
-      int colorIndex = i % cardColors.length;
-
-      _cards.add(
-        EntryCard(
-          entry: entry,
+        Entry entry = Entry(
           name: tempUser.firstName + " " + tempUser.lastName,
           wasteCount: activity.wasteCount,
           distance: activity.distance,
-          duration: activity.duration,
-          cardColor: Color(cardColors[colorIndex]),
-        ),
-      );
-    }
+        );
 
-    setState(() {});
-  } catch (e) {
-    print('Failed to fetch activities: $e');
-    // Handle error fetching activities
+        int colorIndex = i % cardColors.length;
+
+        _cards.add(
+          EntryCard(
+            entry: entry,
+            name: tempUser.firstName + " " + tempUser.lastName,
+            wasteCount: activity.wasteCount,
+            distance: activity.distance,
+            duration: activity.duration,
+            cardColor: Color(cardColors[colorIndex]),
+          ),
+        );
+      }
+
+      setState(() {});
+    } catch (e) {
+      print('Failed to fetch activities: $e');
+      // Handle error fetching activities
+    }
   }
-}
 
   void _addEntries(Entry en) async {
     DB.insert(Entry.table, en);
@@ -145,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                       ),
                       Text(
-                        name,
+                        _name,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),

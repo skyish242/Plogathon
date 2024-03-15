@@ -6,7 +6,7 @@ import { User } from "./dbClient.js";
 // Define path to .proto file
 const PROTO_PATH = "proto/user.proto";
 
-const SERVER_IP = "127.0.0.1";
+const SERVER_IP = "0.0.0.0";
 
 // Load the .proto file
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {

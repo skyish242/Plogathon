@@ -6,6 +6,8 @@ import { Activity } from "./dbClient.js";
 // Define path to .proto file
 const PROTO_PATH = "proto/activity.proto";
 
+const SERVER_IP = "0.0.0.0";
+
 // Load the .proto file
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -197,9 +199,9 @@ server.addService(activityProto.activity.ActivityService.service, {
 
 // Start server
 server.bindAsync(
-  "127.0.0.1:5001",
+  `${SERVER_IP}:5001`,
   grpc.ServerCredentials.createInsecure(),
   () => {
-    console.log("Server running at http://127.0.0.1:5001");
+    console.log(`Server running at http://${SERVER_IP}:5001`);
   }
 );

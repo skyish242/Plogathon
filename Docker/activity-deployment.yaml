@@ -29,6 +29,8 @@ kind: Service
 metadata:
   name: plog-activity-service
 spec:
+  # Only can work in google cloud
+  type: LoadBalancer
   selector:
     app: plog-activity
   ports:

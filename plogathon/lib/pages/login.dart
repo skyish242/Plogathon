@@ -19,19 +19,23 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _handleLogin() async {
     try {
-      int userID = await _userService.login(
-          _usernameController.text, _passwordController.text);
+      if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+            throw ('Please fill in all fields');
+      } else {
+        int userID = await _userService.login(
+            _usernameController.text, _passwordController.text);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(userID: userID)),
-      );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(userID: userID)),
+        );
+      }
     } catch (e) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Login Failed', style: TextStyle(color: Colors.white)),
-          content: const Text('Failed to login. Please try again.', style: TextStyle(color: Colors.white)),
+          content: Text(e.toString(), style: const TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -100,12 +104,12 @@ class _LoginPageState extends State<LoginPage> {
                             height: 64,
                             child: TextFormField(
                               controller: _usernameController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your username';
-                                }
-                                return null;
-                              },
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please enter your username';
+                              //   }
+                              //   return null;
+                              // },
                               cursorColor:
                                   Theme.of(context).colorScheme.onPrimary,
                               style: Theme.of(context).textTheme.bodyMedium,
@@ -126,13 +130,13 @@ class _LoginPageState extends State<LoginPage> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                    color: Colors.red,
-                                    width: 0,
-                                  ),
-                                ),
+                                // errorBorder: OutlineInputBorder(
+                                //   borderRadius: BorderRadius.circular(12),
+                                //   borderSide: const BorderSide(
+                                //     color: Colors.red,
+                                //     width: 0,
+                                //   ),
+                                // ),
                               ),
                             ),
                           ),
@@ -144,12 +148,12 @@ class _LoginPageState extends State<LoginPage> {
                               height: 64,
                               child: TextFormField(
                                 controller: _passwordController,
-                                validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your password';
-                                }
-                                  return null;
-                                },
+                                // validator: (value) {
+                                // if (value == null || value.isEmpty) {
+                                //   return 'Please enter your password';
+                                // }
+                                //   return null;
+                                // },
                                 cursorColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 style: Theme.of(context).textTheme.bodyMedium,
@@ -171,13 +175,13 @@ class _LoginPageState extends State<LoginPage> {
                                       style: BorderStyle.none,
                                     ),
                                   ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: Colors.red,
-                                      width: 0,
-                                    ),
-                                  ),
+                                  // errorBorder: OutlineInputBorder(
+                                  //   borderRadius: BorderRadius.circular(12),
+                                  //   borderSide: const BorderSide(
+                                  //     color: Colors.red,
+                                  //     width: 0,
+                                  //   ),
+                                  // ),
                                 ),
                               ),
                             ),

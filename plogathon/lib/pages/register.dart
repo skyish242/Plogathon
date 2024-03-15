@@ -11,19 +11,31 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _userService = UserService();
-
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool _isValidEmail(String email) {
+    final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
+
   Future<void> _handleRegister() async {
     try {
-      if (_usernameController.text.isEmpty ||
+      if (_firstnameController.text.isEmpty ||
+          _lastnameController.text.isEmpty ||
+          _usernameController.text.isEmpty ||
           _emailController.text.isEmpty ||
           _passwordController.text.isEmpty) {
         throw ('Please fill in all fields');
+      } else if (!_isValidEmail(_emailController.text)) {
+        throw ('Please enter a valid email address');
       } else {
         User request = User()
+          ..firstName = _firstnameController.text
+          ..lastName = _lastnameController.text
           ..username = _usernameController.text
           ..email = _emailController.text
           ..password = _passwordController.text;
@@ -34,7 +46,6 @@ class _RegisterPageState extends State<RegisterPage> {
           context,
           MaterialPageRoute(builder: (context) => const LoginPage()),
         );
-
       }
     } catch (e) {
       showDialog(
@@ -86,12 +97,77 @@ class _RegisterPageState extends State<RegisterPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 38.0),
+                            padding: const EdgeInsets.only(bottom: 30.0),
                             child: Text(
                               "Join The Team",
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
+                          // First name
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 64,
+                              child: TextField(
+                                controller: _firstnameController,
+                                cursorColor:
+                                    Theme.of(context).colorScheme.onPrimary,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                decoration: InputDecoration(
+                                  hintStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: const Color(0xFFB3B3B3),
+                                      ),
+                                  fillColor: const Color(0xFFEEEEEE),
+                                  filled: true,
+                                  hintText: 'First name',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(
+                                      width: 0,
+                                      style: BorderStyle.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Last name
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 64,
+                              child: TextField(
+                                controller: _lastnameController,
+                                cursorColor:
+                                    Theme.of(context).colorScheme.onPrimary,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                decoration: InputDecoration(
+                                  hintStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: const Color(0xFFB3B3B3),
+                                      ),
+                                  fillColor: const Color(0xFFEEEEEE),
+                                  filled: true,
+                                  hintText: 'Last name',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(
+                                      width: 0,
+                                      style: BorderStyle.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Username
                           SizedBox(
                             width: double.infinity,
                             height: 64,
@@ -119,9 +195,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                           ),
+                          // Email
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                            padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
                             child: SizedBox(
                               width: double.infinity,
                               height: 64,
@@ -151,8 +227,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                           ),
+                          // Password
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 36.0),
+                            padding: const EdgeInsets.only(bottom: 20.0),
                             child: SizedBox(
                               width: double.infinity,
                               height: 64,

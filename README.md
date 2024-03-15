@@ -13,8 +13,7 @@ _oh ma gawd_
 
 ## System Architecture
 
-
-## Project Info
+![image](https://github.com/ptrpfa/CSC2102-PSD2/assets/49118372/391c82aa-7c34-4211-9ff1-ea08b9b9eadc)
 
 ## Ports and IP Addresses
 

@@ -2,15 +2,19 @@ class Entry {
   static String table = "entries";
 
   int? id ;
+  String? name;
+  int? wasteCount;
   String? date;
   String? duration;
   double? speed;
   double? distance;
 
-  Entry({this.id, this.date, this.duration, this.speed, this.distance});
+  Entry({this.id, this.name, this.wasteCount, this.date, this.duration, this.speed, this.distance});
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
+      'name': name,
+      'wasteCount': wasteCount,
       'date': date,
       'duration': duration,
       'speed': speed,
@@ -25,6 +29,8 @@ class Entry {
   static Entry fromMap(Map<String, dynamic> map) {
     return Entry(
         id: map['id'],
+        name: map['name'],
+        wasteCount: map['wasteCount'],
         date: map['date'],
         duration: map['duration'],
         speed: map['speed'],

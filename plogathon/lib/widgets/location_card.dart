@@ -7,7 +7,7 @@ class LocationCard extends StatelessWidget {
   final double distance;
   final double long;
   final double lat;
-  final double time; 
+  final double time;
 
   const LocationCard(
       {super.key,
@@ -19,6 +19,20 @@ class LocationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String timeText;
+    if (time > 1) {
+      // More than one hour
+      int noOfHours = time.floor();
+      timeText = "$noOfHours hour${noOfHours > 1 ? "s" : ""}";
+      if (time - noOfHours > 0) {
+        timeText = "$timeText and ${((time - noOfHours) * 60).ceil()} min";
+      }
+    } else {
+      // Less than an hour
+      timeText = "${(time * 60).ceil()} min";
+    }
+
+    timeText += " required";
     return Card(
       color: Colors.white,
       child: Padding(
@@ -35,9 +49,13 @@ class LocationCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset(
-                    "assets/navigation.svg",
-                    semanticsLabel: 'Navigation',
+                  SizedBox(
+                    width: 18,
+                    height: 13,
+                    child: SvgPicture.asset(
+                      "assets/navigation.svg",
+                      semanticsLabel: 'Distance',
+                    ),
                   ),
                   Text(
                     '$distance km away',
@@ -47,12 +65,14 @@ class LocationCard extends StatelessWidget {
               ),
               Row(
                 children: [
-                  SvgPicture.asset(
-                    "assets/time.svg",
-                    semanticsLabel: 'Time',
+                  SizedBox(
+                    width: 18,
+                    height: 13,
+                    child: SvgPicture.asset("assets/time.svg",
+                        semanticsLabel: 'Time'),
                   ),
                   Text(
-                    '$time hours required',
+                    timeText,
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                 ],
@@ -72,6 +92,7 @@ class LocationCard extends StatelessWidget {
                   destLatitude: lat,
                   destName: name,
                   destTime: time,
+                  distance: distance,
                 ),
               ),
             ),

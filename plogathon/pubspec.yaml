@@ -47,6 +47,7 @@ dependencies:
   protobuf: ^3.1.0
   camera: ^0.10.5+9
   path: ^1.9.0
+  pedometer: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,7 @@ flutter:
     - assets/right-arrow.svg
     - assets/time.svg
     - assets/camera.svg
+    - assets/run.svg
     - assets/CashForTrashGEOJSON.geojson
 
   # An image asset can refer to one or more resolution-specific "variants", see

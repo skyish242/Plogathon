@@ -2,13 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:plogathon/pages/home.dart';
 
 class EndPage extends StatefulWidget {
-  const EndPage({Key key = const Key('defaultKey')}) : super(key: key);
+  const EndPage({
+    Key key = const Key('defaultKey'),
+    required this.distance,
+    required this.time,
+    required this.wasteCount,
+    required this.stepCount,
+  }) : super(key: key);
 
+  final double distance;
+  final int time;
+  final int wasteCount;
+  final int stepCount;
   @override
   _EndPageState createState() => _EndPageState();
 }
 
 class _EndPageState extends State<EndPage> {
+  String convertDistance() {
+    // Assuming meters
+    if (widget.distance > 1000) {
+      String distance = (widget.distance / 1000).toStringAsFixed(2);
+      distance = distance.replaceAll(RegExp(r'([.]*0+)(?!.*\d)'), '');
+
+      return "${distance}km";
+    }
+
+    return "${widget.distance}m";
+  }
+
+  String convertTime() {
+    // Convert to seconds
+    int seconds = (widget.time / 1000).floor();
+    int minutes = 0;
+    if (seconds > 60) {
+      // Get minutes
+      minutes = (seconds / 60).floor();
+    }
+    seconds = seconds - minutes * 60;
+    return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -42,7 +76,7 @@ class _EndPageState extends State<EndPage> {
                         color: Colors.white,
                       ),
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 Card(
                   margin: EdgeInsets.zero,
                   color: Colors.white,
@@ -59,7 +93,7 @@ class _EndPageState extends State<EndPage> {
                                   style: Theme.of(context).textTheme.bodySmall),
                               Padding(
                                 padding: const EdgeInsets.only(top: 12),
-                                child: Text("+10",
+                                child: Text("+${widget.wasteCount}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium),
@@ -79,7 +113,7 @@ class _EndPageState extends State<EndPage> {
                                   style: Theme.of(context).textTheme.bodySmall),
                               Padding(
                                 padding: const EdgeInsets.only(top: 12),
-                                child: Text("2.5km",
+                                child: Text(convertDistance(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium),
@@ -99,7 +133,7 @@ class _EndPageState extends State<EndPage> {
                                   style: Theme.of(context).textTheme.bodySmall),
                               Padding(
                                 padding: const EdgeInsets.only(top: 12),
-                                child: Text("20:32",
+                                child: Text(convertTime(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium),
@@ -170,11 +204,14 @@ class _EndPageState extends State<EndPage> {
                   width: double.infinity,
                   height: 50.0,
                   child: ElevatedButton(
-                    onPressed: () => Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomePage()),
-                        (Route<dynamic> route) => false),
+                    onPressed: () {
+                      convertTime();
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage(userID: 9)),
+                          (Route<dynamic> route) => false);
+                    },
                     style: ElevatedButton.styleFrom(
                       elevation: 5,
                       backgroundColor: Theme.of(context).primaryColor,

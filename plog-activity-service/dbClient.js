@@ -38,14 +38,6 @@ export const Activity = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    StartDatetime: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    EndDatetime: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     RouteMap: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -59,6 +51,10 @@ export const Activity = sequelize.define(
       allowNull: false,
     },
     WasteCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    Duration: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

@@ -22,12 +22,11 @@ const Activity$json = {
     {'1': 'Type', '3': 3, '4': 1, '5': 9, '10': 'Type'},
     {'1': 'Description', '3': 4, '4': 1, '5': 9, '10': 'Description'},
     {'1': 'Datetime', '3': 5, '4': 1, '5': 9, '10': 'Datetime'},
-    {'1': 'StartDatetime', '3': 6, '4': 1, '5': 9, '10': 'StartDatetime'},
-    {'1': 'EndDatetime', '3': 7, '4': 1, '5': 9, '10': 'EndDatetime'},
-    {'1': 'RouteMap', '3': 8, '4': 1, '5': 9, '10': 'RouteMap'},
-    {'1': 'Distance', '3': 9, '4': 1, '5': 2, '10': 'Distance'},
-    {'1': 'Steps', '3': 10, '4': 1, '5': 5, '10': 'Steps'},
-    {'1': 'WasteCount', '3': 11, '4': 1, '5': 5, '10': 'WasteCount'},
+    {'1': 'RouteMap', '3': 6, '4': 1, '5': 9, '10': 'RouteMap'},
+    {'1': 'Distance', '3': 7, '4': 1, '5': 2, '10': 'Distance'},
+    {'1': 'Steps', '3': 8, '4': 1, '5': 5, '10': 'Steps'},
+    {'1': 'WasteCount', '3': 9, '4': 1, '5': 5, '10': 'WasteCount'},
+    {'1': 'Duration', '3': 10, '4': 1, '5': 5, '10': 'Duration'},
   ],
 };
 
@@ -35,10 +34,9 @@ const Activity$json = {
 final $typed_data.Uint8List activityDescriptor = $convert.base64Decode(
     'CghBY3Rpdml0eRIWCgZVc2VySUQYASABKAVSBlVzZXJJRBISCgROYW1lGAIgASgJUgROYW1lEh'
     'IKBFR5cGUYAyABKAlSBFR5cGUSIAoLRGVzY3JpcHRpb24YBCABKAlSC0Rlc2NyaXB0aW9uEhoK'
-    'CERhdGV0aW1lGAUgASgJUghEYXRldGltZRIkCg1TdGFydERhdGV0aW1lGAYgASgJUg1TdGFydE'
-    'RhdGV0aW1lEiAKC0VuZERhdGV0aW1lGAcgASgJUgtFbmREYXRldGltZRIaCghSb3V0ZU1hcBgI'
-    'IAEoCVIIUm91dGVNYXASGgoIRGlzdGFuY2UYCSABKAJSCERpc3RhbmNlEhQKBVN0ZXBzGAogAS'
-    'gFUgVTdGVwcxIeCgpXYXN0ZUNvdW50GAsgASgFUgpXYXN0ZUNvdW50');
+    'CERhdGV0aW1lGAUgASgJUghEYXRldGltZRIaCghSb3V0ZU1hcBgGIAEoCVIIUm91dGVNYXASGg'
+    'oIRGlzdGFuY2UYByABKAJSCERpc3RhbmNlEhQKBVN0ZXBzGAggASgFUgVTdGVwcxIeCgpXYXN0'
+    'ZUNvdW50GAkgASgFUgpXYXN0ZUNvdW50EhoKCER1cmF0aW9uGAogASgFUghEdXJhdGlvbg==');
 
 @$core.Deprecated('Use protoActivityDescriptor instead')
 const ProtoActivity$json = {
@@ -50,12 +48,11 @@ const ProtoActivity$json = {
     {'1': 'Type', '3': 4, '4': 1, '5': 9, '10': 'Type'},
     {'1': 'Description', '3': 5, '4': 1, '5': 9, '10': 'Description'},
     {'1': 'Datetime', '3': 6, '4': 1, '5': 9, '10': 'Datetime'},
-    {'1': 'StartDatetime', '3': 7, '4': 1, '5': 9, '10': 'StartDatetime'},
-    {'1': 'EndDatetime', '3': 8, '4': 1, '5': 9, '10': 'EndDatetime'},
-    {'1': 'RouteMap', '3': 9, '4': 1, '5': 9, '10': 'RouteMap'},
-    {'1': 'Distance', '3': 10, '4': 1, '5': 2, '10': 'Distance'},
-    {'1': 'Steps', '3': 11, '4': 1, '5': 5, '10': 'Steps'},
-    {'1': 'WasteCount', '3': 12, '4': 1, '5': 5, '10': 'WasteCount'},
+    {'1': 'RouteMap', '3': 7, '4': 1, '5': 9, '10': 'RouteMap'},
+    {'1': 'Distance', '3': 8, '4': 1, '5': 2, '10': 'Distance'},
+    {'1': 'Steps', '3': 9, '4': 1, '5': 5, '10': 'Steps'},
+    {'1': 'WasteCount', '3': 10, '4': 1, '5': 5, '10': 'WasteCount'},
+    {'1': 'Duration', '3': 11, '4': 1, '5': 5, '10': 'Duration'},
   ],
 };
 
@@ -64,10 +61,9 @@ final $typed_data.Uint8List protoActivityDescriptor = $convert.base64Decode(
     'Cg1Qcm90b0FjdGl2aXR5Eh4KCkFjdGl2aXR5SUQYASABKAVSCkFjdGl2aXR5SUQSFgoGVXNlck'
     'lEGAIgASgFUgZVc2VySUQSEgoETmFtZRgDIAEoCVIETmFtZRISCgRUeXBlGAQgASgJUgRUeXBl'
     'EiAKC0Rlc2NyaXB0aW9uGAUgASgJUgtEZXNjcmlwdGlvbhIaCghEYXRldGltZRgGIAEoCVIIRG'
-    'F0ZXRpbWUSJAoNU3RhcnREYXRldGltZRgHIAEoCVINU3RhcnREYXRldGltZRIgCgtFbmREYXRl'
-    'dGltZRgIIAEoCVILRW5kRGF0ZXRpbWUSGgoIUm91dGVNYXAYCSABKAlSCFJvdXRlTWFwEhoKCE'
-    'Rpc3RhbmNlGAogASgCUghEaXN0YW5jZRIUCgVTdGVwcxgLIAEoBVIFU3RlcHMSHgoKV2FzdGVD'
-    'b3VudBgMIAEoBVIKV2FzdGVDb3VudA==');
+    'F0ZXRpbWUSGgoIUm91dGVNYXAYByABKAlSCFJvdXRlTWFwEhoKCERpc3RhbmNlGAggASgCUghE'
+    'aXN0YW5jZRIUCgVTdGVwcxgJIAEoBVIFU3RlcHMSHgoKV2FzdGVDb3VudBgKIAEoBVIKV2FzdG'
+    'VDb3VudBIaCghEdXJhdGlvbhgLIAEoBVIIRHVyYXRpb24=');
 
 @$core.Deprecated('Use activitiesDescriptor instead')
 const Activities$json = {
@@ -104,24 +100,22 @@ const UpdateOneActivity$json = {
     {'1': 'Type', '3': 4, '4': 1, '5': 9, '9': 1, '10': 'Type', '17': true},
     {'1': 'Description', '3': 5, '4': 1, '5': 9, '9': 2, '10': 'Description', '17': true},
     {'1': 'Datetime', '3': 6, '4': 1, '5': 9, '9': 3, '10': 'Datetime', '17': true},
-    {'1': 'StartDatetime', '3': 7, '4': 1, '5': 9, '9': 4, '10': 'StartDatetime', '17': true},
-    {'1': 'EndDatetime', '3': 8, '4': 1, '5': 9, '9': 5, '10': 'EndDatetime', '17': true},
-    {'1': 'RouteMap', '3': 9, '4': 1, '5': 9, '9': 6, '10': 'RouteMap', '17': true},
-    {'1': 'Distance', '3': 10, '4': 1, '5': 2, '9': 7, '10': 'Distance', '17': true},
-    {'1': 'Steps', '3': 11, '4': 1, '5': 5, '9': 8, '10': 'Steps', '17': true},
-    {'1': 'WasteCount', '3': 12, '4': 1, '5': 5, '9': 9, '10': 'WasteCount', '17': true},
+    {'1': 'RouteMap', '3': 7, '4': 1, '5': 9, '9': 4, '10': 'RouteMap', '17': true},
+    {'1': 'Distance', '3': 8, '4': 1, '5': 2, '9': 5, '10': 'Distance', '17': true},
+    {'1': 'Steps', '3': 9, '4': 1, '5': 5, '9': 6, '10': 'Steps', '17': true},
+    {'1': 'WasteCount', '3': 10, '4': 1, '5': 5, '9': 7, '10': 'WasteCount', '17': true},
+    {'1': 'Duration', '3': 11, '4': 1, '5': 5, '9': 8, '10': 'Duration', '17': true},
   ],
   '8': [
     {'1': '_Name'},
     {'1': '_Type'},
     {'1': '_Description'},
     {'1': '_Datetime'},
-    {'1': '_StartDatetime'},
-    {'1': '_EndDatetime'},
     {'1': '_RouteMap'},
     {'1': '_Distance'},
     {'1': '_Steps'},
     {'1': '_WasteCount'},
+    {'1': '_Duration'},
   ],
 };
 
@@ -130,11 +124,10 @@ final $typed_data.Uint8List updateOneActivityDescriptor = $convert.base64Decode(
     'ChFVcGRhdGVPbmVBY3Rpdml0eRIeCgpBY3Rpdml0eUlEGAEgASgFUgpBY3Rpdml0eUlEEhYKBl'
     'VzZXJJRBgCIAEoBVIGVXNlcklEEhcKBE5hbWUYAyABKAlIAFIETmFtZYgBARIXCgRUeXBlGAQg'
     'ASgJSAFSBFR5cGWIAQESJQoLRGVzY3JpcHRpb24YBSABKAlIAlILRGVzY3JpcHRpb26IAQESHw'
-    'oIRGF0ZXRpbWUYBiABKAlIA1IIRGF0ZXRpbWWIAQESKQoNU3RhcnREYXRldGltZRgHIAEoCUgE'
-    'Ug1TdGFydERhdGV0aW1liAEBEiUKC0VuZERhdGV0aW1lGAggASgJSAVSC0VuZERhdGV0aW1liA'
-    'EBEh8KCFJvdXRlTWFwGAkgASgJSAZSCFJvdXRlTWFwiAEBEh8KCERpc3RhbmNlGAogASgCSAdS'
-    'CERpc3RhbmNliAEBEhkKBVN0ZXBzGAsgASgFSAhSBVN0ZXBziAEBEiMKCldhc3RlQ291bnQYDC'
-    'ABKAVICVIKV2FzdGVDb3VudIgBAUIHCgVfTmFtZUIHCgVfVHlwZUIOCgxfRGVzY3JpcHRpb25C'
-    'CwoJX0RhdGV0aW1lQhAKDl9TdGFydERhdGV0aW1lQg4KDF9FbmREYXRldGltZUILCglfUm91dG'
-    'VNYXBCCwoJX0Rpc3RhbmNlQggKBl9TdGVwc0INCgtfV2FzdGVDb3VudA==');
+    'oIRGF0ZXRpbWUYBiABKAlIA1IIRGF0ZXRpbWWIAQESHwoIUm91dGVNYXAYByABKAlIBFIIUm91'
+    'dGVNYXCIAQESHwoIRGlzdGFuY2UYCCABKAJIBVIIRGlzdGFuY2WIAQESGQoFU3RlcHMYCSABKA'
+    'VIBlIFU3RlcHOIAQESIwoKV2FzdGVDb3VudBgKIAEoBUgHUgpXYXN0ZUNvdW50iAEBEh8KCER1'
+    'cmF0aW9uGAsgASgFSAhSCER1cmF0aW9uiAEBQgcKBV9OYW1lQgcKBV9UeXBlQg4KDF9EZXNjcm'
+    'lwdGlvbkILCglfRGF0ZXRpbWVCCwoJX1JvdXRlTWFwQgsKCV9EaXN0YW5jZUIICgZfU3RlcHNC'
+    'DQoLX1dhc3RlQ291bnRCCwoJX0R1cmF0aW9u');
 

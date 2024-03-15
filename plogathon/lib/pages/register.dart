@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plogathon/pages/login.dart';
+import 'package:plogathon/services/userservice.dart';
+import 'package:plogathon/services/grpc/user/user.pb.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key = const Key('defaultKey')}) : super(key: key);
@@ -8,6 +10,51 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _userService = UserService();
+
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<void> _handleRegister() async {
+    try {
+      if (_usernameController.text.isEmpty ||
+          _emailController.text.isEmpty ||
+          _passwordController.text.isEmpty) {
+        throw ('Please fill in all fields');
+      } else {
+        User request = User()
+          ..username = _usernameController.text
+          ..email = _emailController.text
+          ..password = _passwordController.text;
+
+        ProtoUser createdUser = await _userService.createUser(request);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Registration Failed', style: TextStyle(color: Colors.white)),
+          content: Text(e.toString(), style: const TextStyle(color: Colors.white)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -16,8 +63,8 @@ class _RegisterPageState extends State<RegisterPage> {
           Column(
             children: <Widget>[
               Padding(
-                padding:
-                    const EdgeInsets.only(left: 50.0, right: 50.0, top: 100),
+                padding: const EdgeInsets.only(
+                    left: 50.0, right: 50.0, top: 100, bottom: 40),
                 child: Text(
                   "PLOGATHON",
                   style: Theme.of(context).textTheme.displayLarge,
@@ -39,7 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 80.0),
+                            padding: const EdgeInsets.only(bottom: 38.0),
                             child: Text(
                               "Join The Team",
                               style: Theme.of(context).textTheme.bodyLarge,
@@ -49,8 +96,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             width: double.infinity,
                             height: 64,
                             child: TextField(
-                              cursorColor:
-                                  Theme.of(context).colorScheme.onPrimary,
+                              controller: _usernameController,
+                              cursorColor: Theme.of(context).colorScheme.onPrimary,
                               style: Theme.of(context).textTheme.bodyMedium,
                               decoration: InputDecoration(
                                 hintStyle: Theme.of(context)
@@ -61,7 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                 fillColor: const Color(0xFFEEEEEE),
                                 filled: true,
-                                hintText: 'Name',
+                                hintText: 'Username',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: const BorderSide(
@@ -79,6 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               width: double.infinity,
                               height: 64,
                               child: TextField(
+                                controller: _emailController,
                                 cursorColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 style: Theme.of(context).textTheme.bodyMedium,
@@ -109,6 +157,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               width: double.infinity,
                               height: 64,
                               child: TextField(
+                                controller: _passwordController,
                                 cursorColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 style: Theme.of(context).textTheme.bodyMedium,
@@ -140,11 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               width: double.infinity,
                               height: 50.0,
                               child: ElevatedButton(
-                                onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginPage())),
+                                onPressed: _handleRegister,
                                 style: ElevatedButton.styleFrom(
                                   elevation: 5,
                                   backgroundColor:
@@ -160,10 +205,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             width: double.infinity,
                             height: 50.0,
                             child: ElevatedButton(
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const LoginPage())),
+                              onPressed: () => Navigator.pop(context),
                               style: ElevatedButton.styleFrom(
                                   elevation: 5,
                                   backgroundColor:

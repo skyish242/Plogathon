@@ -3,9 +3,16 @@ import 'package:plogathon/db/db.dart';
 import 'package:plogathon/model/entry.dart';
 import 'package:plogathon/pages/nearby.dart';
 import 'package:plogathon/widgets/entry_card.dart';
+import 'package:plogathon/services/grpc/activity/activity.pb.dart';
+import 'package:plogathon/services/grpc/user/user.pb.dart';
+import 'package:plogathon/services/activityservice.dart';
+import 'package:plogathon/services/userservice.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key = const Key('defaultKey')}) : super(key: key);
+  final int userID;
+
+  const HomePage({Key key = const Key('defaultKey'), required this.userID})
+      : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -14,13 +21,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Entry>? _data;
   List<EntryCard> _cards = [];
+  final userService = UserService();
+  final activityService = ActivityService();
+  String _name = '';
 
   @override
   void initState() {
     super.initState();
+    _fetchUser();
     DB.init().then((value) => _fetchEntries());
   }
 
+  /*
   void _fetchEntries() async {
     _cards = [];
     List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
@@ -43,10 +55,64 @@ class _HomePageState extends State<HomePage> {
           cardColor: Color(cardColors[index % 3]),
         ),
       );
+
       index++;
     });
 
     setState(() {});
+  }
+  */
+
+  void _fetchUser() async {
+    try {
+      ProtoUser user = await userService.findOneUser(widget.userID);
+
+      setState(() {
+        _name = "${user.firstName} ${user.lastName}";
+      });
+    } catch (e) {
+      // Handle login failure
+      print('Fetching user failed: $e');
+    }
+  }
+
+  void _fetchEntries() async {
+    _cards = [];
+    List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
+
+    try {
+      Activities fetchedActivities = await activityService.findAllActivities();
+      List<ProtoActivity> activities = fetchedActivities.activities;
+
+      for (int i = 0; i < activities.length; i++) {
+        ProtoActivity activity = activities[i];
+        ProtoUser tempUser = await userService.findOneUser(activity.userID);
+
+        Entry entry = Entry(
+          name: tempUser.firstName + " " + tempUser.lastName,
+          wasteCount: activity.wasteCount,
+          distance: activity.distance,
+        );
+
+        int colorIndex = i % cardColors.length;
+
+        _cards.add(
+          EntryCard(
+            entry: entry,
+            name: tempUser.firstName + " " + tempUser.lastName,
+            wasteCount: activity.wasteCount,
+            distance: activity.distance,
+            duration: activity.duration,
+            cardColor: Color(cardColors[colorIndex]),
+          ),
+        );
+      }
+
+      setState(() {});
+    } catch (e) {
+      print('Failed to fetch activities: $e');
+      // Handle error fetching activities
+    }
   }
 
   void _addEntries(Entry en) async {
@@ -82,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                       ),
                       Text(
-                        "drake",
+                        _name,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),

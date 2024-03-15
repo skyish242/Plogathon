@@ -6,6 +6,8 @@ import { User } from "./dbClient.js";
 // Define path to .proto file
 const PROTO_PATH = "proto/user.proto";
 
+const SERVER_IP = "127.0.0.1";
+
 // Load the .proto file
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -24,47 +26,55 @@ const server = new grpc.Server();
 server.addService(userProto.user.UserService.service, {
   // Create User
   CreateUser: async (call, callback) => {
-    let newUser = call.request;
+    try {
+      let newUser = call.request;
 
-    /**
-     * Response Format
-     * User {
-        dataValues: {
-            UserID: 1,
-            Username: 'TestUsername',
-            FirstName: 'TestFirstName',
-            LastName: 'TestLastName',
-            Email: 'TestEmail',
-            StravaEmail: 'TestStravaEmail',
-            Password: 'TestPassword'
-        },
-        _previousDataValues: {
-            UserID: 1,
-            Username: 'TestUsername',
-            FirstName: 'TestFirstName',
-            LastName: 'TestLastName',
-            Email: 'TestEmail',
-            StravaEmail: 'TestStravaEmail',
-            Password: 'TestPassword'
-        },
-        uniqno: 1,
-        _changed: Set(0) {},
-        _options: {
-            isNewRecord: true,
-            _schema: null,
-            _schemaDelimiter: '',
-            attributes: undefined,
-            include: undefined,
-            raw: undefined,
-            silent: undefined
-        },
-        isNewRecord: false,
-        null: 1
-        }
-     */
-    const createResponse = await User.create(newUser);
+      /**
+       * Response Format
+       * User {
+          dataValues: {
+              UserID: 1,
+              Username: 'TestUsername',
+              FirstName: 'TestFirstName',
+              LastName: 'TestLastName',
+              Email: 'TestEmail',
+              StravaEmail: 'TestStravaEmail',
+              Password: 'TestPassword'
+          },
+          _previousDataValues: {
+              UserID: 1,
+              Username: 'TestUsername',
+              FirstName: 'TestFirstName',
+              LastName: 'TestLastName',
+              Email: 'TestEmail',
+              StravaEmail: 'TestStravaEmail',
+              Password: 'TestPassword'
+          },
+          uniqno: 1,
+          _changed: Set(0) {},
+          _options: {
+              isNewRecord: true,
+              _schema: null,
+              _schemaDelimiter: '',
+              attributes: undefined,
+              include: undefined,
+              raw: undefined,
+              silent: undefined
+          },
+          isNewRecord: false,
+          null: 1
+          }
+      */
+      const createResponse = await User.create(newUser);
 
-    callback(null, createResponse.dataValues);
+      callback(null, createResponse.dataValues);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      callback({
+        code: grpc.status.INTERNAL,
+        details: "Internal server error",
+      });
+    }
   },
   // Find all users
   FindAllUsers: async (call, callback) => {
@@ -105,6 +115,7 @@ server.addService(userProto.user.UserService.service, {
   UpdateUser: async (call, callback) => {
     try {
       const user = call.request;
+
       // Remove empty keys
       Object.keys(user).forEach((key) => {
         if (user[key] === "") {
@@ -167,9 +178,9 @@ server.addService(userProto.user.UserService.service, {
 
 // Start server
 server.bindAsync(
-  "127.0.0.1:5002",
+  `${SERVER_IP}:5002`,
   grpc.ServerCredentials.createInsecure(),
   () => {
-    console.log("Server running at http://127.0.0.1:5002");
+    console.log(`Server running at http://${SERVER_IP}:5002`);
   }
 );

@@ -44,10 +44,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   width: double.infinity,
                   height: 50.0,
                   child: ElevatedButton(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage())),
+                    onPressed: () => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    ),
                     style: ElevatedButton.styleFrom(
                       elevation: 5,
                       backgroundColor: Theme.of(context)

@@ -1,20 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/pages/register.dart';
 import 'package:plogathon/services/userservice.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key key = const Key('defaultKey')}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final _userService = UserService();
+  final _formKey = GlobalKey<FormState>();
 
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _usernameController = TextEditingController(text: "ishowmeat");
+  final _passwordController = TextEditingController(text: "testest1");
+
+  Future<void> _handleLogin() async {
+    try {
+      int userID = await _userService.login(
+          _usernameController.text, _passwordController.text);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(userID: userID)),
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Failed', style: TextStyle(color: Colors.white)),
+          content: const Text('Failed to login. Please try again.', style: TextStyle(color: Colors.white)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -27,8 +56,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Theme.of(context).colorScheme.background,
-        child: Stack(fit: StackFit.expand, children: <Widget>[
+      color: Theme.of(context).colorScheme.background,
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
           Column(
             children: <Widget>[
               Padding(
@@ -41,16 +72,19 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Expanded(
                 child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(36),
-                      ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(36),
                     ),
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 70),
+                  ),
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 70),
+                    child: Form(
+                      key: _formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -64,8 +98,14 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             width: double.infinity,
                             height: 64,
-                            child: TextField(
+                            child: TextFormField(
                               controller: _usernameController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your username';
+                                }
+                                return null;
+                              },
                               cursorColor:
                                   Theme.of(context).colorScheme.onPrimary,
                               style: Theme.of(context).textTheme.bodyMedium,
@@ -86,6 +126,13 @@ class _LoginPageState extends State<LoginPage> {
                                     style: BorderStyle.none,
                                   ),
                                 ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                    width: 0,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -95,8 +142,14 @@ class _LoginPageState extends State<LoginPage> {
                             child: SizedBox(
                               width: double.infinity,
                               height: 64,
-                              child: TextField(
+                              child: TextFormField(
                                 controller: _passwordController,
+                                validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                }
+                                  return null;
+                                },
                                 cursorColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 style: Theme.of(context).textTheme.bodyMedium,
@@ -118,48 +171,56 @@ class _LoginPageState extends State<LoginPage> {
                                       style: BorderStyle.none,
                                     ),
                                   ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                      width: 0,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                          // Login Button 
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20.0),
                             child: SizedBox(
                               width: double.infinity,
                               height: 50.0,
                               child: ElevatedButton(
-                                onPressed: _handleLogin,
-                                // onPressed: () => Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const HomePage())),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _handleLogin();
+                                  }
+                                },
                                 style: ElevatedButton.styleFrom(
                                   elevation: 5,
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
                                 ),
-                                child: Text("Log in",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium),
+                                child: Text(
+                                  "Log in",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
                               ),
                             ),
                           ),
-                          // Sign Up Button 
+                          // Sign Up Button
                           SizedBox(
                             width: double.infinity,
                             height: 50.0,
                             child: ElevatedButton(
                               onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RegisterPage())),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const RegisterPage(),
+                                ),
+                              ),
                               style: ElevatedButton.styleFrom(
-                                  elevation: 5,
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.secondary),
+                                elevation: 5,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
+                              ),
                               child: Text(
                                 "Don't Have An Account?",
                                 style: Theme.of(context)
@@ -173,26 +234,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                    )),
-              )
+                    ),
+                  ),
+                ),
+              ),
             ],
           )
-        ]));
-  }
-  Future<void> _handleLogin() async {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
-
-    try {
-      int userID = await _userService.login(username, password);
-      
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    } catch (e) {
-      // Handle login failure
-      print('Login failed: $e');
-    }
+        ],
+      ),
+    );
   }
 }

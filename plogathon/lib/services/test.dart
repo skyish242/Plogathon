@@ -37,27 +37,25 @@ void main() async {
     type: 'Outdoor',
     description: 'Morning jog',
     datetime: dateTimeToString(DateTime.now()),
-    startDatetime: dateTimeToString(DateTime.now()),
-    endDatetime: dateTimeToString(DateTime.now().add(Duration(hours: 1))),
     routeMap: 'encoded_polyline_data',
     distance: 5.0,
     steps: 10000,
     wasteCount: 2,
+    duration: 1800,
   );
 
-    final updateActivity = UpdateOneActivity(
+  final updateActivity = UpdateOneActivity(
     activityID: 4,
     userID: 1,
     name: 'Sprinting',
     type: 'Outdoor',
     description: 'Morning run',
     datetime: dateTimeToString(DateTime.now()),
-    startDatetime: dateTimeToString(DateTime.now()),
-    endDatetime: dateTimeToString(DateTime.now().add(Duration(hours: 1))),
     routeMap: 'encoded_polyline_data',
     distance: 10.0,
     steps: 50000,
     wasteCount: 10,
+    duration: 3600,
   );
 
   try {
@@ -78,8 +76,8 @@ void main() async {
     // final oneUser = await userService.findOneUser(1);
     // print('One user: \n$oneUser');  
 
-    final response = await userService.login('iShowMeat', 'Testest1');
-    print('Response: $response');  
+    // final response = await userService.login('iShowMeat', 'Testest1');
+    // print('Response: $response');  
 
     /*****************/
     /* ACTIVITY CRUD */

@@ -15,8 +15,6 @@ import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dart:convert';
 
-
-
 class ActivityPage extends StatefulWidget {
   final double destLongitude;
   final double destLatitude;
@@ -55,8 +53,10 @@ class _ActivityPageState extends State<ActivityPage> {
   //Direction Service Variables:
   Location _locationController = Location();
   Map<PolylineId, Polyline> _polylines = {};
+  Map<MarkerId, Marker> _markers = {};
   Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
   LatLng? _currentPosition;
+  List<LatLng> _waypoints = [];
   static const API_KEY = String.fromEnvironment('MAPS_API_KEY', defaultValue: '');
 
 
@@ -130,9 +130,16 @@ class _ActivityPageState extends State<ActivityPage> {
                 closestBin['geometry']['coordinates'][0]
               );
               print('Nearest Bin Coords!!!: $nearestBinCoords');
+              setState(() {
+                _waypoints.add(nearestBinCoords);
+                _markers[MarkerId('nearestBin')] = Marker(
+                    markerId: MarkerId('nearestBin'),
+                    position: nearestBinCoords,
+                    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                  );
+              });
             }
-          // Add waypoint and update polyline
-          // Update distance left
+          // Update distance left (yet to implement)
           // Thanks jr
         }
         } else {
@@ -257,11 +264,16 @@ class _ActivityPageState extends State<ActivityPage> {
     if (currentPosition == null) return;
     List<LatLng> polylineCoordinates = [];
     PolylinePoints polylinePoints = PolylinePoints();
+     List<PolylineWayPoint> polylineWayPoints = _waypoints.map(
+      (latLng) => PolylineWayPoint(location: "${latLng.latitude},${latLng.longitude}")
+    ).toList();
+
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       API_KEY,
       PointLatLng(currentPosition.latitude, currentPosition.longitude),
       PointLatLng(widget.destLatitude, widget.destLongitude),
       travelMode: TravelMode.walking, 
+      wayPoints: polylineWayPoints
     );
 
     if (result.points.isNotEmpty) {
@@ -318,8 +330,9 @@ class _ActivityPageState extends State<ActivityPage> {
                 Marker(
                   markerId: MarkerId("_destinationLocation"),
                   icon: BitmapDescriptor.defaultMarker,
-                  position: LatLng(widget.destLatitude, widget.destLongitude) 
-                )
+                  position: LatLng(widget.destLatitude, widget.destLongitude),
+                ),
+                ..._markers.values,
               },
               polylines: Set<Polyline>.of(_polylines.values),
               onMapCreated: (GoogleMapController controller) {

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:plogathon/pages/activity.dart';
 
 class LocationCard extends StatelessWidget {
+  final int userID;
   final String name;
   final double distance;
   final double long;
@@ -11,6 +12,7 @@ class LocationCard extends StatelessWidget {
 
   const LocationCard(
       {super.key,
+      required this.userID,
       required this.name,
       required this.distance,
       required this.long,
@@ -87,6 +89,7 @@ class LocationCard extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => ActivityPage(
+                  userID: userID,
                   destLongitude: long,
                   destLatitude: lat,
                   destName: name,

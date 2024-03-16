@@ -8,6 +8,7 @@ import os, re, json, pickle
 PARENT_DATASET_FOLDER = './dataset'
 DATASET_FOLDER = f'{PARENT_DATASET_FOLDER}/waste_dataset'
 EXPORT_FOLDER = './export'
+MODEL_FOLDER = './clip'
 
 # Files
 recyclability_dataset_file = f'{PARENT_DATASET_FOLDER}/cgs_data.txt'

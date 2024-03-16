@@ -16,6 +16,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dart:convert';
 
 class ActivityPage extends StatefulWidget {
+  final int userID;
   final double destLongitude;
   final double destLatitude;
   final String destName;
@@ -24,6 +25,7 @@ class ActivityPage extends StatefulWidget {
 
   const ActivityPage({
     Key key = const Key('defaultKey'),
+    required this.userID,
     required this.destLongitude,
     required this.destLatitude,
     required this.destName,
@@ -211,6 +213,7 @@ class _ActivityPageState extends State<ActivityPage> {
           context,
           MaterialPageRoute(
             builder: (context) => EndPage(
+              userID: widget.userID,
               distance: _distanceTravelled,
               time: _time,
               wasteCount: _wasteCount,

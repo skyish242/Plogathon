@@ -54,11 +54,12 @@ class _ActivityPageState extends State<ActivityPage> {
   Location _locationController = Location();
   Map<PolylineId, Polyline> _polylines = {};
   Map<MarkerId, Marker> _markers = {};
-  Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
+  Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
   LatLng? _currentPosition;
   List<LatLng> _waypoints = [];
-  static const API_KEY = String.fromEnvironment('MAPS_API_KEY', defaultValue: '');
-
+  static const API_KEY =
+      String.fromEnvironment('MAPS_API_KEY', defaultValue: '');
 
   @override
   void initState() {
@@ -71,7 +72,6 @@ class _ActivityPageState extends State<ActivityPage> {
     _stopWatchTimer.onStartTimer();
     initPlatformState();
     _getLocationUpdates();
-
   }
 
   Future<void> openCamera(BuildContext context) async {
@@ -102,8 +102,9 @@ class _ActivityPageState extends State<ActivityPage> {
           if (reroute) {
             //Find nearest bin (find current pos then read json then search compare dist then return nearest coords)
             //1) Current Position
-             geolocator.Position userCurrentPosition = await geolocator.Geolocator.getCurrentPosition(
-                desiredAccuracy: geolocator.LocationAccuracy.high);
+            geolocator.Position userCurrentPosition =
+                await geolocator.Geolocator.getCurrentPosition(
+                    desiredAccuracy: geolocator.LocationAccuracy.high);
             //2)Load JSON
             String binsJson = await DefaultAssetBundle.of(context)
                 .loadString('assets/CashForTrashGEOJSON.geojson');
@@ -111,37 +112,36 @@ class _ActivityPageState extends State<ActivityPage> {
             //3) Search thru json and compare
             double minDistance = double.infinity;
             Map<String, dynamic>? closestBin;
-            for (var bin in binsData['features']){
+            for (var bin in binsData['features']) {
               var binLocation = bin['geometry']['coordinates'];
               double distance = geolocator.Geolocator.distanceBetween(
-                userCurrentPosition.latitude, 
-                userCurrentPosition.longitude, 
-                binLocation[1], 
-                binLocation[0]
-                );
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestBin = bin;
-                }
+                  userCurrentPosition.latitude,
+                  userCurrentPosition.longitude,
+                  binLocation[1],
+                  binLocation[0]);
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestBin = bin;
+              }
             }
             if (closestBin != null) {
               LatLng nearestBinCoords = LatLng(
-                closestBin['geometry']['coordinates'][1], 
-                closestBin['geometry']['coordinates'][0]
-              );
+                  closestBin['geometry']['coordinates'][1],
+                  closestBin['geometry']['coordinates'][0]);
               print('Nearest Bin Coords!!!: $nearestBinCoords');
               setState(() {
                 _waypoints.add(nearestBinCoords);
                 _markers[MarkerId('nearestBin')] = Marker(
-                    markerId: MarkerId('nearestBin'),
-                    position: nearestBinCoords,
-                    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-                  );
+                  markerId: MarkerId('nearestBin'),
+                  position: nearestBinCoords,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueBlue),
+                );
               });
             }
-          // Update distance left (yet to implement)
-          // Thanks jr
-        }
+            // Update distance left (yet to implement)
+            // Thanks jr
+          }
         } else {
           showDialog(
             context: context,
@@ -230,51 +230,54 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   Future<void> _getLocationUpdates() async {
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
 
-  _serviceEnabled = await _locationController.serviceEnabled();
-  if (!_serviceEnabled) {
-    _serviceEnabled = await _locationController.requestService();
+    _serviceEnabled = await _locationController.serviceEnabled();
     if (!_serviceEnabled) {
-      return;
+      _serviceEnabled = await _locationController.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
     }
-  }
 
-  _permissionGranted = await _locationController.hasPermission();
-  if (_permissionGranted == PermissionStatus.denied) {
-    _permissionGranted = await _locationController.requestPermission();
-    if (_permissionGranted != PermissionStatus.granted) {
-      return;
+    _permissionGranted = await _locationController.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await _locationController.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
     }
-  }
 
-  _locationController.onLocationChanged.listen((LocationData currentLocation) {
-    setState(() {
-      _currentPosition = LatLng(currentLocation.latitude!, currentLocation.longitude!);
-      _updatePolyline(_currentPosition);
-      _mapController.future.then((controller) {
-      controller.animateCamera(CameraUpdate.newLatLng(LatLng(currentLocation.latitude!, currentLocation.longitude!)));
+    _locationController.onLocationChanged
+        .listen((LocationData currentLocation) {
+      setState(() {
+        _currentPosition =
+            LatLng(currentLocation.latitude!, currentLocation.longitude!);
+        _updatePolyline(_currentPosition);
+        _mapController.future.then((controller) {
+          controller.animateCamera(CameraUpdate.newLatLng(
+              LatLng(currentLocation.latitude!, currentLocation.longitude!)));
+        });
+      });
     });
-    });
-  });
-}
+  }
 
   Future<void> _updatePolyline(LatLng? currentPosition) async {
     if (currentPosition == null) return;
     List<LatLng> polylineCoordinates = [];
     PolylinePoints polylinePoints = PolylinePoints();
-     List<PolylineWayPoint> polylineWayPoints = _waypoints.map(
-      (latLng) => PolylineWayPoint(location: "${latLng.latitude},${latLng.longitude}")
-    ).toList();
+    List<PolylineWayPoint> polylineWayPoints = _waypoints
+        .map((latLng) => PolylineWayPoint(
+            location: "${latLng.latitude},${latLng.longitude}"))
+        .toList();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      API_KEY,
-      PointLatLng(currentPosition.latitude, currentPosition.longitude),
-      PointLatLng(widget.destLatitude, widget.destLongitude),
-      travelMode: TravelMode.walking, 
-      wayPoints: polylineWayPoints
-    );
+        API_KEY,
+        PointLatLng(currentPosition.latitude, currentPosition.longitude),
+        PointLatLng(widget.destLatitude, widget.destLongitude),
+        travelMode: TravelMode.walking,
+        wayPoints: polylineWayPoints);
 
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
@@ -285,7 +288,7 @@ class _ActivityPageState extends State<ActivityPage> {
     setState(() {
       _polylines[PolylineId('route')] = Polyline(
         polylineId: PolylineId('route'),
-        color: Color(0xFF67B274), 
+        color: Color(0xFF67B274),
         points: polylineCoordinates,
         width: 5,
       );
@@ -321,25 +324,25 @@ class _ActivityPageState extends State<ActivityPage> {
           ),
           Expanded(
             child: Stack(children: [
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: _currentPosition ?? LatLng(1.3521, 103.8198), 
-                zoom: 13,
-              ),
-              markers: {
-                Marker(
-                  markerId: MarkerId("_destinationLocation"),
-                  icon: BitmapDescriptor.defaultMarker,
-                  position: LatLng(widget.destLatitude, widget.destLongitude),
+              GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: _currentPosition ?? LatLng(1.3521, 103.8198),
+                  zoom: 13,
                 ),
-                ..._markers.values,
-              },
-              polylines: Set<Polyline>.of(_polylines.values),
-              onMapCreated: (GoogleMapController controller) {
-                _mapController.complete(controller);
-              },
-              myLocationEnabled: true, 
-            ),
+                markers: {
+                  Marker(
+                    markerId: MarkerId("_destinationLocation"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: LatLng(widget.destLatitude, widget.destLongitude),
+                  ),
+                  ..._markers.values,
+                },
+                polylines: Set<Polyline>.of(_polylines.values),
+                onMapCreated: (GoogleMapController controller) {
+                  _mapController.complete(controller);
+                },
+                myLocationEnabled: true,
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 24, left: 32, right: 32),
                 child: Column(
@@ -444,7 +447,7 @@ class _ActivityPageState extends State<ActivityPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: 150,
+                          width: 140,
                           child: ElevatedButton(
                               onPressed: () => openCamera(context),
                               style: ElevatedButton.styleFrom(
@@ -458,7 +461,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                       Theme.of(context).textTheme.labelLarge)),
                         ),
                         SizedBox(
-                          width: 150,
+                          width: 140,
                           child: ElevatedButton(
                             onPressed: () => showEndPrompt(),
                             style: ElevatedButton.styleFrom(

@@ -81,7 +81,7 @@ class CameraPageState extends State<CameraPage> {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return SizedBox(
                           width: size.width,
-                          height: size.height,
+                          height: (size.height - 24),
                           child: FittedBox(
                             fit: BoxFit.cover,
                             child: SizedBox(
@@ -170,70 +170,68 @@ class DisplayPictureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Theme.of(context).colorScheme.surface,
-      child: Column(
+      child: Stack(
         children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 32, right: 32, top: 64, bottom: 20),
-            child: Row(
-              children: <Widget>[
-                IconButton(
-                    icon: SvgPicture.asset("assets/back.svg",
-                        semanticsLabel: 'Navigate Back'),
-                    onPressed: () => Navigator.pop(context)),
-                const SizedBox(
-                  width: 14,
-                ),
-                Text(
-                  "Your Photo",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                )
-              ],
+          Align(
+              alignment: Alignment.center, child: Image.file(File(imagePath))),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: const EdgeInsets.only(
+                  left: 32, right: 32, top: 64, bottom: 20),
+              color: Theme.of(context).colorScheme.surface,
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                      icon: SvgPicture.asset("assets/back.svg",
+                          semanticsLabel: 'Navigate Back'),
+                      onPressed: () => Navigator.pop(context)),
+                  const SizedBox(
+                    width: 14,
+                  ),
+                  Text(
+                    "Your Photo",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  )
+                ],
+              ),
             ),
           ),
-          Stack(
+          Align(
             alignment: Alignment.bottomCenter,
-            children: [
-              Image.file(File(imagePath)),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 64, left: 64, right: 64),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50.0,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          File imageFile = File(imagePath);
-                          fileToBase64(imageFile).then((base64Str) {
-                            // PETERRRR
-                            const uploadResult = true;
-                            const instruction =
-                                "Before recycling a Tetra Pak, ensure that it is empty, rinse it out, and flatten it to save space in the recycling bin.";
+            child: Padding(
+                padding: const EdgeInsets.only(bottom: 64, left: 64, right: 64),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50.0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      File imageFile = File(imagePath);
+                      fileToBase64(imageFile).then((base64Str) {
+                        // PETERRRR
+                        const uploadResult = true;
+                        const instruction =
+                            "Before recycling a Tetra Pak, ensure that it is empty, rinse it out, and flatten it to save space in the recycling bin.";
 
-                            Navigator.pop(context);
+                        Navigator.pop(context);
 
-                            Navigator.pop(context, {
-                              'recylable': uploadResult,
-                              'instruction': instruction
-                            });
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                            elevation: 5,
-                            backgroundColor: const Color(0xFFBFECC6)),
-                        child: Text(
-                          "Upload",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    )),
-              )
-            ],
-          ),
+                        Navigator.pop(context, {
+                          'recylable': uploadResult,
+                          'instruction': instruction
+                        });
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                        elevation: 5, backgroundColor: const Color(0xFFBFECC6)),
+                    child: Text(
+                      "Upload",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                )),
+          )
         ],
       ),
     );

@@ -35,7 +35,7 @@ class MainApp extends StatelessWidget {
           colorScheme: colorScheme,
           textTheme: TextTheme(
             displayLarge: GoogleFonts.zenTokyoZoo(
-                fontSize: MediaQuery.of(context).size.width < 385 ? 40 : 36,
+                fontSize: MediaQuery.of(context).size.width > 385 ? 40 : 36,
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFFEDFB92)),
             bodyLarge: GoogleFonts.poppins(

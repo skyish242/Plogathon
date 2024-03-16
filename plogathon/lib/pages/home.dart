@@ -213,13 +213,13 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.only(
-                  top: 72.0, left: 12.0, right: 12.0, bottom: 9),
+                  top: 64.0, left: 12.0, right: 12.0, bottom: 9),
               width: double.infinity,
               child: Card(
                 color: Theme.of(context).colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 30, bottom: 18),
+                      left: 20, right: 20, top: 16, bottom: 18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -263,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: 150,
+                            width: 140,
                             child: Card(
                               margin: const EdgeInsets.only(
                                   left: 0, right: 0, top: 12),
@@ -295,9 +295,8 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       "Litter Cleared\nOff The Streets",
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                   ],
                                 ),
@@ -305,7 +304,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           SizedBox(
-                            width: 150,
+                            width: 140,
                             child: Card(
                               margin: const EdgeInsets.only(
                                   left: 0, right: 0, top: 12),
@@ -338,9 +337,8 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       "Kilometers\nTravelled",
                                       textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                   ],
                                 ),

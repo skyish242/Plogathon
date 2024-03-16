@@ -49,7 +49,7 @@ class _EndPageState extends State<EndPage> {
       child: Stack(
         children: [
           AspectRatio(
-            aspectRatio: 1.1,
+            aspectRatio: 1.3,
             child: Opacity(
               opacity: 0.6,
               child: Image.asset(
@@ -59,7 +59,7 @@ class _EndPageState extends State<EndPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(left: 32, right: 32, top: 220),
+            padding: const EdgeInsets.only(left: 32, right: 32, top: 140),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -200,7 +200,7 @@ class _NearbyPageState extends State<NearbyPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     SizedBox(
-                      width: 160,
+                      width: 145,
                       child: ElevatedButton(
                         onPressed: () => setListView(true),
                         style: ElevatedButton.styleFrom(
@@ -223,7 +223,7 @@ class _NearbyPageState extends State<NearbyPage> {
                       ),
                     ),
                     SizedBox(
-                      width: 160,
+                      width: 145,
                       child: ElevatedButton(
                         onPressed: () => setListView(false),
                         style: ElevatedButton.styleFrom(

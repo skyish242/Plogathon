@@ -32,7 +32,6 @@ class LocationCard extends StatelessWidget {
       timeText = "${(time * 60).ceil()} min";
     }
 
-    timeText += " required";
     return Card(
       color: Colors.white,
       child: Padding(

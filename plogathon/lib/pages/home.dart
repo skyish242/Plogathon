@@ -1,7 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:plogathon/db/db.dart';
 import 'package:plogathon/model/entry.dart';
 import 'package:plogathon/pages/nearby.dart';
 import 'package:plogathon/widgets/entry_card.dart';
@@ -21,18 +22,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Entry>? _data;
   List<EntryCard> _cards = [];
   final userService = UserService();
   final activityService = ActivityService();
   String _name = '';
+  int _userWasteCount = 0;
+  double _userMileageCount = 0.0;
 
   @override
   void initState() {
     super.initState();
     initializeDateFormatting();
     _fetchUser();
-    DB.init().then((value) => _fetchEntries());
+    _fetchEntries();
   }
 
   /*
@@ -66,6 +68,13 @@ class _HomePageState extends State<HomePage> {
   }
   */
 
+  /*
+  void _addEntries(Entry en) async {
+    DB.insert(Entry.table, en);
+    _fetchEntries();
+  }
+  */
+
   void _fetchUser() async {
     try {
       ProtoUser user = await userService.findOneUser(widget.userID);
@@ -88,7 +97,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _fetchEntries() async {
-    _cards = [];
     List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
 
     try {
@@ -98,6 +106,11 @@ class _HomePageState extends State<HomePage> {
       for (int i = activities.length - 1; i >= 0; i--) {
         ProtoActivity activity = activities[i];
         ProtoUser tempUser = await userService.findOneUser(activity.userID);
+
+        if (tempUser.userID == widget.userID) {
+          _userWasteCount += activity.wasteCount;
+          _userMileageCount += activity.distance;
+        }
 
         Entry entry = Entry(
           name: tempUser.firstName + " " + tempUser.lastName,
@@ -125,13 +138,6 @@ class _HomePageState extends State<HomePage> {
       print('Failed to fetch activities: $e');
     }
   }
-
-  /*
-  void _addEntries(Entry en) async {
-    DB.insert(Entry.table, en);
-    _fetchEntries();
-  }
-  */
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                                           .bodyMedium,
                                     ),
                                     Text(
-                                      "192",
+                                      _userWasteCount.toString(),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge,
@@ -218,7 +224,7 @@ class _HomePageState extends State<HomePage> {
                                           .bodyMedium,
                                     ),
                                     Text(
-                                      "452",
+                                      _userMileageCount.toStringAsFixed(2),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge,

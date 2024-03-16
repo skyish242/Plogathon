@@ -265,13 +265,14 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             width: 150,
                             child: Card(
-                                margin: const EdgeInsets.only(
-                                    left: 0, right: 0, top: 12),
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 20),
-                                  child: Column(children: <Widget>[
+                              margin: const EdgeInsets.only(
+                                  left: 0, right: 0, top: 12),
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 20),
+                                child: Column(
+                                  children: <Widget>[
                                     Text(
                                       "Eco-Effort",
                                       style: Theme.of(context)
@@ -298,19 +299,22 @@ class _HomePageState extends State<HomePage> {
                                           .textTheme
                                           .bodyMedium,
                                     ),
-                                  ]),
-                                )),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                           SizedBox(
                             width: 150,
                             child: Card(
-                                margin: const EdgeInsets.only(
-                                    left: 0, right: 0, top: 12),
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 20),
-                                  child: Column(children: <Widget>[
+                              margin: const EdgeInsets.only(
+                                  left: 0, right: 0, top: 12),
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 20),
+                                child: Column(
+                                  children: <Widget>[
                                     Text(
                                       "Mileage",
                                       style: Theme.of(context)
@@ -338,8 +342,10 @@ class _HomePageState extends State<HomePage> {
                                           .textTheme
                                           .bodyMedium,
                                     ),
-                                  ]),
-                                )),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:plogathon/model/entry.dart';
+import 'package:plogathon/pages/login.dart';
 import 'package:plogathon/pages/nearby.dart';
 import 'package:plogathon/widgets/entry_card.dart';
 import 'package:plogathon/services/grpc/activity/activity.pb.dart';
@@ -29,6 +31,9 @@ class _HomePageState extends State<HomePage> {
   int _userWasteCount = 0;
   double _userMileageCount = 0.0;
   bool _isAllSelected = true;
+
+  bool _isLoading = true;
+  bool _initialLoad = false;
 
   @override
   void initState() {
@@ -100,6 +105,49 @@ class _HomePageState extends State<HomePage> {
   void _fetchAllEntries() async {
     List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
 
+    List<EntryCard> cards = [];
+    try {
+      Activities fetchedActivities = await activityService.findAllActivities();
+      List<ProtoActivity> activities = fetchedActivities.activities;
+
+      for (int i = activities.length - 1; i >= 0; i--) {
+        ProtoActivity activity = activities[i];
+        ProtoUser tempUser = await userService.findOneUser(activity.userID);
+
+        if (tempUser.userID == widget.userID && !_initialLoad) {
+          _userWasteCount += activity.wasteCount;
+          _userMileageCount += activity.distance;
+          setState(() {
+            _initialLoad = true;
+          });
+        }
+
+        int colorIndex = i % cardColors.length;
+
+        cards.add(
+          EntryCard(
+            name: "${tempUser.firstName} ${tempUser.lastName}",
+            wasteCount: activity.wasteCount,
+            distance: activity.distance,
+            duration: activity.duration,
+            time: _calculateTimeDifference(activity.datetime),
+            cardColor: Color(cardColors[colorIndex]),
+          ),
+        );
+      }
+      setState(() {
+        _cards = List<EntryCard>.from(cards);
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Failed to fetch activities: $e');
+    }
+  }
+
+  void _fetchMyEntries() async {
+    List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
+    List<EntryCard> cards = [];
+
     try {
       Activities fetchedActivities = await activityService.findAllActivities();
       List<ProtoActivity> activities = fetchedActivities.activities;
@@ -109,65 +157,19 @@ class _HomePageState extends State<HomePage> {
         ProtoUser tempUser = await userService.findOneUser(activity.userID);
 
         if (tempUser.userID == widget.userID) {
-          _userWasteCount += activity.wasteCount;
-          _userMileageCount += activity.distance;
-        }
-
-        Entry entry = Entry(
-          name: tempUser.firstName + " " + tempUser.lastName,
-          wasteCount: activity.wasteCount,
-          distance: activity.distance,
-          time: _calculateTimeDifference(activity.datetime),
-        );
-
-        int colorIndex = i % cardColors.length;
-
-        _cards.add(
-          EntryCard(
-            entry: entry,
-            name: tempUser.firstName + " " + tempUser.lastName,
-            wasteCount: activity.wasteCount,
-            distance: activity.distance,
-            duration: activity.duration,
-            time: _calculateTimeDifference(activity.datetime),
-            cardColor: Color(cardColors[colorIndex]),
-          ),
-        );
-      }
-      setState(() {});
-    } catch (e) {
-      print('Failed to fetch activities: $e');
-    }
-  }
-
-  void _fetchMyEntries() async {
-    List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
-
-    try {
-      Activities fetchedActivities = await activityService.findAllActivities();
-      List<ProtoActivity> activities = fetchedActivities.activities;
-
-      for (int i = activities.length - 1; i >= 0; i--) {
-        ProtoActivity activity = activities[i];
-        ProtoUser tempUser = await userService.findOneUser(activity.userID);
-
-        if (tempUser.userID == widget.userID) {      
-          _userWasteCount += activity.wasteCount;
-          _userMileageCount += activity.distance;
-
-          Entry entry = Entry(
-            name: tempUser.firstName + " " + tempUser.lastName,
-            wasteCount: activity.wasteCount,
-            distance: activity.distance,
-            time: _calculateTimeDifference(activity.datetime),
-          );
+          if (!_initialLoad) {
+            setState(() {
+              _userWasteCount += activity.wasteCount;
+              _userMileageCount += activity.distance;
+              _initialLoad = true;
+            });
+          }
 
           int colorIndex = i % cardColors.length;
 
-          _cards.add(
+          cards.add(
             EntryCard(
-              entry: entry,
-              name: tempUser.firstName + " " + tempUser.lastName,
+              name: "${tempUser.firstName} ${tempUser.lastName}",
               wasteCount: activity.wasteCount,
               distance: activity.distance,
               duration: activity.duration,
@@ -177,7 +179,10 @@ class _HomePageState extends State<HomePage> {
           );
         }
       }
-      setState(() {});
+      setState(() {
+        _cards = List<EntryCard>.from(cards);
+        _isLoading = false;
+      });
     } catch (e) {
       print('Failed to fetch activities: $e');
     }
@@ -185,16 +190,16 @@ class _HomePageState extends State<HomePage> {
 
   void _fetchEntries() async {
     _cards = [];
-    _userWasteCount = 0;
-    _userMileageCount = 0.0;
+
+    setState(() {
+      _isLoading = true;
+    });
 
     if (_isAllSelected) {
       _fetchAllEntries();
     } else {
       _fetchMyEntries();
     }
-
-    setState(() {});
   }
 
   @override
@@ -218,11 +223,35 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        "hello",
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: const Color(0xFF747474),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "hello,",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: const Color(0xFF747474),
+                                  ),
                             ),
+                            IconButton(
+                              icon: SvgPicture.asset(
+                                "assets/logout.svg",
+                                semanticsLabel: 'logout',
+                              ),
+                              onPressed: () => Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginPage(),
+                                ),
+                                (Route<dynamic> route) => false,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       Text(
                         _name,
@@ -249,12 +278,19 @@ class _HomePageState extends State<HomePage> {
                                           .textTheme
                                           .bodyMedium,
                                     ),
-                                    Text(
-                                      _userWasteCount.toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
-                                    ),
+                                    _initialLoad
+                                        ? Text(
+                                            _userWasteCount.toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
+                                          )
+                                        : Container(
+                                            padding: const EdgeInsets.only(
+                                                top: 6, bottom: 6),
+                                            child:
+                                                const CircularProgressIndicator(),
+                                          ),
                                     Text(
                                       "Litter Cleared\nOff The Streets",
                                       textAlign: TextAlign.center,
@@ -281,12 +317,20 @@ class _HomePageState extends State<HomePage> {
                                           .textTheme
                                           .bodyMedium,
                                     ),
-                                    Text(
-                                      _userMileageCount.toStringAsFixed(2),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
-                                    ),
+                                    _initialLoad
+                                        ? Text(
+                                            _userMileageCount
+                                                .toStringAsFixed(2),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
+                                          )
+                                        : Container(
+                                            padding: const EdgeInsets.only(
+                                                top: 6, bottom: 6),
+                                            child:
+                                                const CircularProgressIndicator(),
+                                          ),
                                     Text(
                                       "Kilometers\nTravelled",
                                       textAlign: TextAlign.center,
@@ -325,38 +369,49 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 12, right: 12),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: ToggleButtons(
-                      onPressed: (int index) {
-                        setState(() {
-                          _isAllSelected = index == 0;
-                          _fetchEntries();
-                        });
-                      },
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      selectedBorderColor: Theme.of(context).highlightColor,
-                      fillColor: Theme.of(context).primaryColor,
-                      color: Theme.of(context).colorScheme.secondary,
-                      isSelected: [_isAllSelected, !_isAllSelected],
-                      constraints: const BoxConstraints(minHeight: 40, minWidth: 200),
-                      children: [
-                        Text('All', style: Theme.of(context).textTheme.bodyMedium),
-                        Text('Mine', style: Theme.of(context).textTheme.bodyMedium),
-                      ],
-                    ),
+              child: SizedBox(
+                width: double.infinity,
+                child: Center(
+                  child: ToggleButtons(
+                    onPressed: (int index) {
+                      setState(() {
+                        _isAllSelected = index == 0;
+                        _fetchEntries();
+                      });
+                    },
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    borderColor: Theme.of(context).colorScheme.primary,
+                    selectedColor: Theme.of(context).colorScheme.onPrimary,
+                    selectedBorderColor: Theme.of(context).colorScheme.primary,
+                    fillColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                    isSelected: [_isAllSelected, !_isAllSelected],
+                    constraints:
+                        const BoxConstraints(minHeight: 40, minWidth: 150),
+                    children: const [
+                      Text(
+                        'All',
+                      ),
+                      Text(
+                        'Mine',
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: _cards,
                 ),
               ),
-            )
+            ),
+            _isLoading
+                ? Container(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: const CircularProgressIndicator(),
+                  )
+                : Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: _cards,
+                      ),
+                    ),
+                  )
           ],
         ),
       ),

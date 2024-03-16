@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plogathon/model/entry.dart';
 
 class EntryCard extends StatelessWidget {
   /// Entry should include:
@@ -9,14 +8,20 @@ class EntryCard extends StatelessWidget {
   /// * mileage
   /// * duration
 
-  final Entry? entry;
   final Color? cardColor;
   final String? name;
   final int? wasteCount;
   final double? distance;
   final int? duration;
   final int? time;
-  const EntryCard({super.key, this.entry, this.cardColor, this.name, this.wasteCount, this.distance, this.duration, this.time});
+  const EntryCard(
+      {super.key,
+      this.cardColor,
+      this.name,
+      this.wasteCount,
+      this.distance,
+      this.duration,
+      this.time});
 
   String _formatDuration(int durationInSeconds) {
     int hours = durationInSeconds ~/ 3600;
@@ -44,7 +49,7 @@ class EntryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(name?? '', style: Theme.of(context).textTheme.bodySmall),
+            Text(name ?? '', style: Theme.of(context).textTheme.bodySmall),
             Text(_formatTimeDifference(Duration(minutes: time ?? 0)),
                 style: Theme.of(context).textTheme.labelMedium),
             Container(
@@ -78,7 +83,7 @@ class EntryCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text(distance.toString() + "km",
+                          child: Text("${distance}km",
                               style: Theme.of(context).textTheme.titleMedium),
                         )
                       ],
@@ -96,7 +101,7 @@ class EntryCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text(_formatDuration(duration?? 0),
+                          child: Text(_formatDuration(duration ?? 0),
                               style: Theme.of(context).textTheme.titleMedium),
                         )
                       ],

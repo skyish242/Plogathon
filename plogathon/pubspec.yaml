@@ -80,6 +80,7 @@ flutter:
     - assets/time.svg
     - assets/camera.svg
     - assets/run.svg
+    - assets/logout.svg
     - assets/CashForTrashGEOJSON.geojson
 
   # An image asset can refer to one or more resolution-specific "variants", see

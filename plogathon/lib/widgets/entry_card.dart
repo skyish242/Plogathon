@@ -15,12 +15,23 @@ class EntryCard extends StatelessWidget {
   final int? wasteCount;
   final double? distance;
   final int? duration;
-  const EntryCard({super.key, this.entry, this.name, this.wasteCount, this.distance, this.duration, this.cardColor});
+  final int? time;
+  const EntryCard({super.key, this.entry, this.cardColor, this.name, this.wasteCount, this.distance, this.duration, this.time});
 
-  String formatDuration(int durationInSeconds) {
+  String _formatDuration(int durationInSeconds) {
     int hours = durationInSeconds ~/ 3600;
     int minutes = (durationInSeconds ~/ 60) % 60;
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+  }
+
+  String _formatTimeDifference(Duration timeDifference) {
+    if (timeDifference.inDays > 0) {
+      return '${timeDifference.inDays} ${timeDifference.inDays == 1 ? 'day' : 'days'} ago';
+    } else if (timeDifference.inHours > 0) {
+      return '${timeDifference.inHours} ${timeDifference.inHours == 1 ? 'hour' : 'hours'} ago';
+    } else {
+      return '${timeDifference.inMinutes} ${timeDifference.inMinutes == 1 ? 'minute' : 'minutes'} ago';
+    }
   }
 
   @override
@@ -34,7 +45,7 @@ class EntryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(name?? '', style: Theme.of(context).textTheme.bodySmall),
-            Text("12 minutes ago",
+            Text(_formatTimeDifference(Duration(minutes: time ?? 0)),
                 style: Theme.of(context).textTheme.labelMedium),
             Container(
               padding: const EdgeInsets.only(top: 20),
@@ -85,7 +96,7 @@ class EntryCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text(formatDuration(duration?? 0),
+                          child: Text(_formatDuration(duration?? 0),
                               style: Theme.of(context).textTheme.titleMedium),
                         )
                       ],

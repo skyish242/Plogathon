@@ -8,8 +8,9 @@ class Entry {
   String? duration;
   double? speed;
   double? distance;
+  int? time;
 
-  Entry({this.id, this.name, this.wasteCount, this.date, this.duration, this.speed, this.distance});
+  Entry({this.id, this.name, this.wasteCount, this.date, this.duration, this.speed, this.distance, this.time});
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {

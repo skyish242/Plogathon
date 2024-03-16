@@ -7,15 +7,15 @@ class ActivityService {
   final ActivityServiceClient client;
   
   ActivityService(): channel = ClientChannel(
-        '127.0.0.1',
+        '34.23.233.168',
         port: 5001,
         options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
       ),
       client = ActivityServiceClient(ClientChannel(
-        '127.0.0.1',
+        '34.23.233.168',
         port: 5001,
         options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
-      ));
+  ));
 
   // Create Activity
   Future<ProtoActivity> createActivity(Activity request) async {

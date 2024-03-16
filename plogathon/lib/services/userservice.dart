@@ -6,26 +6,30 @@ class UserService {
   final ClientChannel channel;
   final UserServiceClient client;
 
-  UserService()
-      : channel = ClientChannel(
-          '127.0.0.1',
-          port: 5002,
-          options:
-              const ChannelOptions(credentials: ChannelCredentials.insecure()),
-        ),
-        client = UserServiceClient(ClientChannel(
-          '127.0.0.1',
-          port: 5002,
-          options:
-              const ChannelOptions(credentials: ChannelCredentials.insecure()),
-        ));
+  UserService(): channel = ClientChannel(
+        '34.73.60.176',
+        port: 5002,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure()),
+      ),
+      client = UserServiceClient(ClientChannel(
+        '34.73.60.176',
+        port: 5002,
+        options:
+            const ChannelOptions(credentials: ChannelCredentials.insecure()),
+      ));
 
   // Create User
   Future<ProtoUser> createUser(User request) async {
     try {
       return await client.createUser(request);
     } catch (e) {
-      throw const GrpcError.internal('Failed to create user');
+      print(e);
+      if (e.toString().contains('INTERNAL')) {
+        throw 'Username or email already exists!';
+      } else {
+        throw const GrpcError.internal('Failed to create user');
+      }
     }
   }
 
@@ -80,8 +84,11 @@ class UserService {
 
       return response.userID;
     } catch (e) {
-      print(e);
-      throw const GrpcError.internal('Failed to login user');
+      if (e.toString().contains('NOT_FOUND')) {
+        throw 'Invalid user or password!';
+      } else {
+        throw const GrpcError.internal('Failed to login user');
+      }
     }
   }
 }

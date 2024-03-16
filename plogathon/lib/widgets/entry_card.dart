@@ -26,7 +26,13 @@ class EntryCard extends StatelessWidget {
   String _formatDuration(int durationInSeconds) {
     int hours = durationInSeconds ~/ 3600;
     int minutes = (durationInSeconds ~/ 60) % 60;
-    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+    int seconds = durationInSeconds % 60;
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    } else {
+      return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    }
   }
 
   String _formatTimeDifference(Duration timeDifference) {

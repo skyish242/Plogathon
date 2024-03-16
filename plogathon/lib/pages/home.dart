@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     initializeDateFormatting();
     _fetchUser();
-    _fetchAllEntries();
+    _fetchEntries();
   }
 
   /*
@@ -116,9 +116,6 @@ class _HomePageState extends State<HomePage> {
         if (tempUser.userID == widget.userID && !_initialLoad) {
           _userWasteCount += activity.wasteCount;
           _userMileageCount += activity.distance;
-          setState(() {
-            _initialLoad = true;
-          });
         }
 
         int colorIndex = i % cardColors.length;
@@ -137,6 +134,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _cards = List<EntryCard>.from(cards);
         _isLoading = false;
+        _initialLoad = true;
       });
     } catch (e) {
       print('Failed to fetch activities: $e');
@@ -157,11 +155,8 @@ class _HomePageState extends State<HomePage> {
 
         if (tempUser.userID == widget.userID) {
           if (!_initialLoad) {
-            setState(() {
               _userWasteCount += activity.wasteCount;
               _userMileageCount += activity.distance;
-              _initialLoad = true;
-            });
           }
 
           int colorIndex = i % cardColors.length;
@@ -181,6 +176,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _cards = List<EntryCard>.from(cards);
         _isLoading = false;
+        _initialLoad = true;
       });
     } catch (e) {
       print('Failed to fetch activities: $e');

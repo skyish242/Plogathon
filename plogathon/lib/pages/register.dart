@@ -51,8 +51,10 @@ class _RegisterPageState extends State<RegisterPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Registration Failed', style: TextStyle(color: Colors.white)),
-          content: Text(e.toString(), style: const TextStyle(color: Colors.white)),
+          title: const Text('Registration Failed',
+              style: TextStyle(color: Colors.white)),
+          content:
+              Text(e.toString(), style: const TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -69,8 +71,10 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Theme.of(context).colorScheme.background,
-        child: Stack(fit: StackFit.expand, children: <Widget>[
+      color: Theme.of(context).colorScheme.background,
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
           Column(
             children: <Widget>[
               Padding(
@@ -82,98 +86,38 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               Expanded(
-                child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(36),
-                      ),
+                child: SingleChildScrollView(
+                    child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(36),
                     ),
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 70),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 30.0),
-                            child: Text(
-                              "Join The Team",
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
+                  ),
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 70),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 30.0),
+                          child: Text(
+                            "Join The Team",
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                          // First name
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 64,
-                              child: TextField(
-                                controller: _firstnameController,
-                                cursorColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                decoration: InputDecoration(
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: const Color(0xFFB3B3B3),
-                                      ),
-                                  fillColor: const Color(0xFFEEEEEE),
-                                  filled: true,
-                                  hintText: 'First name',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Last name
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 64,
-                              child: TextField(
-                                controller: _lastnameController,
-                                cursorColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                decoration: InputDecoration(
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: const Color(0xFFB3B3B3),
-                                      ),
-                                  fillColor: const Color(0xFFEEEEEE),
-                                  filled: true,
-                                  hintText: 'Last name',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Username
-                          SizedBox(
+                        ),
+                        // First name
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          child: SizedBox(
                             width: double.infinity,
                             height: 64,
                             child: TextField(
-                              controller: _usernameController,
-                              cursorColor: Theme.of(context).colorScheme.onPrimary,
+                              controller: _firstnameController,
+                              cursorColor:
+                                  Theme.of(context).colorScheme.onPrimary,
                               style: Theme.of(context).textTheme.bodyMedium,
                               decoration: InputDecoration(
                                 hintStyle: Theme.of(context)
@@ -184,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                 fillColor: const Color(0xFFEEEEEE),
                                 filled: true,
-                                hintText: 'Username',
+                                hintText: 'First name',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: const BorderSide(
@@ -195,115 +139,180 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                           ),
-                          // Email
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 64,
-                              child: TextField(
-                                controller: _emailController,
-                                cursorColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                decoration: InputDecoration(
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: const Color(0xFFB3B3B3),
-                                      ),
-                                  fillColor: const Color(0xFFEEEEEE),
-                                  filled: true,
-                                  hintText: 'Email',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Password
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 64,
-                              child: TextField(
-                                controller: _passwordController,
-                                cursorColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: const Color(0xFFB3B3B3),
-                                      ),
-                                  fillColor: const Color(0xFFEEEEEE),
-                                  filled: true,
-                                  hintText: 'Password',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 50.0,
-                              child: ElevatedButton(
-                                onPressed: _handleRegister,
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 5,
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                ),
-                                child: Text("Register",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
+                        ),
+                        // Last name
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          child: SizedBox(
                             width: double.infinity,
-                            height: 50.0,
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              style: ElevatedButton.styleFrom(
-                                  elevation: 5,
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.secondary),
-                              child: Text(
-                                "Already Have An Account?",
-                                style: Theme.of(context)
+                            height: 64,
+                            child: TextField(
+                              controller: _lastnameController,
+                              cursorColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              decoration: InputDecoration(
+                                hintStyle: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
                                     ?.copyWith(
-                                      color: const Color(0xFFFCFCFC),
+                                      color: const Color(0xFFB3B3B3),
                                     ),
+                                fillColor: const Color(0xFFEEEEEE),
+                                filled: true,
+                                hintText: 'Last name',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    )),
+                        ),
+                        // Username
+                        SizedBox(
+                          width: double.infinity,
+                          height: 64,
+                          child: TextField(
+                            controller: _usernameController,
+                            cursorColor:
+                                Theme.of(context).colorScheme.onPrimary,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            decoration: InputDecoration(
+                              hintStyle: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: const Color(0xFFB3B3B3),
+                                  ),
+                              fillColor: const Color(0xFFEEEEEE),
+                              filled: true,
+                              hintText: 'Username',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Email
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 64,
+                            child: TextField(
+                              controller: _emailController,
+                              cursorColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              decoration: InputDecoration(
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: const Color(0xFFB3B3B3),
+                                    ),
+                                fillColor: const Color(0xFFEEEEEE),
+                                filled: true,
+                                hintText: 'Email',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Password
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 64,
+                            child: TextField(
+                              controller: _passwordController,
+                              cursorColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: const Color(0xFFB3B3B3),
+                                    ),
+                                fillColor: const Color(0xFFEEEEEE),
+                                filled: true,
+                                hintText: 'Password',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 50.0,
+                            child: ElevatedButton(
+                              onPressed: _handleRegister,
+                              style: ElevatedButton.styleFrom(
+                                elevation: 5,
+                                backgroundColor: Theme.of(context).primaryColor,
+                              ),
+                              child: Text("Register",
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50.0,
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                                elevation: 5,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary),
+                            child: Text(
+                              "Already Have An Account?",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: const Color(0xFFFCFCFC),
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
               )
             ],
           )
-        ]));
+        ],
+      ),
+    );
   }
 }

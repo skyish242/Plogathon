@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:plogathon/model/entry.dart';
 import 'package:plogathon/pages/login.dart';
 import 'package:plogathon/pages/nearby.dart';
 import 'package:plogathon/widgets/entry_card.dart';
@@ -358,7 +357,7 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const NearbyPage())),
+                                    builder: (context) => new NearbyPage(userID: widget.userID))),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).primaryColor,
                               elevation: 5,
@@ -374,7 +373,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
+              padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
               child: SizedBox(
                 width: double.infinity,
                 child: Center(

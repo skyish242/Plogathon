@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:plogathon/pages/camera.dart';
 import 'package:plogathon/pages/end.dart';
 import 'package:plogathon/widgets/end_session_dialog.dart';
@@ -12,6 +13,8 @@ import 'package:plogathon/widgets/recylable_dialog.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'dart:convert';
+
 
 
 class ActivityPage extends StatefulWidget {
@@ -97,11 +100,41 @@ class _ActivityPageState extends State<ActivityPage> {
           });
 
           if (reroute) {
-            // Find nearest bin
-            // Add waypoint and update polyline
-            // Update distance left
-            // Thanks jr
-          }
+            //Find nearest bin (find current pos then read json then search compare dist then return nearest coords)
+            //1) Current Position
+             geolocator.Position userCurrentPosition = await geolocator.Geolocator.getCurrentPosition(
+                desiredAccuracy: geolocator.LocationAccuracy.high);
+            //2)Load JSON
+            String binsJson = await DefaultAssetBundle.of(context)
+                .loadString('assets/CashForTrashGEOJSON.geojson');
+            Map<String, dynamic> binsData = jsonDecode(binsJson);
+            //3) Search thru json and compare
+            double minDistance = double.infinity;
+            Map<String, dynamic>? closestBin;
+            for (var bin in binsData['features']){
+              var binLocation = bin['geometry']['coordinates'];
+              double distance = geolocator.Geolocator.distanceBetween(
+                userCurrentPosition.latitude, 
+                userCurrentPosition.longitude, 
+                binLocation[1], 
+                binLocation[0]
+                );
+                if (distance < minDistance) {
+                  minDistance = distance;
+                  closestBin = bin;
+                }
+            }
+            if (closestBin != null) {
+              LatLng nearestBinCoords = LatLng(
+                closestBin['geometry']['coordinates'][1], 
+                closestBin['geometry']['coordinates'][0]
+              );
+              print('Nearest Bin Coords!!!: $nearestBinCoords');
+            }
+          // Add waypoint and update polyline
+          // Update distance left
+          // Thanks jr
+        }
         } else {
           showDialog(
             context: context,

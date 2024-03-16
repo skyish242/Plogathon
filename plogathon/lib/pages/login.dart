@@ -19,8 +19,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _handleLogin() async {
     try {
-      if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
-            throw ('Please fill in all fields');
+      if (_usernameController.text.isEmpty ||
+          _passwordController.text.isEmpty) {
+        throw ('Please fill in all fields');
       } else {
         int userID = await _userService.login(
             _usernameController.text, _passwordController.text);
@@ -34,8 +35,10 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Login Failed', style: TextStyle(color: Colors.white)),
-          content: Text(e.toString(), style: const TextStyle(color: Colors.white)),
+          title:
+              const Text('Login Failed', style: TextStyle(color: Colors.white)),
+          content:
+              Text(e.toString(), style: const TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
               onPressed: () {

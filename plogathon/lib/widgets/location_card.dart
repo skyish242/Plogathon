@@ -84,7 +84,7 @@ class LocationCard extends StatelessWidget {
               "assets/right-arrow.svg",
               semanticsLabel: 'Start Run',
             ),
-            onPressed: () => Navigator.push(
+            onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) => ActivityPage(
@@ -95,6 +95,7 @@ class LocationCard extends StatelessWidget {
                   distance: distance,
                 ),
               ),
+              (Route<dynamic> route) => false,
             ),
           ),
         ),

@@ -120,17 +120,18 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
-
       setState(() {});
     } catch (e) {
       print('Failed to fetch activities: $e');
     }
   }
 
+  /*
   void _addEntries(Entry en) async {
     DB.insert(Entry.table, en);
     _fetchEntries();
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -259,9 +260,10 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Flexible(
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                children: _cards,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: _cards,
+                ),
               ),
             )
           ],

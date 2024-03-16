@@ -1,6 +1,6 @@
-import 'dart:ffi';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:plogathon/model/entry.dart';
@@ -28,13 +28,14 @@ class _HomePageState extends State<HomePage> {
   String _name = '';
   int _userWasteCount = 0;
   double _userMileageCount = 0.0;
+  bool _isAllSelected = true;
 
   @override
   void initState() {
     super.initState();
     initializeDateFormatting();
     _fetchUser();
-    _fetchEntries();
+    _fetchAllEntries();
   }
 
   /*
@@ -96,7 +97,7 @@ class _HomePageState extends State<HomePage> {
     return differenceInMinutes;
   }
 
-  void _fetchEntries() async {
+  void _fetchAllEntries() async {
     List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
 
     try {
@@ -139,6 +140,63 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _fetchMyEntries() async {
+    List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
+
+    try {
+      Activities fetchedActivities = await activityService.findAllActivities();
+      List<ProtoActivity> activities = fetchedActivities.activities;
+
+      for (int i = activities.length - 1; i >= 0; i--) {
+        ProtoActivity activity = activities[i];
+        ProtoUser tempUser = await userService.findOneUser(activity.userID);
+
+        if (tempUser.userID == widget.userID) {      
+          _userWasteCount += activity.wasteCount;
+          _userMileageCount += activity.distance;
+
+          Entry entry = Entry(
+            name: tempUser.firstName + " " + tempUser.lastName,
+            wasteCount: activity.wasteCount,
+            distance: activity.distance,
+            time: _calculateTimeDifference(activity.datetime),
+          );
+
+          int colorIndex = i % cardColors.length;
+
+          _cards.add(
+            EntryCard(
+              entry: entry,
+              name: tempUser.firstName + " " + tempUser.lastName,
+              wasteCount: activity.wasteCount,
+              distance: activity.distance,
+              duration: activity.duration,
+              time: _calculateTimeDifference(activity.datetime),
+              cardColor: Color(cardColors[colorIndex]),
+            ),
+          );
+        }
+      }
+      setState(() {});
+    } catch (e) {
+      print('Failed to fetch activities: $e');
+    }
+  }
+
+  void _fetchEntries() async {
+    _cards = [];
+    _userWasteCount = 0;
+    _userMileageCount = 0.0;
+
+    if (_isAllSelected) {
+      _fetchAllEntries();
+    } else {
+      _fetchMyEntries();
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -150,7 +208,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.only(
-                  top: 72.0, left: 12.0, right: 12.0, bottom: 18),
+                  top: 72.0, left: 12.0, right: 12.0, bottom: 9),
               width: double.infinity,
               child: Card(
                 color: Theme.of(context).colorScheme.surface,
@@ -263,6 +321,33 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 12, right: 12),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ToggleButtons(
+                      onPressed: (int index) {
+                        setState(() {
+                          _isAllSelected = index == 0;
+                          _fetchEntries();
+                        });
+                      },
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      selectedBorderColor: Theme.of(context).highlightColor,
+                      fillColor: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.secondary,
+                      isSelected: [_isAllSelected, !_isAllSelected],
+                      constraints: const BoxConstraints(minHeight: 40, minWidth: 200),
+                      children: [
+                        Text('All', style: Theme.of(context).textTheme.bodyMedium),
+                        Text('Mine', style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             Flexible(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +10,9 @@ import 'package:plogathon/widgets/end_session_dialog.dart';
 import 'package:plogathon/widgets/non_recylable_dialog.dart';
 import 'package:plogathon/widgets/recylable_dialog.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:location/location.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+
 
 class ActivityPage extends StatefulWidget {
   final double destLongitude;
@@ -45,6 +49,13 @@ class _ActivityPageState extends State<ActivityPage> {
   int _latestSteps = 0;
   String _displayedSteps = "0";
 
+  //Direction Service Variables:
+  Location _locationController = Location();
+  Map<PolylineId, Polyline> _polylines = {};
+  Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
+  LatLng? _currentPosition;
+
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +66,8 @@ class _ActivityPageState extends State<ActivityPage> {
     String name = widget.destName;
     _stopWatchTimer.onStartTimer();
     initPlatformState();
+    _getLocationUpdates();
+
   }
 
   Future<void> openCamera(BuildContext context) async {
@@ -175,6 +188,64 @@ class _ActivityPageState extends State<ActivityPage> {
     await _stopWatchTimer.dispose();
   }
 
+  Future<void> _getLocationUpdates() async {
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+
+  _serviceEnabled = await _locationController.serviceEnabled();
+  if (!_serviceEnabled) {
+    _serviceEnabled = await _locationController.requestService();
+    if (!_serviceEnabled) {
+      return;
+    }
+  }
+
+  _permissionGranted = await _locationController.hasPermission();
+  if (_permissionGranted == PermissionStatus.denied) {
+    _permissionGranted = await _locationController.requestPermission();
+    if (_permissionGranted != PermissionStatus.granted) {
+      return;
+    }
+  }
+
+  _locationController.onLocationChanged.listen((LocationData currentLocation) {
+    setState(() {
+      _currentPosition = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+      _updatePolyline(_currentPosition);
+      _mapController.future.then((controller) {
+      controller.animateCamera(CameraUpdate.newLatLng(LatLng(currentLocation.latitude!, currentLocation.longitude!)));
+    });
+    });
+  });
+}
+
+  Future<void> _updatePolyline(LatLng? currentPosition) async {
+    if (currentPosition == null) return;
+    List<LatLng> polylineCoordinates = [];
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      'API_KEY_HERE!!!!!!!!!!!',
+      PointLatLng(currentPosition.latitude, currentPosition.longitude),
+      PointLatLng(widget.destLatitude, widget.destLongitude),
+      travelMode: TravelMode.walking, 
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+
+    setState(() {
+      _polylines[PolylineId('route')] = Polyline(
+        polylineId: PolylineId('route'),
+        color: Color(0xFF67B274), 
+        points: polylineCoordinates,
+        width: 5,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -204,10 +275,24 @@ class _ActivityPageState extends State<ActivityPage> {
           ),
           Expanded(
             child: Stack(children: [
-              const GoogleMap(
-                initialCameraPosition:
-                    CameraPosition(target: LatLng(1.3521, 103.8198), zoom: 11),
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _currentPosition ?? LatLng(1.3521, 103.8198), 
+                zoom: 13,
               ),
+              markers: {
+                Marker(
+                  markerId: MarkerId("_destinationLocation"),
+                  icon: BitmapDescriptor.defaultMarker,
+                  position: LatLng(widget.destLatitude, widget.destLongitude) 
+                )
+              },
+              polylines: Set<Polyline>.of(_polylines.values),
+              onMapCreated: (GoogleMapController controller) {
+                _mapController.complete(controller);
+              },
+              myLocationEnabled: true, 
+            ),
               Padding(
                 padding: const EdgeInsets.only(top: 24, left: 32, right: 32),
                 child: Column(

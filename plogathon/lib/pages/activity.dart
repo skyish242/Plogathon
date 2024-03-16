@@ -54,6 +54,7 @@ class _ActivityPageState extends State<ActivityPage> {
   Map<PolylineId, Polyline> _polylines = {};
   Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
   LatLng? _currentPosition;
+  static const API_KEY = String.fromEnvironment('MAPS_API_KEY', defaultValue: '');
 
 
   @override
@@ -224,7 +225,7 @@ class _ActivityPageState extends State<ActivityPage> {
     List<LatLng> polylineCoordinates = [];
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      'API_KEY_HERE!!!!!!!!!!!',
+      API_KEY,
       PointLatLng(currentPosition.latitude, currentPosition.longitude),
       PointLatLng(widget.destLatitude, widget.destLongitude),
       travelMode: TravelMode.walking, 

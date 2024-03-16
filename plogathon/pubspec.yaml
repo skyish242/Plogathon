@@ -48,6 +48,7 @@ dependencies:
   camera: ^0.10.5+9
   path: ^1.9.0
   pedometer: ^4.0.1
+  flutter_polyline_points: ^2.0.0
 
 dev_dependencies:
   flutter_test:

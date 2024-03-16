@@ -8,7 +8,8 @@ import 'package:plogathon/widgets/nearby_map_view.dart';
 import 'dart:convert';
 
 class NearbyPage extends StatefulWidget {
-  const NearbyPage({Key key = const Key('defaultKey')}) : super(key: key);
+  final int userID;
+  const NearbyPage({Key key = const Key('defaultKey'), required this.userID}) : super(key: key);
 
   @override
   _NearbyPageState createState() => _NearbyPageState();
@@ -256,8 +257,8 @@ class _NearbyPageState extends State<NearbyPage> {
           _locationServiceEnabled
               ? (_locations.isNotEmpty
                   ? _listView
-                      ? NearbyListView(locationData: _locations)
-                      : NearbyMapView(locationData: _locations)
+                      ? NearbyListView(locationData: _locations, userID: widget.userID)
+                      : NearbyMapView(locationData: _locations, userID: widget.userID)
                   : _noBinsMessage != null
                       ? Padding(
                           padding: const EdgeInsets.only(left: 32, right: 32),

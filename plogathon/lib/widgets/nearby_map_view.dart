@@ -4,8 +4,9 @@ import 'package:plogathon/model/location.dart';
 import 'package:plogathon/widgets/location_card.dart';
 
 class NearbyMapView extends StatelessWidget {
+  final int userID;
   final List<Location>? locationData;
-  const NearbyMapView({Key? key, this.locationData});
+  const NearbyMapView({Key? key, this.locationData, required this.userID});
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,7 @@ class NearbyMapView extends StatelessWidget {
                           (location) => SizedBox(
                             width: 300,
                             child: LocationCard(
+                              userID: userID,
                               name: location.locationName,
                               distance: location.distance,
                               long: location.long,

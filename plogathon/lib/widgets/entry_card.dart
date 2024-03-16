@@ -43,7 +43,8 @@ class EntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: cardColor ?? Color(0xFFFFFFFF),
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(
+        left: 12.0, right: 12.0, bottom: 12.0),
       child: Container(
         padding: const EdgeInsets.all(20),
         child: Column(

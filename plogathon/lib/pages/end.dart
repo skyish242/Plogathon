@@ -211,6 +211,8 @@ class _EndPageState extends State<EndPage> {
                           children: [
                             Expanded(
                               child: TextField(
+                                controller: _thoughtsController,
+                                focusNode: _focusNode,
                                 keyboardType: TextInputType.multiline,
                                 maxLength: 200,
                                 minLines: 5,
@@ -264,12 +266,7 @@ class _EndPageState extends State<EndPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         convertTime();
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const HomePage(userID: 9)),
-                            (Route<dynamic> route) => false);
+                        uploadActivity();
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 5,

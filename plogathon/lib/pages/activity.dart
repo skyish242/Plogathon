@@ -59,6 +59,7 @@ class _ActivityPageState extends State<ActivityPage> {
   Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
   LatLng? _currentPosition;
+  LatLng? _lastPosition;
   List<LatLng> _waypoints = [];
   static const API_KEY =
       String.fromEnvironment('MAPS_API_KEY', defaultValue: '');
@@ -88,7 +89,6 @@ class _ActivityPageState extends State<ActivityPage> {
           builder: (context) => CameraPage(camera: firstCamera),
         ),
       );
-
       if (context.mounted) {
         if (result['recylable']) {
           bool reroute = await showDialog(
@@ -159,7 +159,6 @@ class _ActivityPageState extends State<ActivityPage> {
                // Update distance left 
               updateDistanceLeft(LatLng(userCurrentPosition.latitude, userCurrentPosition.longitude), nearestBinCoords, LatLng(widget.destLatitude, widget.destLongitude));
             }
-            // Thanks jr
           }
         } else {
           showDialog(
@@ -172,6 +171,7 @@ class _ActivityPageState extends State<ActivityPage> {
       }
     }
   }
+  //when user adds a waypoint this function is invoked to update the new distance left. 
   void updateDistanceLeft(LatLng currentPos, LatLng newWaypoint, LatLng finalDest) {
   // Current Location to WP
   double toWaypointDistance = geolocator.Geolocator.distanceBetween(
@@ -292,12 +292,22 @@ class _ActivityPageState extends State<ActivityPage> {
         return;
       }
     }
-
     _locationController.onLocationChanged
         .listen((LocationData currentLocation) {
+      //this is to constantly update how much the user had walked
+      if (_lastPosition != null) {
+      final double distanceIncrement = geolocator.Geolocator.distanceBetween(
+        _lastPosition!.latitude,
+        _lastPosition!.longitude,
+        currentLocation.latitude!,
+        currentLocation.longitude!,
+      ) / 1000;    
+      _distanceTravelled = double.parse((_distanceTravelled + distanceIncrement).toStringAsFixed(2));
+      }
       setState(() {
         _currentPosition =
             LatLng(currentLocation.latitude!, currentLocation.longitude!);
+         _lastPosition = LatLng(currentLocation.latitude!, currentLocation.longitude!);
         _updateDistanceToDestination();    
         _updatePolyline(_currentPosition);
         _mapController.future.then((controller) {
@@ -306,6 +316,7 @@ class _ActivityPageState extends State<ActivityPage> {
         });
       });
     });
+    
   }
   //this function is to keep updating the distance left when user are traveling towards it.
   void _updateDistanceToDestination() {

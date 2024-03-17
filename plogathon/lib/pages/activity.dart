@@ -59,7 +59,8 @@ class _ActivityPageState extends State<ActivityPage> {
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
   LatLng? _currentPosition;
-  final List<LatLng> _waypoints = [];
+  LatLng? _lastPosition;
+  List<LatLng> _waypoints = [];
   static const API_KEY =
       String.fromEnvironment('MAPS_API_KEY', defaultValue: '');
 
@@ -88,7 +89,6 @@ class _ActivityPageState extends State<ActivityPage> {
           builder: (context) => CameraPage(camera: firstCamera),
         ),
       );
-
       if (context.mounted) {
         if (result['recylable']) {
           bool reroute = await showDialog(
@@ -114,23 +114,34 @@ class _ActivityPageState extends State<ActivityPage> {
             //3) Search thru json and compare
             double minDistance = double.infinity;
             Map<String, dynamic>? closestBin;
+            String closestBinLocationName = 'Unknown Location';
             for (var bin in binsData['features']) {
               var binLocation = bin['geometry']['coordinates'];
-              double distance = geolocator.Geolocator.distanceBetween(
+              double distance = double.parse((geolocator.Geolocator.distanceBetween(
                   userCurrentPosition.latitude,
                   userCurrentPosition.longitude,
                   binLocation[1],
-                  binLocation[0]);
+                  binLocation[0])/1000).toStringAsFixed(2));
               if (distance < minDistance) {
                 minDistance = distance;
                 closestBin = bin;
+                String descriptionHtml = bin['properties']['Description'];
+                RegExp regExp =
+                    RegExp(r'<th>ADDRESSSTREETNAME<\/th>\s*<td>([^<]+)<\/td>');
+                Match? match = regExp.firstMatch(descriptionHtml);
+                closestBinLocationName = match?.group(1) ?? 'Unknown Location';
               }
             }
             if (closestBin != null) {
               LatLng nearestBinCoords = LatLng(
                   closestBin['geometry']['coordinates'][1],
                   closestBin['geometry']['coordinates'][0]);
+              Map<String, dynamic> nearestBinData = {
+                'closestBinLocationName': closestBinLocationName,
+                'distance': minDistance,
+                'coordinates': nearestBinCoords};
               print('Nearest Bin Coords!!!: $nearestBinCoords');
+              print(nearestBinData);
               setState(() {
                 _waypoints.add(nearestBinCoords);
                 _markers[const MarkerId('nearestBin')] = Marker(
@@ -138,11 +149,16 @@ class _ActivityPageState extends State<ActivityPage> {
                   position: nearestBinCoords,
                   icon: BitmapDescriptor.defaultMarkerWithHue(
                       BitmapDescriptor.hueBlue),
+                  infoWindow: InfoWindow(
+                    title: nearestBinData['closestBinLocationName'],
+                    snippet: '${nearestBinData['distance']} km away'
+                  ),
                 );
               });
+              print('distance before updating: $_distanceLeft');
+               // Update distance left 
+              updateDistanceLeft(LatLng(userCurrentPosition.latitude, userCurrentPosition.longitude), nearestBinCoords, LatLng(widget.destLatitude, widget.destLongitude));
             }
-            // Update distance left (yet to implement)
-            // Thanks jr
           }
         } else {
           showDialog(
@@ -155,6 +171,31 @@ class _ActivityPageState extends State<ActivityPage> {
       }
     }
   }
+  //when user adds a waypoint this function is invoked to update the new distance left. 
+  void updateDistanceLeft(LatLng currentPos, LatLng newWaypoint, LatLng finalDest) {
+  // Current Location to WP
+  double toWaypointDistance = geolocator.Geolocator.distanceBetween(
+    currentPos.latitude,
+    currentPos.longitude,
+    newWaypoint.latitude,
+    newWaypoint.longitude,
+  ) / 1000; 
+
+  // WP to final dest
+  double toFinalDestDistance = geolocator.Geolocator.distanceBetween(
+    newWaypoint.latitude,
+    newWaypoint.longitude,
+    finalDest.latitude,
+    finalDest.longitude,
+  ) / 1000; 
+  print('to waypoint dest: $toWaypointDistance');
+  print('to final dest:$toFinalDestDistance');
+
+  setState(() {
+    _distanceLeft = double.parse((toWaypointDistance + toFinalDestDistance).toStringAsFixed(2));
+    print('updated distanceleft: $_distanceLeft');
+  });
+}
 
   // Step counter functions
   void onStepCount(StepCount event) {
@@ -251,12 +292,23 @@ class _ActivityPageState extends State<ActivityPage> {
         return;
       }
     }
-
     _locationController.onLocationChanged
         .listen((LocationData currentLocation) {
+      //this is to constantly update how much the user had walked
+      if (_lastPosition != null) {
+      final double distanceIncrement = geolocator.Geolocator.distanceBetween(
+        _lastPosition!.latitude,
+        _lastPosition!.longitude,
+        currentLocation.latitude!,
+        currentLocation.longitude!,
+      ) / 1000;    
+      _distanceTravelled = double.parse((_distanceTravelled + distanceIncrement).toStringAsFixed(2));
+      }
       setState(() {
         _currentPosition =
             LatLng(currentLocation.latitude!, currentLocation.longitude!);
+         _lastPosition = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+        _updateDistanceToDestination();    
         _updatePolyline(_currentPosition);
         _mapController.future.then((controller) {
           controller.animateCamera(CameraUpdate.newLatLng(
@@ -264,8 +316,23 @@ class _ActivityPageState extends State<ActivityPage> {
         });
       });
     });
+    
   }
-
+  //this function is to keep updating the distance left when user are traveling towards it.
+  void _updateDistanceToDestination() {
+  if (_currentPosition == null) {
+    return;
+  }
+  final distance = geolocator.Geolocator.distanceBetween(
+    _currentPosition!.latitude,
+    _currentPosition!.longitude,
+    widget.destLatitude,
+    widget.destLongitude,
+  ) / 1000; 
+  setState(() {
+    _distanceLeft = double.parse(distance.toStringAsFixed(2)); 
+    });
+  }
   Future<void> _updatePolyline(LatLng? currentPosition) async {
     if (currentPosition == null) return;
     List<LatLng> polylineCoordinates = [];
@@ -337,6 +404,10 @@ class _ActivityPageState extends State<ActivityPage> {
                     markerId: const MarkerId("_destinationLocation"),
                     icon: BitmapDescriptor.defaultMarker,
                     position: LatLng(widget.destLatitude, widget.destLongitude),
+                    infoWindow: InfoWindow(
+                      title: widget.destName,
+                      snippet: '${widget.distance} km away'
+                    ),
                   ),
                   ..._markers.values,
                 },

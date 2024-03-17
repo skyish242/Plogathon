@@ -2,7 +2,6 @@
 import pandas as pd
 import os, re, json, pickle
 
-
 """ Variables """
 # Folders
 PARENT_DATASET_FOLDER = './dataset'
@@ -15,11 +14,15 @@ recyclability_dataset_file = f'{PARENT_DATASET_FOLDER}/cgs_data.txt'
 recyclability_file = f'{EXPORT_FOLDER}/df_recyclability.pkl'
 dataset_file = f'{EXPORT_FOLDER}/df_dataset.pkl'
 material_items_file = f'{EXPORT_FOLDER}/dict_material_items.pkl'
+x_train_images_file = f'{EXPORT_FOLDER}/x_train_images.pkl'
+x_test_images_file = f'{EXPORT_FOLDER}/x_test_images.pkl'
 
 # Material-Class mapping
 material_class_mapping = {0: 'Others', 1: 'Paper', 2: 'Plastic', 3: 'Glass', 4: 'Metal'}
 inverse_material_class_mapping = {v: k for k, v in material_class_mapping.items()}
 
+# Hyper Parameter Tuning
+optimal_model = "ViT-L/14"
 
 """ Functions """
 # Function to serialise an object into a pickle file

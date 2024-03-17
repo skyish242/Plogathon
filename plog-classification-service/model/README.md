@@ -63,6 +63,9 @@ However, CLIP was unable to produce desirable results for multi-class classifica
 ---
 To further optimise CLIP for OMT classification, transfer learning was applied by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This enables the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance.
 
+![OMT Model](docs/OMT-Model.png)
+*Adapted from OpenAI's CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
+
 Initial testing of CLIP's nine models as zero-shot classifiers (without prior training) on the dataset revealed that the `ViT-L/14` model performed the best on both a 1% and 10% stratified sample of the dataset. Stratified samples of the dataset were used to speed up initial testing and fine-tuning of the model. The `ViT-L/14` model's performance, when tested against a 10% stratified sample of the dataset, is provided illustrated below:
 ```
 Model: ViT-L/14

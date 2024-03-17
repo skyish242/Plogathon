@@ -298,6 +298,7 @@ class _ActivityPageState extends State<ActivityPage> {
       setState(() {
         _currentPosition =
             LatLng(currentLocation.latitude!, currentLocation.longitude!);
+        _updateDistanceToDestination();    
         _updatePolyline(_currentPosition);
         _mapController.future.then((controller) {
           controller.animateCamera(CameraUpdate.newLatLng(
@@ -306,7 +307,21 @@ class _ActivityPageState extends State<ActivityPage> {
       });
     });
   }
-
+  //this function is to keep updating the distance left when user are traveling towards it.
+  void _updateDistanceToDestination() {
+  if (_currentPosition == null) {
+    return;
+  }
+  final distance = geolocator.Geolocator.distanceBetween(
+    _currentPosition!.latitude,
+    _currentPosition!.longitude,
+    widget.destLatitude,
+    widget.destLongitude,
+  ) / 1000; 
+  setState(() {
+    _distanceLeft = double.parse(distance.toStringAsFixed(2)); 
+    });
+  }
   Future<void> _updatePolyline(LatLng? currentPosition) async {
     if (currentPosition == null) return;
     List<LatLng> polylineCoordinates = [];

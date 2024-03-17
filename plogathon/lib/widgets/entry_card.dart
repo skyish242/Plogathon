@@ -49,8 +49,7 @@ class EntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: cardColor ?? const Color(0xFFFFFFFF),
-      margin: const EdgeInsets.only(
-        left: 12.0, right: 12.0, bottom: 12.0),
+      margin: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 12.0),
       child: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -90,7 +89,8 @@ class EntryCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text("${distance}km",
+                          child: Text(
+                              "${distance?.toStringAsFixed(2).padLeft(2, '0')}km",
                               style: Theme.of(context).textTheme.titleMedium),
                         )
                       ],

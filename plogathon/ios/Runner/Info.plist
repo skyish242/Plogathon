@@ -26,10 +26,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.plogathon</string>
+			<string>plogathon</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.plogathon</string>
+				<string>plogathon</string>
 			</array>
 		</dict>
 	</array>

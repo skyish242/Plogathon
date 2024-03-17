@@ -6,18 +6,19 @@ class UserService {
   final ClientChannel channel;
   final UserServiceClient client;
 
-  UserService(): channel = ClientChannel(
-        '34.73.60.176',
-        port: 5002,
-        options:
-            const ChannelOptions(credentials: ChannelCredentials.insecure()),
-      ),
-      client = UserServiceClient(ClientChannel(
-        '34.73.60.176',
-        port: 5002,
-        options:
-            const ChannelOptions(credentials: ChannelCredentials.insecure()),
-      ));
+  UserService()
+      : channel = ClientChannel(
+          '34.73.60.176',
+          port: 5002,
+          options:
+              const ChannelOptions(credentials: ChannelCredentials.insecure()),
+        ),
+        client = UserServiceClient(ClientChannel(
+          '34.73.60.176',
+          port: 5002,
+          options:
+              const ChannelOptions(credentials: ChannelCredentials.insecure()),
+        ));
 
   // Create User
   Future<ProtoUser> createUser(User request) async {

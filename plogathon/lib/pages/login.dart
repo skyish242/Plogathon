@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/pages/register.dart';
+import 'package:plogathon/services/provider.dart';
+import 'package:plogathon/services/stravaservice.dart';
 import 'package:plogathon/services/userservice.dart';
 
 // Strava
 import 'package:intl/intl.dart';
 import 'dart:async';
-import 'authentication.dart';
-import 'secret.dart';
 import 'package:strava_client/strava_client.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,24 +19,24 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _userService = UserService();
+  final _stravaService = StravaService();
   final _formKey = GlobalKey<FormState>();
 
   final _usernameController = TextEditingController(text: "ishowmeat");
   final _passwordController = TextEditingController(text: "testest1");
 
-  //Strava 
-  late final StravaClient stravaClient;
+  //Strava
   final TextEditingController _textEditingController = TextEditingController();
   final DateFormat dateFormatter = DateFormat("HH:mm:ss");
   bool isLoggedIn = false;
   TokenResponse? token;
-  //Strava 
+  //Strava
   @override
   void initState() {
-    stravaClient = StravaClient(secret: StravaSecret.clientSecret, clientId: StravaSecret.clientId);
     super.initState();
   }
-  //Strava 
+
+  //Strava
   FutureOr<Null> showErrorMessage(dynamic error, dynamic stackTrace) {
     if (error is Fault) {
       showDialog(
@@ -50,30 +50,32 @@ class _LoginPageState extends State<LoginPage> {
           });
     }
   }
-  //Strava 
-    void testAuthentication() {
-      ExampleAuthentication(stravaClient).testAuthentication(
-        [
-          AuthenticationScope.profile_read_all,
-          AuthenticationScope.read_all,
-          AuthenticationScope.activity_read_all
-        ],
-        "plogathon://plogathon.com",
-      ).then((token) {
-        setState(() {
-          isLoggedIn = true;
-          this.token = token;
-        });
-        print("Authentication successful. Token: ${token.accessToken}");
-        _textEditingController.text = token.accessToken;
-      }).catchError((error){
-        print("Authentication failed: $error");
-        showErrorMessage;
+
+  //Strava
+  void testAuthentication() {
+    _stravaService.authorize(
+      [
+        AuthenticationScope.profile_read_all,
+        AuthenticationScope.read_all,
+        AuthenticationScope.activity_read_all
+      ],
+      "plogathon://plogathon.com",
+    ).then((token) {
+      setState(() {
+        isLoggedIn = true;
+        this.token = token;
+      });
+      print("Authentication successful. Token: ${token.accessToken}");
+      _textEditingController.text = token.accessToken;
+    }).catchError((error) {
+      print("Authentication failed: $error");
+      showErrorMessage;
     });
-    }
-  //Strava 
+  }
+
+  //Strava
   void testDeauth() {
-    ExampleAuthentication(stravaClient).testDeauthorize().then((value) {
+    _stravaService.deAuthorize().then((value) {
       setState(() {
         isLoggedIn = false;
         token = null;
@@ -280,7 +282,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ),
-                            Padding( // Strava
+                            Padding(
+                              // Strava
                               padding: const EdgeInsets.only(bottom: 20.0),
                               child: SizedBox(
                                 width: double.infinity,
@@ -300,7 +303,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ),
-                            Padding( // Strava
+                            Padding(
+                              // Strava
                               padding: const EdgeInsets.only(bottom: 20.0),
                               child: SizedBox(
                                 width: double.infinity,

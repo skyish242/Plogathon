@@ -42,9 +42,25 @@ class _RegisterPageState extends State<RegisterPage> {
 
         ProtoUser createdUser = await _userService.createUser(request);
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('User created!',
+                style: TextStyle(color: Colors.white)),
+            content:
+                Text('Your account has been successfully created.', style: const TextStyle(color: Colors.white)),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
         );
       }
     } catch (e) {

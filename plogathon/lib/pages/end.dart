@@ -24,7 +24,9 @@ class EndPage extends StatefulWidget {
 
 class _EndPageState extends State<EndPage> {
   final activityService = ActivityService();
-  final TextEditingController _thoughtsController = TextEditingController();
+  final _thoughtsController = TextEditingController();
+  final _activityNameController = TextEditingController();
+  final _activityTypeController = TextEditingController();
   final _focusNode = FocusNode();
 
   double convertDistance() {
@@ -53,8 +55,8 @@ class _EndPageState extends State<EndPage> {
     try {
       final newActivity = Activity(
         userID: widget.userID,
-        name: 'Test Activity',
-        type: 'Test Type',
+        name: _activityNameController.text,
+        type: _activityTypeController.text,
         description: _thoughtsController.text,
         datetime: DateTime.now().toUtc().toIso8601String(),
         routeMap: 'Test Route Map',
@@ -66,11 +68,27 @@ class _EndPageState extends State<EndPage> {
 
       final createdActivity = await activityService.createActivity(newActivity);
 
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePage(userID: widget.userID)),
-          (Route<dynamic> route) => false);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Activity uploaded!',
+              style: TextStyle(color: Colors.white)),
+          content:
+              Text('Your activity has been successfully saved.', style: const TextStyle(color: Colors.white)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage(userID: widget.userID)),
+                  (Route<dynamic> route) => false);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     } catch (e) {
       showDialog(
         context: context,
@@ -203,8 +221,70 @@ class _EndPageState extends State<EndPage> {
                       ),
                     ),
                   ),
-                  Container(
+                  Padding(
                     padding: const EdgeInsets.only(top: 30.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 64,
+                      child: TextField(
+                        controller: _activityNameController,
+                        cursorColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        decoration: InputDecoration(
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                color: const Color(0xFFB3B3B3),
+                              ),
+                          fillColor: const Color(0xFFEEEEEE),
+                          filled: true,
+                          hintText: 'Activity name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12, bottom: 12.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 64,
+                      child: TextField(
+                        controller: _activityTypeController,
+                        cursorColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        decoration: InputDecoration(
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                color: const Color(0xFFB3B3B3),
+                              ),
+                          fillColor: const Color(0xFFEEEEEE),
+                          filled: true,
+                          hintText: 'Activity type',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    // padding: const EdgeInsets.only(top: 30.0),
                     child: Column(
                       children: [
                         Row(

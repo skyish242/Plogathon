@@ -157,7 +157,7 @@ class _ActivityPageState extends State<ActivityPage> {
               });
               print('distance before updating: $_distanceLeft');
                // Update distance left 
-              updateDistanceLeft(_currentPosition!, nearestBinCoords, LatLng(widget.destLatitude, widget.destLongitude));
+              updateDistanceLeft(LatLng(userCurrentPosition.latitude, userCurrentPosition.longitude), nearestBinCoords, LatLng(widget.destLatitude, widget.destLongitude));
             }
             // Thanks jr
           }

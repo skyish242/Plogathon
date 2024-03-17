@@ -10,9 +10,9 @@ class ExampleAuthentication {
         scopes: scopes,
         redirectUrl: redirectUrl,
         forceShowingApproval: false,
-        callbackUrlScheme: "com.plogathon",
+        callbackUrlScheme: "plogathon",
         preferEphemeral: true
-    );
+    );  
   }
 
   Future<void> testDeauthorize() {

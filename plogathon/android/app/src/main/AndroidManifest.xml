@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="plogathon"
         android:name="${applicationName}"
@@ -39,8 +40,7 @@
               <action android:name="android.intent.action.VIEW" />  
               <category android:name="android.intent.category.DEFAULT" /> 
               <category android:name="android.intent.category.BROWSABLE" /> 
-              <data android:scheme="com.plogathon" android:host="redirect" />
-              <data android:pathPattern="/.*" />   
+              <data android:scheme="plogathon" android:host="plogathon.com" />
             </intent-filter>
         </activity>
 

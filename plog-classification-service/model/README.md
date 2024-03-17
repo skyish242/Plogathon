@@ -57,68 +57,74 @@ The OMT model is built on top of OpenAI's [CLIP](https://openai.com/research/cli
 ![CLIP Performance](docs/clip-performance.png)
 *Source: OpenAI CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
 
-However, CLIP was unable to produce desirable results for multi-class classification of object material types, which is likely due to its lack of generalisation to such images during its pre-training. Initial testing on the dataset resulted in the highest accuracy of 66.21% and precision of 66.71% when performing as a zero-shot classifier. Testing revealed that the `ViT-L/14` model performed the best, with the following results when tested against a 10% stratified sample of the dataset:
-```
-    Model: ViT-L/14
-    Model parameters: 427,616,513
-    Input resolution: 224
-    Context length: 77
-    Vocab size: 49408
-
-    Accuracy: 0.6621287128712872
-    Precision: 0.6671066030427073
-    Recall: 0.6464374130645891
-    F1 Score: 0.6345731510632313
-    Matthews Correlation Coefficient (MCC): 0.5628138868486012
-    Cohen's Kappa: 0.557143634710465
-    Hamming Loss: 0.3378712871287129
-
-    Confusion Matrix:
-    [[683  81  16   2 141]
-    [ 56 334  65   0   2]
-    [ 27  13 246  12   0]
-    [ 72   2  73 173   2]
-    [ 34  82 134   5 169]]
-
-    Classification Report:
-                precision    recall  f1-score   support
-
-            0       0.78      0.74      0.76       923
-            1       0.65      0.73      0.69       457
-            2       0.46      0.83      0.59       298
-            3       0.90      0.54      0.67       322
-            4       0.54      0.40      0.46       424
-
-        accuracy                           0.66      2424
-    macro avg       0.67      0.65      0.63      2424
-    weighted avg       0.69      0.66      0.66      2424
-```
+However, CLIP was unable to produce desirable results for multi-class classification of object material types, which is likely due to its lack of generalisation to such images during its pre-training. Initial testing on the dataset resulted in the highest accuracy of *72.01%* and precision of *73.49%* when performing as a zero-shot classifier. 
 
 ### Model Fine-Tuning and Performance
 ---
-To optimise CLIP for OMT classification, transfer learning was applied by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This enables the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance.
+To further optimise CLIP for OMT classification, transfer learning was applied by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This enables the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance.
 
-Initial testing of CLIP's nine models as zero-shot classifiers (without prior training) on the dataset revealed that the `ViT-L/14` model performed the best on both a 1% and 10% stratified sample of the dataset. Stratified samples of the dataset were used to speed up initial testing and fine-tuning of the model. A classification head was trained on the OMT dataset and attached onto this variant of CLIP to enable optimal OMT classification. 
-
-Prompt engineering on the text captions provided to the base CLIP model were also performed, revealing optimal performance using text prompts (ontologies) following the convention "photo of an object made of `material`". The text prompts provided for each of the five material type classes are provided below, with a special exception to the `Others` class.
+Initial testing of CLIP's nine models as zero-shot classifiers (without prior training) on the dataset revealed that the `ViT-L/14` model performed the best on both a 1% and 10% stratified sample of the dataset. Stratified samples of the dataset were used to speed up initial testing and fine-tuning of the model. The `ViT-L/14` model's performance, when tested against a 10% stratified sample of the dataset, is provided illustrated below:
 ```
-Paper: photo of an object made of paper
+Model: ViT-L/14
+Model parameters: 427,616,513
+Input resolution: 224
+Context length: 77
+Vocab size: 49408
 
-Plastic: photo of an object made of plastic
+Accuracy: 0.720164609053498
+Precision: 0.734947393591583
+Recall: 0.7138424998330328
+F1 Score: 0.703695785990944
+Matthews Correlation Coefficient (MCC): 0.640289920044027
+Cohen's Kappa: 0.6349013455887227
+Hamming Loss: 0.27983539094650206
 
-Glass: photo of an object made of glass
+Confusion Matrix:
+ [[70  9  0  0 14]
+ [ 4 35  6  0  1]
+ [ 2  2 26  0  0]
+ [ 5  0  8 19  0]
+ [ 1  5 11  0 25]]
 
-Metal: photo of an object made of metal
+Classification Report:
+               precision    recall  f1-score   support
 
-Others: photo of an object made of anything other than paper, plastic, glass, or metal
+           0       0.85      0.75      0.80        93
+           1       0.69      0.76      0.72        46
+           2       0.51      0.87      0.64        30
+           3       1.00      0.59      0.75        32
+           4       0.62      0.60      0.61        42
+
+    accuracy                           0.72       243
+   macro avg       0.73      0.71      0.70       243
+weighted avg       0.76      0.72      0.73       243
 ```
 
+Prompt engineering on the text captions provided to the base CLIP model were also performed, revealing optimal performance using text prompts (ontologies) following the convention `a photo of an object made of <material>`. 
 
-After optimisations, the final OMT model was able to produce the following results:
+For instance, the following ontologies were tested:
+- `<material>` (44.03% Accuracy, 49.70% Precision)
+- `object made of <material>` (52.26% Accuracy, 57.56% Precision)
+- `a picture of an object made of <material>` (68.31% Accuracy, 70.44% Precision)
+- `a photo of an object made of <material>`  (**Optimal**: 72.01% Accuracy, 73.49% Precision)
+
+Expressing appropriate class descriptions to CLIP is essential to fine-tuning its performance, as it enables us to leverage on the richness of its pre-training procedures. The optimised text prompts for each of the five material type classes are provided below, with a special exception for the `Others` class.
+```
+Paper: a photo of an object made of paper
+
+Plastic: a photo of an object made of plastic
+
+Glass: a photo of an object made of glass
+
+Metal: a photo of an object made of metal
+
+Others: a photo of an object made of anything other than paper, plastic, glass, or metal
+```
+
+Subsequently, a classification head was trained on the OMT dataset and attached onto CLIP to enable optimal OMT classification. After optimisations, the final OMT model was able to produce the following results:
 ```
 FINAL MODEL RESULTS
 ```
-
 
 ### Directory Structure
 ---

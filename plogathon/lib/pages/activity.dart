@@ -47,16 +47,16 @@ class _ActivityPageState extends State<ActivityPage> {
 
   int _wasteCount = 0;
   double _distanceLeft = 0;
-  double _distanceTravelled = 0;
+  final double _distanceTravelled = 0;
   int _time = 0;
   int _latestSteps = 0;
   String _displayedSteps = "0";
 
   //Direction Service Variables:
-  Location _locationController = Location();
-  Map<PolylineId, Polyline> _polylines = {};
-  Map<MarkerId, Marker> _markers = {};
-  Completer<GoogleMapController> _mapController =
+  final Location _locationController = Location();
+  final Map<PolylineId, Polyline> _polylines = {};
+  final Map<MarkerId, Marker> _markers = {};
+  final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
   LatLng? _currentPosition;
   LatLng? _lastPosition;
@@ -144,8 +144,8 @@ class _ActivityPageState extends State<ActivityPage> {
               print(nearestBinData);
               setState(() {
                 _waypoints.add(nearestBinCoords);
-                _markers[MarkerId('nearestBin')] = Marker(
-                  markerId: MarkerId('nearestBin'),
+                _markers[const MarkerId('nearestBin')] = Marker(
+                  markerId: const MarkerId('nearestBin'),
                   position: nearestBinCoords,
                   icon: BitmapDescriptor.defaultMarkerWithHue(
                       BitmapDescriptor.hueBlue),
@@ -274,21 +274,21 @@ class _ActivityPageState extends State<ActivityPage> {
   }
 
   Future<void> _getLocationUpdates() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
 
-    _serviceEnabled = await _locationController.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _locationController.requestService();
-      if (!_serviceEnabled) {
+    serviceEnabled = await _locationController.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await _locationController.requestService();
+      if (!serviceEnabled) {
         return;
       }
     }
 
-    _permissionGranted = await _locationController.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _locationController.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await _locationController.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _locationController.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
@@ -350,15 +350,15 @@ class _ActivityPageState extends State<ActivityPage> {
         wayPoints: polylineWayPoints);
 
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+      for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
+      }
     }
 
     setState(() {
-      _polylines[PolylineId('route')] = Polyline(
-        polylineId: PolylineId('route'),
-        color: Color(0xFF67B274),
+      _polylines[const PolylineId('route')] = Polyline(
+        polylineId: const PolylineId('route'),
+        color: const Color(0xFF67B274),
         points: polylineCoordinates,
         width: 5,
       );
@@ -396,12 +396,12 @@ class _ActivityPageState extends State<ActivityPage> {
             child: Stack(children: [
               GoogleMap(
                 initialCameraPosition: CameraPosition(
-                  target: _currentPosition ?? LatLng(1.3521, 103.8198),
+                  target: _currentPosition ?? const LatLng(1.3521, 103.8198),
                   zoom: 13,
                 ),
                 markers: {
                   Marker(
-                    markerId: MarkerId("_destinationLocation"),
+                    markerId: const MarkerId("_destinationLocation"),
                     icon: BitmapDescriptor.defaultMarker,
                     position: LatLng(widget.destLatitude, widget.destLongitude),
                     infoWindow: InfoWindow(

@@ -48,7 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
             title: const Text('User created!',
                 style: TextStyle(color: Colors.white)),
             content:
-                Text('Your account has been successfully created.', style: const TextStyle(color: Colors.white)),
+                const Text('Your account has been successfully created.', style: TextStyle(color: Colors.white)),
             actions: <Widget>[
               TextButton(
                 onPressed: () {

@@ -7,8 +7,7 @@ class NearbyMapView extends StatefulWidget {
   final List<Location>? locationData;
   final int userID;
 
-  const NearbyMapView({Key? key, this.locationData, required this.userID})
-      : super(key: key);
+  const NearbyMapView({super.key, this.locationData, required this.userID});
 
   @override
   State<NearbyMapView> createState() => _NearbyMapViewState();

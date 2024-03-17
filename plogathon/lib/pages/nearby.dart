@@ -264,11 +264,11 @@ class _NearbyPageState extends State<NearbyPage> {
                           padding: const EdgeInsets.only(left: 32, right: 32),
                           child: Text(
                             _noBinsMessage!,
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         )
-                      : Center(child: CircularProgressIndicator()))
-              : Center(
+                      : const Center(child: CircularProgressIndicator()))
+              : const Center(
                   child: Text('Location services are disabled.'),
                 ),
         ],

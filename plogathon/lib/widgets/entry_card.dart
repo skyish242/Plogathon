@@ -48,7 +48,7 @@ class EntryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: cardColor ?? Color(0xFFFFFFFF),
+      color: cardColor ?? const Color(0xFFFFFFFF),
       margin: const EdgeInsets.only(
         left: 12.0, right: 12.0, bottom: 12.0),
       child: Container(
@@ -72,7 +72,7 @@ class EntryCard extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
-                          child: Text("+" + wasteCount.toString(),
+                          child: Text("+$wasteCount",
                               style: Theme.of(context).textTheme.titleMedium),
                         )
                       ],

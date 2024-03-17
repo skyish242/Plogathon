@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -41,44 +39,6 @@ class _HomePageState extends State<HomePage> {
     _fetchUser();
     _fetchEntries();
   }
-
-  /*
-  void _fetchEntries() async {
-    _cards = [];
-    List<int> cardColors = [0xFFEBFFEE, 0xFFF7FFD6, 0xFFEDFAFF];
-
-    List<Map<String, dynamic>> results = await DB.query(Entry.table);
-    _data = results.map((item) => Entry.fromMap(item)).toList();
-
-    /// Each element in data should include:
-    /// * Name
-    /// * Time
-    /// * eco-effort
-    /// * mileage
-    /// * duration
-
-    int index = 0;
-    _data?.forEach((element) {
-      _cards.add(
-        EntryCard(
-          entry: element,
-          cardColor: Color(cardColors[index % 3]),
-        ),
-      );
-
-      index++;
-    });
-
-    setState(() {});
-  }
-  */
-
-  /*
-  void _addEntries(Entry en) async {
-    DB.insert(Entry.table, en);
-    _fetchEntries();
-  }
-  */
 
   void _fetchUser() async {
     try {
@@ -155,8 +115,8 @@ class _HomePageState extends State<HomePage> {
 
         if (tempUser.userID == widget.userID) {
           if (!_initialLoad) {
-              _userWasteCount += activity.wasteCount;
-              _userMileageCount += activity.distance;
+            _userWasteCount += activity.wasteCount;
+            _userMileageCount += activity.distance;
           }
 
           int colorIndex = i % cardColors.length;
@@ -351,7 +311,8 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => new NearbyPage(userID: widget.userID))),
+                                    builder: (context) =>
+                                        NearbyPage(userID: widget.userID))),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).primaryColor,
                               elevation: 5,

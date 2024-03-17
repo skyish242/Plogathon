@@ -4,6 +4,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:plogathon/pages/login.dart';
 import 'package:plogathon/pages/nearby.dart';
+import 'package:plogathon/services/provider.dart';
 import 'package:plogathon/widgets/entry_card.dart';
 import 'package:plogathon/services/grpc/activity/activity.pb.dart';
 import 'package:plogathon/services/grpc/user/user.pb.dart';
@@ -11,13 +12,14 @@ import 'package:plogathon/services/activityservice.dart';
 import 'package:plogathon/services/userservice.dart';
 
 class HomePage extends StatefulWidget {
-  final int userID;
+  final int userID = Provider().userId;
 
-  const HomePage({Key key = const Key('defaultKey'), required this.userID})
-      : super(key: key);
+  HomePage({Key key = const Key('defaultKey')}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() {
+    return _HomePageState();
+  }
 }
 
 class _HomePageState extends State<HomePage> {
@@ -44,9 +46,11 @@ class _HomePageState extends State<HomePage> {
     try {
       ProtoUser user = await userService.findOneUser(widget.userID);
 
-      setState(() {
-        _name = "${user.firstName} ${user.lastName}";
-      });
+      if (mounted) {
+        setState(() {
+          _name = "${user.firstName} ${user.lastName}";
+        });
+      }
     } catch (e) {
       print('Fetching user failed: $e');
     }
@@ -91,11 +95,14 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
-      setState(() {
-        _cards = List<EntryCard>.from(cards);
-        _isLoading = false;
-        _initialLoad = true;
-      });
+
+      if (mounted) {
+        setState(() {
+          _cards = List<EntryCard>.from(cards);
+          _isLoading = false;
+          _initialLoad = true;
+        });
+      }
     } catch (e) {
       print('Failed to fetch activities: $e');
     }
@@ -133,11 +140,14 @@ class _HomePageState extends State<HomePage> {
           );
         }
       }
-      setState(() {
-        _cards = List<EntryCard>.from(cards);
-        _isLoading = false;
-        _initialLoad = true;
-      });
+
+      if (mounted) {
+        setState(() {
+          _cards = List<EntryCard>.from(cards);
+          _isLoading = false;
+          _initialLoad = true;
+        });
+      }
     } catch (e) {
       print('Failed to fetch activities: $e');
     }

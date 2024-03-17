@@ -5,9 +5,8 @@ import 'package:plogathon/widgets/location_card.dart';
 
 class NearbyMapView extends StatefulWidget {
   final List<Location>? locationData;
-  final int userID;
 
-  const NearbyMapView({super.key, this.locationData, required this.userID});
+  const NearbyMapView({super.key, this.locationData});
 
   @override
   State<NearbyMapView> createState() => _NearbyMapViewState();
@@ -15,9 +14,41 @@ class NearbyMapView extends StatefulWidget {
 
 class _NearbyMapViewState extends State<NearbyMapView> {
   GoogleMapController? _controller;
+  List<Marker> _markers = [];
+
+  late BitmapDescriptor pinLocationIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    setPin();
+  }
+
+  void setPin() {
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(), 'assets/trash.png')
+        .then((onValue) {
+      pinLocationIcon = onValue;
+    });
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     _controller = controller;
+    setState(() {
+      // Create a list of Marker objects from the location data
+      _markers = widget.locationData?.map((location) {
+            return Marker(
+              markerId: MarkerId(location.locationName),
+              position: LatLng(location.lat, location.long),
+              icon: pinLocationIcon,
+              infoWindow: InfoWindow(
+                title: location.locationName,
+                snippet: '${location.distance} km away',
+              ),
+            );
+          }).toList() ??
+          [];
+    });
   }
 
   void _onLocationTap(String markerId, double lat, double long) {
@@ -27,19 +58,6 @@ class _NearbyMapViewState extends State<NearbyMapView> {
 
   @override
   Widget build(BuildContext context) {
-    // Create a list of Marker objects from the location data
-    List<Marker> markers = widget.locationData?.map((location) {
-          return Marker(
-            markerId: MarkerId(location.locationName),
-            position: LatLng(location.lat, location.long),
-            infoWindow: InfoWindow(
-              title: location.locationName,
-              snippet: '${location.distance} km away',
-            ),
-          );
-        }).toList() ??
-        [];
-
     // Gmaps here
     return Expanded(
       child: Stack(
@@ -48,7 +66,7 @@ class _NearbyMapViewState extends State<NearbyMapView> {
             onMapCreated: _onMapCreated,
             initialCameraPosition: const CameraPosition(
                 target: LatLng(1.3521, 103.8198), zoom: 11),
-            markers: Set<Marker>.from(markers),
+            markers: Set<Marker>.from(_markers),
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
           ),
@@ -70,7 +88,6 @@ class _NearbyMapViewState extends State<NearbyMapView> {
                             child: SizedBox(
                               width: 300,
                               child: LocationCard(
-                                userID: widget.userID,
                                 name: location.locationName,
                                 distance: location.distance,
                                 long: location.long,

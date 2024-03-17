@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:plogathon/pages/onboarding.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((value) => runApp(const MainApp()));
   runApp(const MainApp());
 }
 
@@ -32,6 +39,18 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return const Color(0xFFABD4B2).withOpacity(0.2);
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
           colorScheme: colorScheme,
           textTheme: TextTheme(
             displayLarge: GoogleFonts.zenTokyoZoo(

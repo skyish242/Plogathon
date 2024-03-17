@@ -5,6 +5,7 @@ import 'package:plogathon/services/grpc/user/user.pb.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key = const Key('defaultKey')}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _RegisterPageState();
 }
@@ -40,15 +41,15 @@ class _RegisterPageState extends State<RegisterPage> {
           ..email = _emailController.text
           ..password = _passwordController.text;
 
-        ProtoUser createdUser = await _userService.createUser(request);
+        await _userService.createUser(request);
 
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('User created!',
                 style: TextStyle(color: Colors.white)),
-            content:
-                const Text('Your account has been successfully created.', style: TextStyle(color: Colors.white)),
+            content: const Text('Your account has been successfully created.',
+                style: TextStyle(color: Colors.white)),
             actions: <Widget>[
               TextButton(
                 onPressed: () {

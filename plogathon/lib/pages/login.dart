@@ -14,7 +14,9 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() {
+    return _LoginPageState();
+  }
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -28,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   //Strava
   final TextEditingController _textEditingController = TextEditingController();
   final DateFormat dateFormatter = DateFormat("HH:mm:ss");
-  bool isLoggedIn = false;
+  bool _enabledButtons = true;
   TokenResponse? token;
   //Strava
   @override
@@ -62,7 +64,6 @@ class _LoginPageState extends State<LoginPage> {
       "plogathon://plogathon.com",
     ).then((token) {
       setState(() {
-        isLoggedIn = true;
         this.token = token;
       });
       print("Authentication successful. Token: ${token.accessToken}");
@@ -77,7 +78,6 @@ class _LoginPageState extends State<LoginPage> {
   void testDeauth() {
     _stravaService.deAuthorize().then((value) {
       setState(() {
-        isLoggedIn = false;
         token = null;
         _textEditingController.clear();
       });
@@ -90,15 +90,25 @@ class _LoginPageState extends State<LoginPage> {
           _passwordController.text.isEmpty) {
         throw ('Please fill in all fields');
       } else {
+        setState(() {
+          _enabledButtons = false;
+        });
+
         int userID = await _userService.login(
             _usernameController.text, _passwordController.text);
 
+        Provider().userId = userID;
+
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(userID: userID)),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
     } catch (e) {
+      setState(() {
+        _enabledButtons = true;
+      });
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -264,11 +274,14 @@ class _LoginPageState extends State<LoginPage> {
                                 width: double.infinity,
                                 height: 50.0,
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      _handleLogin();
-                                    }
-                                  },
+                                  onPressed: _enabledButtons
+                                      ? () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            _handleLogin();
+                                          }
+                                        }
+                                      : null,
                                   style: ElevatedButton.styleFrom(
                                     elevation: 5,
                                     backgroundColor:
@@ -329,12 +342,15 @@ class _LoginPageState extends State<LoginPage> {
                               width: double.infinity,
                               height: 50.0,
                               child: ElevatedButton(
-                                onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const RegisterPage(),
-                                  ),
-                                ),
+                                onPressed: _enabledButtons
+                                    ? () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const RegisterPage(),
+                                          ),
+                                        )
+                                    : null,
                                 style: ElevatedButton.styleFrom(
                                   elevation: 5,
                                   backgroundColor:

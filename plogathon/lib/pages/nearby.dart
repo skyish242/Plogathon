@@ -9,10 +9,13 @@ import 'dart:convert';
 
 class NearbyPage extends StatefulWidget {
   final int userID;
-  const NearbyPage({Key key = const Key('defaultKey'), required this.userID}) : super(key: key);
+  const NearbyPage({Key key = const Key('defaultKey'), required this.userID})
+      : super(key: key);
 
   @override
-  _NearbyPageState createState() => _NearbyPageState();
+  State<NearbyPage> createState() {
+    return _NearbyPageState();
+  }
 }
 
 class _NearbyPageState extends State<NearbyPage> {
@@ -257,8 +260,8 @@ class _NearbyPageState extends State<NearbyPage> {
           _locationServiceEnabled
               ? (_locations.isNotEmpty
                   ? _listView
-                      ? NearbyListView(locationData: _locations, userID: widget.userID)
-                      : NearbyMapView(locationData: _locations, userID: widget.userID)
+                      ? NearbyListView(locationData: _locations)
+                      : NearbyMapView(locationData: _locations)
                   : _noBinsMessage != null
                       ? Padding(
                           padding: const EdgeInsets.only(left: 32, right: 32),

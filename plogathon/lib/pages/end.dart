@@ -2,24 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/services/grpc/activity/activity.pb.dart';
 import 'package:plogathon/services/activityservice.dart';
+import 'package:plogathon/services/provider.dart';
 
 class EndPage extends StatefulWidget {
-  const EndPage({
+  final int userID = Provider().userId;
+  final double distance;
+  final int time;
+  final int wasteCount;
+  final int stepCount;
+
+  EndPage({
     Key key = const Key('defaultKey'),
-    required this.userID,
     required this.distance,
     required this.time,
     required this.wasteCount,
     required this.stepCount,
   }) : super(key: key);
 
-  final int userID;
-  final double distance;
-  final int time;
-  final int wasteCount;
-  final int stepCount;
   @override
-  _EndPageState createState() => _EndPageState();
+  State<EndPage> createState() {
+    return _EndPageState();
+  }
 }
 
 class _EndPageState extends State<EndPage> {
@@ -66,23 +69,22 @@ class _EndPageState extends State<EndPage> {
         duration: (widget.time / 1000).floor(),
       );
 
-      final createdActivity = await activityService.createActivity(newActivity);
+      await activityService.createActivity(newActivity);
 
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Activity uploaded!',
               style: TextStyle(color: Colors.white)),
-          content:
-              const Text('Your activity has been successfully saved.', style: TextStyle(color: Colors.white)),
+          content: const Text('Your activity has been successfully saved.',
+              style: TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePage(userID: widget.userID)),
-                  (Route<dynamic> route) => false);
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                    (Route<dynamic> route) => false);
               },
               child: const Text('OK'),
             ),
@@ -228,16 +230,13 @@ class _EndPageState extends State<EndPage> {
                       height: 64,
                       child: TextField(
                         controller: _activityNameController,
-                        cursorColor:
-                            Theme.of(context).colorScheme.onPrimary,
+                        cursorColor: Theme.of(context).colorScheme.onPrimary,
                         style: Theme.of(context).textTheme.bodyMedium,
                         decoration: InputDecoration(
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: const Color(0xFFB3B3B3),
-                              ),
+                          hintStyle:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: const Color(0xFFB3B3B3),
+                                  ),
                           fillColor: const Color(0xFFEEEEEE),
                           filled: true,
                           hintText: 'Activity name',
@@ -259,16 +258,13 @@ class _EndPageState extends State<EndPage> {
                       height: 64,
                       child: TextField(
                         controller: _activityTypeController,
-                        cursorColor:
-                            Theme.of(context).colorScheme.onPrimary,
+                        cursorColor: Theme.of(context).colorScheme.onPrimary,
                         style: Theme.of(context).textTheme.bodyMedium,
                         decoration: InputDecoration(
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: const Color(0xFFB3B3B3),
-                              ),
+                          hintStyle:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: const Color(0xFFB3B3B3),
+                                  ),
                           fillColor: const Color(0xFFEEEEEE),
                           filled: true,
                           hintText: 'Activity type',
@@ -283,50 +279,47 @@ class _EndPageState extends State<EndPage> {
                       ),
                     ),
                   ),
-                  Container(
-                    // padding: const EdgeInsets.only(top: 30.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _thoughtsController,
-                                focusNode: _focusNode,
-                                keyboardType: TextInputType.multiline,
-                                maxLength: 200,
-                                minLines: 5,
-                                maxLines: 5,
-                                cursorColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.all(20.0),
-                                  counterStyle:
-                                      Theme.of(context).textTheme.labelSmall,
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: const Color(0xFFB3B3B3),
-                                      ),
-                                  fillColor: const Color(0xFFEEEEEE),
-                                  filled: true,
-                                  hintText: 'Share Your Thoughts..',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _thoughtsController,
+                              focusNode: _focusNode,
+                              keyboardType: TextInputType.multiline,
+                              maxLength: 200,
+                              minLines: 5,
+                              maxLines: 5,
+                              cursorColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.all(20.0),
+                                counterStyle:
+                                    Theme.of(context).textTheme.labelSmall,
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: const Color(0xFFB3B3B3),
                                     ),
+                                fillColor: const Color(0xFFEEEEEE),
+                                filled: true,
+                                hintText: 'Share Your Thoughts..',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   Center(

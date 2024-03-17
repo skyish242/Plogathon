@@ -3,8 +3,11 @@ import 'package:plogathon/pages/login.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({Key key = const Key('defaultKey')}) : super(key: key);
+
   @override
-  _OnboardingPageState createState() => _OnboardingPageState();
+  State<OnboardingPage> createState() {
+    return _OnboardingPageState();
+  }
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
@@ -52,7 +55,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     style: ElevatedButton.styleFrom(
                       elevation: 5,
                       backgroundColor: Theme.of(context)
-                          .primaryColor, // Use the primary color from the theme
+                          .colorScheme
+                          .primary, // Use the primary color from the theme
                     ),
                     child: Text("Get Started",
                         style: Theme.of(context).textTheme.bodyMedium),

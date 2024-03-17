@@ -16,7 +16,6 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dart:convert';
 
 class ActivityPage extends StatefulWidget {
-  final int userID;
   final double destLongitude;
   final double destLatitude;
   final String destName;
@@ -25,7 +24,6 @@ class ActivityPage extends StatefulWidget {
 
   const ActivityPage({
     Key key = const Key('defaultKey'),
-    required this.userID,
     required this.destLongitude,
     required this.destLatitude,
     required this.destName,
@@ -34,10 +32,16 @@ class ActivityPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ActivityPageState createState() => _ActivityPageState();
+  State<ActivityPage> createState() {
+    return _ActivityPageState();
+  }
 }
 
 class _ActivityPageState extends State<ActivityPage> {
+  // ignore: constant_identifier_names
+  static const API_KEY =
+      String.fromEnvironment('MAPS_API_KEY', defaultValue: '');
+
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
   final DateTime startDateTime = DateTime.now();
 
@@ -61,17 +65,12 @@ class _ActivityPageState extends State<ActivityPage> {
   LatLng? _currentPosition;
   LatLng? _lastPosition;
   List<LatLng> _waypoints = [];
-  static const API_KEY =
-      String.fromEnvironment('MAPS_API_KEY', defaultValue: '');
 
   @override
   void initState() {
     super.initState();
 
     _distanceLeft = widget.distance;
-    double longitude = widget.destLongitude;
-    double latitude = widget.destLatitude;
-    String name = widget.destName;
     _stopWatchTimer.onStartTimer();
     initPlatformState();
     _getLocationUpdates();
@@ -266,7 +265,6 @@ class _ActivityPageState extends State<ActivityPage> {
           context,
           MaterialPageRoute(
             builder: (context) => EndPage(
-              userID: widget.userID,
               distance: _distanceTravelled,
               time: _time,
               wasteCount: _wasteCount,
@@ -380,6 +378,7 @@ class _ActivityPageState extends State<ActivityPage> {
         width: 5,
       );
     });
+    print(_polylines[const PolylineId('route')].toString());
   }
 
   @override
@@ -391,22 +390,11 @@ class _ActivityPageState extends State<ActivityPage> {
           Padding(
             padding:
                 const EdgeInsets.only(left: 32, right: 32, top: 64, bottom: 20),
-            child: Row(
-              children: <Widget>[
-                IconButton(
-                    icon: SvgPicture.asset("assets/back.svg",
-                        semanticsLabel: 'Navigate Back'),
-                    onPressed: () => Navigator.pop(context)),
-                const SizedBox(
-                  width: 14,
-                ),
-                Text(
-                  "Plogging",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                )
-              ],
+            child: Text(
+              "Plogging",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
           ),
           Expanded(

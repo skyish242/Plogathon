@@ -10,7 +10,7 @@ class Provider {
     return _instance;
   }
 
-  String userId = '';
+  int userId = -1;
 
   final StravaClient _stravaClient = StravaClient(
       secret: StravaSecret.clientSecret,

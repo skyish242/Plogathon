@@ -2,6 +2,8 @@ PODS:
   - camera_avfoundation (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_web_auth (0.5.0):
+    - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
   - google_maps_flutter_ios (0.0.1):
@@ -19,19 +21,30 @@ PODS:
     - FlutterMacOS
   - pedometer (0.0.1):
     - Flutter
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
+  - uni_links (0.0.1):
+    - Flutter
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - Flutter (from `Flutter`)
+  - flutter_web_auth (from `.symlinks/plugins/flutter_web_auth/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - pedometer (from `.symlinks/plugins/pedometer/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
+  - uni_links (from `.symlinks/plugins/uni_links/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -42,6 +55,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   Flutter:
     :path: Flutter
+  flutter_web_auth:
+    :path: ".symlinks/plugins/flutter_web_auth/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter_ios:
@@ -52,19 +67,29 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   pedometer:
     :path: ".symlinks/plugins/pedometer/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
     :path: ".symlinks/plugins/sqflite/darwin"
+  uni_links:
+    :path: ".symlinks/plugins/uni_links/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   camera_avfoundation: 759172d1a77ae7be0de08fc104cfb79738b8a59e
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_web_auth: c25208760459cec375a3c39f6a8759165ca0fa4d
   geolocator_apple: 9157311f654584b9bb72686c55fc02a97b73f461
   google_maps_flutter_ios: f135b968a67c05679e0a53538e900b5c174b0d99
   GoogleMaps: 20d7b12be49a14287f797e88e0e31bc4156aaeb4
   location: d5cf8598915965547c3f36761ae9cc4f4e87d22e
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   pedometer: 381969883680ade42559782cc41a3bbd453d8234
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+  uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
+  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 

@@ -74,7 +74,7 @@ class _EndPageState extends State<EndPage> {
           title: const Text('Activity uploaded!',
               style: TextStyle(color: Colors.white)),
           content:
-              Text('Your activity has been successfully saved.', style: const TextStyle(color: Colors.white)),
+              const Text('Your activity has been successfully saved.', style: TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -335,7 +335,7 @@ class _EndPageState extends State<EndPage> {
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
-                          ?.copyWith(color: Color(0xFFEDFB92)),
+                          ?.copyWith(color: const Color(0xFFEDFB92)),
                       textAlign: TextAlign.center,
                     ),
                   ),

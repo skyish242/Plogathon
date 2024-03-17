@@ -114,23 +114,34 @@ class _ActivityPageState extends State<ActivityPage> {
             //3) Search thru json and compare
             double minDistance = double.infinity;
             Map<String, dynamic>? closestBin;
+            String closestBinLocationName = 'Unknown Location';
             for (var bin in binsData['features']) {
               var binLocation = bin['geometry']['coordinates'];
-              double distance = geolocator.Geolocator.distanceBetween(
+              double distance = double.parse((geolocator.Geolocator.distanceBetween(
                   userCurrentPosition.latitude,
                   userCurrentPosition.longitude,
                   binLocation[1],
-                  binLocation[0]);
+                  binLocation[0])/1000).toStringAsFixed(2));
               if (distance < minDistance) {
                 minDistance = distance;
                 closestBin = bin;
+                String descriptionHtml = bin['properties']['Description'];
+                RegExp regExp =
+                    RegExp(r'<th>ADDRESSSTREETNAME<\/th>\s*<td>([^<]+)<\/td>');
+                Match? match = regExp.firstMatch(descriptionHtml);
+                closestBinLocationName = match?.group(1) ?? 'Unknown Location';
               }
             }
             if (closestBin != null) {
               LatLng nearestBinCoords = LatLng(
                   closestBin['geometry']['coordinates'][1],
                   closestBin['geometry']['coordinates'][0]);
+              Map<String, dynamic> nearestBinData = {
+                'closestBinLocationName': closestBinLocationName,
+                'distance': minDistance,
+                'coordinates': nearestBinCoords};
               print('Nearest Bin Coords!!!: $nearestBinCoords');
+              print(nearestBinData);
               setState(() {
                 _waypoints.add(nearestBinCoords);
                 _markers[MarkerId('nearestBin')] = Marker(
@@ -138,10 +149,16 @@ class _ActivityPageState extends State<ActivityPage> {
                   position: nearestBinCoords,
                   icon: BitmapDescriptor.defaultMarkerWithHue(
                       BitmapDescriptor.hueBlue),
+                  infoWindow: InfoWindow(
+                    title: nearestBinData['closestBinLocationName'],
+                    snippet: '${nearestBinData['distance']} km away'
+                  ),
                 );
               });
+              print('distance before updating: $_distanceLeft');
+               // Update distance left 
+              updateDistanceLeft(_currentPosition!, nearestBinCoords, LatLng(widget.destLatitude, widget.destLongitude));
             }
-            // Update distance left (yet to implement)
             // Thanks jr
           }
         } else {
@@ -155,6 +172,30 @@ class _ActivityPageState extends State<ActivityPage> {
       }
     }
   }
+  void updateDistanceLeft(LatLng currentPos, LatLng newWaypoint, LatLng finalDest) {
+  // Current Location to WP
+  double toWaypointDistance = geolocator.Geolocator.distanceBetween(
+    currentPos.latitude,
+    currentPos.longitude,
+    newWaypoint.latitude,
+    newWaypoint.longitude,
+  ) / 1000; 
+
+  // WP to final dest
+  double toFinalDestDistance = geolocator.Geolocator.distanceBetween(
+    newWaypoint.latitude,
+    newWaypoint.longitude,
+    finalDest.latitude,
+    finalDest.longitude,
+  ) / 1000; 
+  print('to waypoint dest: $toWaypointDistance');
+  print('to final dest:$toFinalDestDistance');
+
+  setState(() {
+    _distanceLeft = double.parse((toWaypointDistance + toFinalDestDistance).toStringAsFixed(2));
+    print('updated distanceleft: $_distanceLeft');
+  });
+}
 
   // Step counter functions
   void onStepCount(StepCount event) {
@@ -337,6 +378,10 @@ class _ActivityPageState extends State<ActivityPage> {
                     markerId: MarkerId("_destinationLocation"),
                     icon: BitmapDescriptor.defaultMarker,
                     position: LatLng(widget.destLatitude, widget.destLongitude),
+                    infoWindow: InfoWindow(
+                      title: widget.destName,
+                      snippet: '${widget.distance} km away'
+                    ),
                   ),
                   ..._markers.values,
                 },

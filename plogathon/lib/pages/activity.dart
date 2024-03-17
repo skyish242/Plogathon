@@ -50,6 +50,8 @@ class _ActivityPageState extends State<ActivityPage> {
   int? _initialSteps;
 
   int _wasteCount = 0;
+  int _holdingCount = 0;
+  bool _nearBin = false;
   double _distanceLeft = 0;
   double _distanceTravelled = 0;
   int _time = 0;
@@ -93,11 +95,13 @@ class _ActivityPageState extends State<ActivityPage> {
           bool reroute = await showDialog(
             context: context,
             builder: (BuildContext context) {
-              return RecylableDialog(instruction: result['instruction']);
+              return RecylableDialog(
+                  instruction: result['instruction'],
+                  nearBinShown: _waypoints.isNotEmpty);
             },
           );
           setState(() {
-            _wasteCount++;
+            _holdingCount++;
           });
 
           if (reroute) {
@@ -327,7 +331,36 @@ class _ActivityPageState extends State<ActivityPage> {
           controller.animateCamera(CameraUpdate.newLatLng(
               LatLng(currentLocation.latitude!, currentLocation.longitude!)));
         });
+        _checkRadius();
       });
+    });
+  }
+
+  void disposeTrash() {
+    setState(() {
+      _nearBin = false;
+      _waypoints.removeLast();
+      _wasteCount = _holdingCount;
+      _holdingCount = 0;
+    });
+  }
+
+  void _checkRadius() {
+    double distance;
+
+    LatLng destination = _waypoints.isNotEmpty
+        ? _waypoints.last
+        : LatLng(widget.destLatitude, widget.destLongitude);
+
+    distance = geolocator.Geolocator.distanceBetween(
+      _currentPosition!.latitude,
+      _currentPosition!.longitude,
+      destination.latitude,
+      destination.longitude,
+    );
+
+    setState(() {
+      _nearBin = distance < 50;
     });
   }
 
@@ -378,7 +411,6 @@ class _ActivityPageState extends State<ActivityPage> {
         width: 5,
       );
     });
-    print(_polylines[const PolylineId('route')].toString());
   }
 
   @override
@@ -559,7 +591,32 @@ class _ActivityPageState extends State<ActivityPage> {
                           ),
                         ),
                       ],
-                    )
+                    ),
+                    const SizedBox(height: 12),
+                    _nearBin
+                        ? SizedBox(
+                            width: 280,
+                            child: ElevatedButton(
+                              onPressed: _nearBin ? () => disposeTrash() : null,
+                              style: ElevatedButton.styleFrom(
+                                elevation: 5,
+                                backgroundColor: const Color(0xFFCCFA6E),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0)),
+                              ),
+                              child: Text(
+                                "Dispose!",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                   ],
                 ),
               ),

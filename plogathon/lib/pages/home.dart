@@ -71,14 +71,7 @@ class _HomePageState extends State<HomePage> {
   }
     //Strava
   void testAuthentication() {
-    _stravaService.authorize(
-      [
-        stravalib.AuthenticationScope.profile_read_all,
-        stravalib.AuthenticationScope.read_all,
-        stravalib.AuthenticationScope.activity_read_all
-      ],
-      "plogathon://plogathon.com",
-    ).then((token) {
+    _stravaService.authorize().then((token) {
       setState(() {
         // this.token = token;
         StravaService().setToken(token);

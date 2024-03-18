@@ -3,6 +3,8 @@ import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/services/grpc/activity/activity.pb.dart';
 import 'package:plogathon/services/activityservice.dart';
 import 'package:plogathon/services/provider.dart';
+import 'package:plogathon/services/stravaservice.dart';
+import 'package:strava_client/strava_client.dart' as stravalib;
 
 class EndPage extends StatefulWidget {
   final int userID = Provider().userId;
@@ -32,6 +34,8 @@ class _EndPageState extends State<EndPage> {
   final _activityTypeController = TextEditingController();
   final _focusNode = FocusNode();
 
+  bool _isUploading = false;
+
   double convertDistance() {
     // Assuming meters
     if (widget.distance > 1000) {
@@ -56,6 +60,10 @@ class _EndPageState extends State<EndPage> {
 
   void uploadActivity() async {
     try {
+      setState(() {
+        _isUploading = true;
+      });
+
       final newActivity = Activity(
         userID: widget.userID,
         name: _activityNameController.text,
@@ -71,6 +79,29 @@ class _EndPageState extends State<EndPage> {
 
       await activityService.createActivity(newActivity);
 
+      // DB uploaded
+      // Try to Upload Strava, if user is linked with strava
+      if(StravaService().checkStravaAuthenticated()){
+          StravaService().postAthleteActivity(
+                stravalib.CreateActivityRequest(
+                  _activityNameController.text, 
+                  stravalib.ActivityTypeEnum.Run, 
+                  DateTime.now().toUtc(), 
+                  (widget.time / 1000).floor(), 
+                  _thoughtsController.text, 
+                  convertDistance(), 
+                  false, 
+                  false
+                )
+          ).catchError((onError){
+              throw onError;
+          });
+      };
+      setState(() {
+        _isUploading = false;
+      });
+
+      
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -336,7 +367,10 @@ class _EndPageState extends State<EndPage> {
                   SizedBox(
                     width: double.infinity,
                     height: 50.0,
-                    child: ElevatedButton(
+                    child: _isUploading ? 
+                      const Center(child:CircularProgressIndicator()) : 
+                    
+                    ElevatedButton(
                       onPressed: () {
                         convertTime();
                         uploadActivity();

@@ -11,8 +11,15 @@ class Provider {
   }
 
   int userId = -1;
-  TokenResponse? token;
-
+  // Auth
+  TokenResponse? _token;
+  final List<AuthenticationScope> _scopes = [
+        AuthenticationScope.profile_read_all,
+        AuthenticationScope.read_all,
+        AuthenticationScope.activity_read_all,
+        AuthenticationScope.activity_write
+  ];
+  final String _redirectURL = "plogathon://plogathon.com";
 
   final StravaClient _stravaClient = StravaClient(
       secret: StravaSecret.clientSecret,
@@ -20,16 +27,19 @@ class Provider {
       applicationName: 'Plogathon');
 
   StravaClient get stravaClient => _stravaClient;
-  TokenResponse? get stravaToken => token;
+  
+  TokenResponse? get stravaToken => _token;
+  List<AuthenticationScope> get stravaScopes => _scopes;
+  String get stravaRedirecURL => _redirectURL;
   
   // Method to set the Strava authentication token synchronously
   void setStravaToken(TokenResponse? newToken) {
-    token = newToken;
+    _token = newToken;
   }
 
   // Method to check if the Strava authentication token is available
   bool checkStravaAuthenticated() {
-    return token != null;
+    return _token != null;
   }
 
 }

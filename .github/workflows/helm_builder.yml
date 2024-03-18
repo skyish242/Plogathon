@@ -1,5 +1,9 @@
+name: Build Helm Ship and Deploy to GKE
+
 on:
-  push: [main]
+  push:
+    branches:
+      - main
 
 env:
   APP_NAME: my-app

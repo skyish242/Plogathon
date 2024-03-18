@@ -1,3 +1,4 @@
+""" Fine Tuning CLIP Model """
 from common import *
 from model_functions import *
 from PIL import Image
@@ -74,8 +75,9 @@ loss_img = nn.CrossEntropyLoss()
 loss_txt = nn.CrossEntropyLoss()
 
 # Train the model
-num_epochs = 30
+num_epochs = 10
 for epoch in range(num_epochs):
+    print("Epoch:", epoch)
     for batch in train_dataloader:
         optimizer.zero_grad()
 

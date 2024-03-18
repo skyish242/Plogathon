@@ -248,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                 color: Theme.of(context).colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 16, bottom: 18),
+                      left: 20, right: 20, top: 20, bottom: 25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -266,7 +266,20 @@ class _HomePageState extends State<HomePage> {
                                     color: const Color(0xFF747474),
                                   ),
                             ),
-                            const SizedBox(width: 200),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _name,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            const SizedBox(width: 100),
                             IconButton(
                               icon: SvgPicture.asset(
                                 "assets/strava-${_isStravaAuthenticated? "enabled" : "disabled"}.svg",
@@ -287,15 +300,8 @@ class _HomePageState extends State<HomePage> {
                                 (Route<dynamic> route) => false,
                               ),
                             ),
-                          ],
+                          ])
                         ),
-                      ),
-                      Text(
-                        _name,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -432,10 +438,10 @@ class _HomePageState extends State<HomePage> {
                         const BoxConstraints(minHeight: 40, minWidth: 150),
                     children: const [
                       Text(
-                        'All',
+                        'Recent',
                       ),
                       Text(
-                        'Mine',
+                        'Personal',
                       ),
                     ],
                   ),

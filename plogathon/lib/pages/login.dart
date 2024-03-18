@@ -6,7 +6,6 @@ import 'package:plogathon/services/stravaservice.dart';
 import 'package:plogathon/services/userservice.dart';
 
 // Strava
-import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:strava_client/strava_client.dart';
 

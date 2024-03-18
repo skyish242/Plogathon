@@ -15,4 +15,14 @@ class StravaService {
   Future<void> deAuthorize() {
     return Provider().stravaClient.authentication.deAuthorize();
   }
+
+  
+  void setToken(TokenResponse? token){
+    Provider().setStravaToken(token);
+  }
+
+  bool checkStravaAuthenticated(){
+    return Provider().checkStravaAuthenticated();
+  }  
+
 }

@@ -45,6 +45,8 @@ class _HomePageState extends State<HomePage> {
 
   //Strava
   stravalib.TokenResponse? token;
+  bool _isStravaAuthenticated = StravaService().checkStravaAuthenticated();
+
 
   @override
   void initState() {
@@ -78,7 +80,9 @@ class _HomePageState extends State<HomePage> {
       "plogathon://plogathon.com",
     ).then((token) {
       setState(() {
-        this.token = token;
+        // this.token = token;
+        StravaService().setToken(token);
+        _isStravaAuthenticated = true;
       });
       print("Authentication successful. Token: ${token.accessToken}");
     }).catchError((error) {
@@ -91,7 +95,8 @@ class _HomePageState extends State<HomePage> {
   void testDeauth() {
     _stravaService.deAuthorize().then((value) {
       setState(() {
-        token = null;
+        StravaService().setToken(null);
+        _isStravaAuthenticated = false;
       });
     }).catchError(showErrorMessage);
   }
@@ -271,10 +276,10 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(width: 200),
                             IconButton(
                               icon: SvgPicture.asset(
-                                "assets/strava-enabled.svg",
+                                "assets/strava-${_isStravaAuthenticated? "enabled" : "disabled"}.svg",
                                 semanticsLabel: 'logout',
                               ),
-                              onPressed: testAuthentication
+                              onPressed: _isStravaAuthenticated ?  testDeauth : testAuthentication
                             ),
                             IconButton(
                               icon: SvgPicture.asset(

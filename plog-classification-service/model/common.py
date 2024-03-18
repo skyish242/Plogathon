@@ -22,9 +22,6 @@ model_file = f'{EXPORT_FOLDER}/omt_model.pt'
 material_class_mapping = {0: 'Others', 1: 'Paper', 2: 'Plastic', 3: 'Glass', 4: 'Metal'}
 inverse_material_class_mapping = {v: k for k, v in material_class_mapping.items()}
 
-# Hyper Parameter Tuning
-optimal_model = "ViT-L/14"
-
 """ Functions """
 # Function to serialise an object into a pickle file
 def save_to_pickle(file_path, save_data):

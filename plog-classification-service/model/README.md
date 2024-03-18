@@ -50,21 +50,14 @@ Others     9232
 
 The combined dataset is available for download [here](https://gla-my.sharepoint.com/:u:/g/personal/2837303a_student_gla_ac_uk/Ed0pU32-uYNKuzjscVhZlPUBdGtgnoB8dJU5axo5vC_xiw?e=SqkfpJ) (password: `plogathon-2024`).
 
-### Model Overview
+### Reference: Classifier built on OpenAI's CLIP
 ---
-The OMT model is built on top of OpenAI's [CLIP](https://openai.com/research/clip) model using transfer learning for the multi-class classification of images of objects as `Paper`, `Plastic`, `Metal`, `Glass` and `Others`. CLIP is a multi-modal neural network trained on 400 million image-text (text caption) pairs from the Internet, making it suitable for multiple use-cases including image classification, generation and ranking. CLIP boasts on-par or better performance without prior training as a generalised zero-shot classifier, when compared against other traditionally trained supervised models.
+Another alternative to the current OMT model would be to build the model on top of OpenAI's [CLIP](https://openai.com/research/clip) model using transfer learning for the multi-class classification of images of objects as `Paper`, `Plastic`, `Metal`, `Glass` and `Others`. CLIP is a multi-modal neural network trained on 400 million image-text (text caption) pairs from the Internet, making it suitable for multiple use-cases including image classification, generation and ranking. CLIP boasts on-par or better performance without prior training as a generalised zero-shot classifier, when compared against other traditionally trained supervised models.
 
 ![CLIP Performance](docs/clip-performance.png)
 *Source: OpenAI CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
 
 However, CLIP was unable to produce desirable results for multi-class classification of object material types, which is likely due to its lack of generalisation to such images during its pre-training. Initial testing on the dataset resulted in the highest accuracy of *72.01%* and precision of *73.49%* when performing as a zero-shot classifier. 
-
-### Model Fine-Tuning and Performance
----
-To further optimise CLIP for OMT classification, transfer learning was applied by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This enables the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance.
-
-![OMT Model](docs/OMT-Model.png)
-*Adapted from OpenAI's CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
 
 Initial testing of CLIP's nine models as zero-shot classifiers (without prior training) on the dataset revealed that the `ViT-L/14` model performed the best on both a 1% and 10% stratified sample of the dataset. Stratified samples of the dataset were used to speed up initial testing and fine-tuning of the model. The `ViT-L/14` model's performance, when tested against a 10% stratified sample of the dataset, is provided illustrated below:
 ```
@@ -124,10 +117,11 @@ Metal: a photo of an object made of metal
 Others: a photo of an object made of anything other than paper, plastic, glass, or metal
 ```
 
-Subsequently, a classification head was trained on the OMT dataset and attached onto CLIP to enable optimal OMT classification. After optimisations, the final OMT model was able to produce the following results:
-```
-FINAL MODEL RESULTS
-```
+To further optimise CLIP for OMT classification, we propose the application of transfer learning by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This would enable the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance. However, due to the hardware requirements (A100 GPU) for fine-tuning or training a new classifier based on CLIP (as demonstrated [here](https://github.com/mlfoundations/open_clip/blob/main/docs/PRETRAINED.md)), we were unable to test this out. Source code demonstrating testing of the CLIP model can be found in the `archived/clip` folder.
+
+![OMT Model](docs/clip-OMT-Model.png)
+*Adapted from OpenAI's CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
+
 
 ### Directory Structure
 ---

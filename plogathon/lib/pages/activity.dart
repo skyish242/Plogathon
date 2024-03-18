@@ -333,7 +333,9 @@ class _ActivityPageState extends State<ActivityPage> {
           controller.animateCamera(CameraUpdate.newLatLng(
               LatLng(currentLocation.latitude!, currentLocation.longitude!)));
         });
-        _checkRadius();
+        if (_holdingCount > 0) {
+          _checkRadius();
+        }
       });
     });
   }
@@ -341,8 +343,11 @@ class _ActivityPageState extends State<ActivityPage> {
   void disposeTrash() {
     setState(() {
       _nearBin = false;
-      _waypoints.removeLast();
-      _markers.clear();
+      if(_waypoints.isNotEmpty) {
+        _waypoints.removeLast();
+        _markers.clear();
+      }
+
       _wasteCount = _holdingCount;
       _holdingCount = 0;
     });

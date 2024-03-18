@@ -8,10 +8,10 @@ echo $parent_dir
 service_folders=$(find "$parent_dir" -maxdepth 1 -type d -name '*-service')
 
 # Namespace name
-namespace_name="plog-plog"
+# namespace_name="plog-plog"
 
 # Create the namespace
-kubectl create namespace "$namespace_name"
+# kubectl create namespace "$namespace_name"
 
 # Loop through the service folders and build Docker images
 for service_dir in $service_folders; do

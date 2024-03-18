@@ -6,6 +6,7 @@ import 'package:plogathon/services/provider.dart';
 import 'package:plogathon/services/stravaservice.dart';
 import 'package:strava_client/strava_client.dart' as stravalib;
 
+
 class EndPage extends StatefulWidget {
   final int userID = Provider().userId;
   final double distance;
@@ -32,6 +33,8 @@ class _EndPageState extends State<EndPage> {
   final _thoughtsController = TextEditingController();
   final _activityNameController = TextEditingController();
   final _activityTypeController = TextEditingController();
+  stravalib.ActivityTypeEnum _selectedActivityType = stravalib.ActivityTypeEnum.Run;
+
   final _focusNode = FocusNode();
 
   bool _isUploading = false;
@@ -64,12 +67,13 @@ class _EndPageState extends State<EndPage> {
         _isUploading = true;
       });
 
+      
       final newActivity = Activity(
         userID: widget.userID,
         name: _activityNameController.text,
-        type: _activityTypeController.text,
+        type: _selectedActivityType.name,
         description: _thoughtsController.text,
-        datetime: DateTime.now().toUtc().toIso8601String(),
+        datetime: DateTime.now().toIso8601String(),
         routeMap: 'Test Route Map',
         distance: convertDistance(),
         steps: widget.stepCount,
@@ -85,8 +89,8 @@ class _EndPageState extends State<EndPage> {
           StravaService().postAthleteActivity(
                 stravalib.CreateActivityRequest(
                   _activityNameController.text, 
-                  stravalib.ActivityTypeEnum.Run, 
-                  DateTime.now().toUtc(), 
+                  _selectedActivityType, 
+                  DateTime.now(), 
                   (widget.time / 1000).floor(), 
                   _thoughtsController.text, 
                   convertDistance(), 
@@ -287,10 +291,18 @@ class _EndPageState extends State<EndPage> {
                     child: SizedBox(
                       width: double.infinity,
                       height: 64,
-                      child: TextField(
-                        controller: _activityTypeController,
-                        cursorColor: Theme.of(context).colorScheme.onPrimary,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      child: DropdownButtonFormField<stravalib.ActivityTypeEnum>(
+                        value: _selectedActivityType,
+                        onChanged: (stravalib.ActivityTypeEnum? newValue) {
+                          setState(() {
+                            _selectedActivityType = newValue!;
+                          });
+                        },
+                        // cursorColor: Theme.of(context).colorScheme.onPrimary,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          // Set the text color here
+                          color: const Color(0xFFB3B3B3), // Change it to the desired color
+                        ),
                         decoration: InputDecoration(
                           hintStyle:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -307,6 +319,12 @@ class _EndPageState extends State<EndPage> {
                             ),
                           ),
                         ),
+                        items: ['Walk','Run', 'Wheelchair', 'Workout'].map((String activityType) {
+                          return DropdownMenuItem<stravalib.ActivityTypeEnum>(
+                            value: stravalib.ActivityTypeEnumHelper.getType(activityType),
+                            child: Text(activityType),
+                          );
+                        }).toList(),
                       ),
                     ),
                   ),

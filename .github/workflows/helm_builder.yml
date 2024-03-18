@@ -25,6 +25,6 @@ jobs:
           helm-chart-path: ./Docker/PlogChart
           helm-vars-folder: ./Docker/PlogChart/
           gke-project: ${{ secrets.GKE_PROJECT }}
-          gke-cluster: Plogathon
+          gke-cluster: plogathon-cluster
           gke-zone: ${{ secrets.GKE_ZONE }}
           gke-sa-key: ${{ secrets.GKE_SA_KEY }}

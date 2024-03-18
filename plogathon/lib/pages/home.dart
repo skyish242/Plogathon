@@ -11,6 +11,12 @@ import 'package:plogathon/services/grpc/user/user.pb.dart';
 import 'package:plogathon/services/activityservice.dart';
 import 'package:plogathon/services/userservice.dart';
 
+// Strava
+import 'dart:async';
+import 'package:strava_client/strava_client.dart' as stravalib;
+import 'package:plogathon/services/stravaservice.dart';
+
+
 class HomePage extends StatefulWidget {
   final int userID = Provider().userId;
 
@@ -22,10 +28,13 @@ class HomePage extends StatefulWidget {
   }
 }
 
+
 class _HomePageState extends State<HomePage> {
   List<EntryCard> _cards = [];
   final userService = UserService();
   final activityService = ActivityService();
+  final _stravaService = StravaService();
+
   String _name = '';
   int _userWasteCount = 0;
   double _userMileageCount = 0.0;
@@ -34,12 +43,57 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = true;
   bool _initialLoad = false;
 
+  //Strava
+  stravalib.TokenResponse? token;
+
   @override
   void initState() {
     super.initState();
     initializeDateFormatting();
     _fetchUser();
     _fetchEntries();
+  }
+    //Strava
+  FutureOr<Null> showErrorMessage(dynamic error, dynamic stackTrace) {
+    if (error is stravalib.Fault) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Did Receive Fault"),
+              content: Text(
+                  "Message: ${error.message}\n-----------------\nErrors:\n${(error.errors ?? []).map((e) => "Code: ${e.code}\nResource: ${e.resource}\nField: ${e.field}\n").toList().join("\n----------\n")}"),
+            );
+          });
+    }
+  }
+    //Strava
+  void testAuthentication() {
+    _stravaService.authorize(
+      [
+        stravalib.AuthenticationScope.profile_read_all,
+        stravalib.AuthenticationScope.read_all,
+        stravalib.AuthenticationScope.activity_read_all
+      ],
+      "plogathon://plogathon.com",
+    ).then((token) {
+      setState(() {
+        this.token = token;
+      });
+      print("Authentication successful. Token: ${token.accessToken}");
+    }).catchError((error) {
+      print("Authentication failed: $error");
+      showErrorMessage;
+    });
+  }
+
+  //Strava
+  void testDeauth() {
+    _stravaService.deAuthorize().then((value) {
+      setState(() {
+        token = null;
+      });
+    }).catchError(showErrorMessage);
   }
 
   void _fetchUser() async {
@@ -214,6 +268,14 @@ class _HomePageState extends State<HomePage> {
                                     color: const Color(0xFF747474),
                                   ),
                             ),
+                            const SizedBox(width: 200),
+                            IconButton(
+                              icon: SvgPicture.asset(
+                                "assets/strava-enabled.svg",
+                                semanticsLabel: 'logout',
+                              ),
+                              onPressed: testAuthentication
+                            ),
                             IconButton(
                               icon: SvgPicture.asset(
                                 "assets/logout.svg",
@@ -247,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 20),
+                                    horizontal: 5, vertical: 20),
                                 child: Column(
                                   children: <Widget>[
                                     Text(

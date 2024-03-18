@@ -28,8 +28,6 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController(text: "testest1");
 
   //Strava
-  final TextEditingController _textEditingController = TextEditingController();
-  final DateFormat dateFormatter = DateFormat("HH:mm:ss");
   bool _enabledButtons = true;
   TokenResponse? token;
   //Strava
@@ -67,7 +65,6 @@ class _LoginPageState extends State<LoginPage> {
         this.token = token;
       });
       print("Authentication successful. Token: ${token.accessToken}");
-      _textEditingController.text = token.accessToken;
     }).catchError((error) {
       print("Authentication failed: $error");
       showErrorMessage;
@@ -79,7 +76,6 @@ class _LoginPageState extends State<LoginPage> {
     _stravaService.deAuthorize().then((value) {
       setState(() {
         token = null;
-        _textEditingController.clear();
       });
     }).catchError(showErrorMessage);
   }

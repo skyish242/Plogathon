@@ -88,6 +88,8 @@ flutter:
     - assets/logout.svg
     - assets/trash.png
     - assets/CashForTrashGEOJSON.geojson
+    - assets/strava-disabled.svg
+    - assets/strava-enabled.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

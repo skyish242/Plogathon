@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: deployment-configmap
-data:
-  # Database Config
-  DATABASE_PORT: "3306"  
-  DATABASE_DIALECT: mysql

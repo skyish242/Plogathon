@@ -126,6 +126,7 @@ class _HomePageState extends State<HomePage> {
           .toList();
 
       List<ProtoUser> tempUsers = await Future.wait(userFetchOperations);
+      int counter = 0;
 
       for (int i = activities.length - 1; i >= 0; i--) {
         ProtoActivity activity = activities[i];
@@ -136,7 +137,8 @@ class _HomePageState extends State<HomePage> {
             _userMileageCount += activity.distance;
           }
 
-          int colorIndex = i % cardColors.length;
+          int colorIndex = counter % cardColors.length;
+          counter++;
 
           cards.add(
             EntryCard(

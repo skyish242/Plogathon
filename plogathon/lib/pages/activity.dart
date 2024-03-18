@@ -47,11 +47,13 @@ class _ActivityPageState extends State<ActivityPage> {
 
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
+  StreamSubscription<LocationData>? _locationSubscription;
   int? _initialSteps;
 
   int _wasteCount = 0;
   int _holdingCount = 0;
   bool _nearBin = false;
+  bool _initialLoad = false;
   double _distanceLeft = 0;
   double _distanceTravelled = 0;
   int _time = 0;
@@ -73,7 +75,6 @@ class _ActivityPageState extends State<ActivityPage> {
     super.initState();
 
     _distanceLeft = widget.distance;
-    _stopWatchTimer.onStartTimer();
     initPlatformState();
     _getLocationUpdates();
   }
@@ -283,8 +284,9 @@ class _ActivityPageState extends State<ActivityPage> {
 
   @override
   void dispose() async {
-    super.dispose();
+    _locationSubscription?.cancel();
     await _stopWatchTimer.dispose();
+    super.dispose();
   }
 
   Future<void> _getLocationUpdates() async {
@@ -306,7 +308,7 @@ class _ActivityPageState extends State<ActivityPage> {
         return;
       }
     }
-    _locationController.onLocationChanged
+    _locationSubscription = _locationController.onLocationChanged
         .listen((LocationData currentLocation) {
       //this is to constantly update how much the user had walked
       if (_lastPosition != null) {
@@ -410,6 +412,11 @@ class _ActivityPageState extends State<ActivityPage> {
         points: polylineCoordinates,
         width: 5,
       );
+
+      if (!_initialLoad) {
+        _initialLoad = true;
+        _stopWatchTimer.onStartTimer();
+      }
     });
   }
 
@@ -465,92 +472,114 @@ class _ActivityPageState extends State<ActivityPage> {
                           padding: const EdgeInsets.only(
                               top: 18, left: 20, bottom: 20, right: 30),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(widget.destName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                          )),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 18,
-                                        height: 13,
-                                        child: SvgPicture.asset(
-                                          "assets/navigation.svg",
-                                          semanticsLabel: 'Distance',
+                            mainAxisAlignment: _initialLoad
+                                ? MainAxisAlignment.spaceBetween
+                                : MainAxisAlignment.start,
+                            children: _initialLoad
+                                ? [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(widget.destName,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                )),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 18,
+                                              height: 13,
+                                              child: SvgPicture.asset(
+                                                "assets/navigation.svg",
+                                                semanticsLabel: 'Distance',
+                                              ),
+                                            ),
+                                            Text("$_distanceLeft km left",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelMedium)
+                                          ],
                                         ),
-                                      ),
-                                      Text("$_distanceLeft km left",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium)
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 18,
-                                        height: 13,
-                                        child: SvgPicture.asset(
-                                            "assets/time.svg",
-                                            semanticsLabel: 'Time'),
-                                      ),
-                                      StreamBuilder<int>(
-                                        stream: _stopWatchTimer.rawTime,
-                                        initialData: 0,
-                                        builder: (context, snap) {
-                                          _time = snap.data ?? 0;
-                                          String displayTime =
-                                              "${StopWatchTimer.getDisplayTimeHours(_time)}:${StopWatchTimer.getDisplayTimeMinute(_time)}:${StopWatchTimer.getDisplayTimeSecond(_time)}";
-                                          return Text(displayTime,
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 18,
+                                              height: 13,
+                                              child: SvgPicture.asset(
+                                                  "assets/time.svg",
+                                                  semanticsLabel: 'Time'),
+                                            ),
+                                            StreamBuilder<int>(
+                                              stream: _stopWatchTimer.rawTime,
+                                              initialData: 0,
+                                              builder: (context, snap) {
+                                                _time = snap.data ?? 0;
+                                                String displayTime =
+                                                    "${StopWatchTimer.getDisplayTimeHours(_time)}:${StopWatchTimer.getDisplayTimeMinute(_time)}:${StopWatchTimer.getDisplayTimeSecond(_time)}";
+                                                return Text(displayTime,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelMedium);
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 18,
+                                              height: 13,
+                                              child: SvgPicture.asset(
+                                                "assets/run.svg",
+                                                semanticsLabel: 'Steps',
+                                              ),
+                                            ),
+                                            Text(_displayedSteps,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelMedium)
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text("Eco-effort",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge
+                                                ?.copyWith(
+                                                  color:
+                                                      const Color(0xFF747474),
+                                                )),
+                                        Text(_wasteCount.toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge)
+                                      ],
+                                    )
+                                  ]
+                                : [
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Loading...",
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .labelMedium);
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 18,
-                                        height: 13,
-                                        child: SvgPicture.asset(
-                                          "assets/run.svg",
-                                          semanticsLabel: 'Steps',
-                                        ),
-                                      ),
-                                      Text(_displayedSteps,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium)
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Text("Eco-effort",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge
-                                          ?.copyWith(
-                                            color: const Color(0xFF747474),
-                                          )),
-                                  Text(_wasteCount.toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge)
-                                ],
-                              )
-                            ],
+                                                  .labelLarge
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                  )),
+                                          const SizedBox(
+                                            height: 48,
+                                          )
+                                        ])
+                                  ],
                           ),
                         )),
                     Row(
@@ -559,7 +588,9 @@ class _ActivityPageState extends State<ActivityPage> {
                         SizedBox(
                           width: 140,
                           child: ElevatedButton(
-                              onPressed: () => openCamera(context),
+                              onPressed: _initialLoad
+                                  ? () => openCamera(context)
+                                  : null,
                               style: ElevatedButton.styleFrom(
                                 elevation: 5,
                                 backgroundColor: Theme.of(context).primaryColor,
@@ -573,7 +604,8 @@ class _ActivityPageState extends State<ActivityPage> {
                         SizedBox(
                           width: 140,
                           child: ElevatedButton(
-                            onPressed: () => showEndPrompt(),
+                            onPressed:
+                                _initialLoad ? () => showEndPrompt() : null,
                             style: ElevatedButton.styleFrom(
                               elevation: 5,
                               backgroundColor:

@@ -22,6 +22,13 @@ spec:
                 name: {{ .Values.env.secret_name }}
           ports:
             - containerPort: {{ .Values.ports.activity }}
+          resources:
+            requests:
+              memory: "64Mi"   # Minimum memory required by the container
+              cpu: "250m"      # Minimum CPU required by the container
+            limits:
+              memory: "128Mi"  # Maximum memory allowed by the container
+              cpu: "500m"      # Maximum CPU allowed by the container
 
 ---
 apiVersion: v1

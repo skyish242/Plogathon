@@ -248,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                 color: Theme.of(context).colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 20, bottom: 25),
+                      left: 20, right: 20, top: 25, bottom: 25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

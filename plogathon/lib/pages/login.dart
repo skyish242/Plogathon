@@ -20,22 +20,17 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _userService = UserService();
-  final _stravaService = StravaService();
   final _formKey = GlobalKey<FormState>();
 
   final _usernameController = TextEditingController(text: "ishowmeat");
   final _passwordController = TextEditingController(text: "testest1");
 
-  //Strava
   bool _enabledButtons = true;
-  TokenResponse? token;
-  //Strava
   @override
   void initState() {
     super.initState();
   }
 
-  //Strava
   FutureOr<Null> showErrorMessage(dynamic error, dynamic stackTrace) {
     if (error is Fault) {
       showDialog(
@@ -48,35 +43,6 @@ class _LoginPageState extends State<LoginPage> {
             );
           });
     }
-  }
-
-  //Strava
-  void testAuthentication() {
-    _stravaService.authorize(
-      [
-        AuthenticationScope.profile_read_all,
-        AuthenticationScope.read_all,
-        AuthenticationScope.activity_read_all
-      ],
-      "plogathon://plogathon.com",
-    ).then((token) {
-      setState(() {
-        this.token = token;
-      });
-      print("Authentication successful. Token: ${token.accessToken}");
-    }).catchError((error) {
-      print("Authentication failed: $error");
-      showErrorMessage;
-    });
-  }
-
-  //Strava
-  void testDeauth() {
-    _stravaService.deAuthorize().then((value) {
-      setState(() {
-        token = null;
-      });
-    }).catchError(showErrorMessage);
   }
 
   Future<void> _handleLogin() async {
@@ -284,48 +250,6 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   child: Text(
                                     "Log in",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              // Strava
-                              padding: const EdgeInsets.only(bottom: 20.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 50.0,
-                                child: ElevatedButton(
-                                  onPressed: testAuthentication,
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 5,
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                  ),
-                                  child: Text(
-                                    "Login With Strava",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              // Strava
-                              padding: const EdgeInsets.only(bottom: 20.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 50.0,
-                                child: ElevatedButton(
-                                  onPressed: testDeauth,
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 5,
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                  ),
-                                  child: Text(
-                                    "Log out Strava",
                                     style:
                                         Theme.of(context).textTheme.bodyMedium,
                                   ),

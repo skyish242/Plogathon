@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: activity-deployment
+spec:
+  replicas: {{ .Values.replicas.activity }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name.activity }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name.activity }}
+    spec:
+      containers:
+        - name: {{ .Values.app_name.activity }}
+          image: {{ .Values.image.activity }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.env.configmap_name }}
+            - secretRef:
+                name: {{ .Values.env.secret_name }}
+          ports:
+            - containerPort: {{ .Values.ports.activity }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app_name.activity }}-service
+spec:
+  # Only can work in google cloud
+  type: LoadBalancer
+  selector:
+    app: {{ .Values.app_name.activity }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.ports.activity }}
+      targetPort: {{ .Values.ports.activity }}

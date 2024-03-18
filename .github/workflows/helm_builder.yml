@@ -1,0 +1,26 @@
+on:
+  push: [main]
+
+env:
+  APP_NAME: my-app
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_ENVIRONMENT: staging
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        uses: jmagnusson/deploy-helm-gke-action@v1
+        with:
+          docker-image-repo: eu.gcr.io/${{ secrets.GKE_PROJECT }}/${{ env.APP_NAME }}
+          docker-image-tag: ${{ github.sha }}
+          helm-release-name: ${{ env.APP_NAME }}
+          helm-chart-path: ./Docker/PlogChart
+          helm-vars-folder: ./Docker/PlogChart/
+          gke-project: ${{ secrets.GKE_PROJECT }}
+          gke-cluster: Plogathon
+          gke-zone: ${{ secrets.GKE_ZONE }}
+          gke-sa-key: ${{ secrets.GKE_SA_KEY }}

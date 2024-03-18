@@ -343,12 +343,12 @@ class _ActivityPageState extends State<ActivityPage> {
   void disposeTrash() {
     setState(() {
       _nearBin = false;
-      if(_waypoints.isNotEmpty) {
+      if (_waypoints.isNotEmpty) {
         _waypoints.removeLast();
         _markers.clear();
       }
 
-      _wasteCount = _holdingCount;
+      _wasteCount += _holdingCount;
       _holdingCount = 0;
     });
   }

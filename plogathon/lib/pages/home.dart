@@ -8,14 +8,13 @@ import 'package:plogathon/services/provider.dart';
 import 'package:plogathon/widgets/entry_card.dart';
 import 'package:plogathon/services/grpc/activity/activity.pb.dart';
 import 'package:plogathon/services/grpc/user/user.pb.dart';
-import 'package:plogathon/services/activityservice.dart';
-import 'package:plogathon/services/userservice.dart';
+import 'package:plogathon/services/activity_service.dart';
+import 'package:plogathon/services/user_service.dart';
 
 // Strava
 import 'dart:async';
 import 'package:strava_client/strava_client.dart' as stravalib;
-import 'package:plogathon/services/stravaservice.dart';
-
+import 'package:plogathon/services/strava_service.dart';
 
 class HomePage extends StatefulWidget {
   final int userID = Provider().userId;
@@ -27,7 +26,6 @@ class HomePage extends StatefulWidget {
     return _HomePageState();
   }
 }
-
 
 class _HomePageState extends State<HomePage> {
   List<EntryCard> _cards = [];
@@ -43,10 +41,9 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = true;
   bool _initialLoad = false;
 
-  //Strava
+  // Strava
   stravalib.TokenResponse? token;
   bool _isStravaAuthenticated = StravaService().checkStravaAuthenticated();
-
 
   @override
   void initState() {
@@ -55,7 +52,8 @@ class _HomePageState extends State<HomePage> {
     _fetchUser();
     _fetchEntries();
   }
-    //Strava
+
+  // Strava
   FutureOr<Null> showErrorMessage(dynamic error, dynamic stackTrace) {
     if (error is stravalib.Fault) {
       showDialog(
@@ -69,7 +67,8 @@ class _HomePageState extends State<HomePage> {
           });
     }
   }
-    //Strava
+
+  // Strava
   void testAuthentication() {
     _stravaService.authorize().then((token) {
       setState(() {
@@ -84,7 +83,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  //Strava
+  // Strava
   void testDeauth() {
     _stravaService.deAuthorize().then((value) {
       setState(() {
@@ -269,39 +268,43 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                      SizedBox(width: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              _name,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                            const SizedBox(width: 100),
-                            IconButton(
-                              icon: SvgPicture.asset(
-                                "assets/strava-${_isStravaAuthenticated? "enabled" : "disabled"}.svg",
-                                semanticsLabel: 'logout',
-                              ),
-                              onPressed: _isStravaAuthenticated ?  testDeauth : testAuthentication
-                            ),
-                            IconButton(
-                              icon: SvgPicture.asset(
-                                "assets/logout.svg",
-                                semanticsLabel: 'logout',
-                              ),
-                              onPressed: () => Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
+                      SizedBox(
+                          width: double.infinity,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                 ),
-                                (Route<dynamic> route) => false,
-                              ),
-                            ),
-                          ])
-                        ),
+                                const SizedBox(width: 100),
+                                IconButton(
+                                    icon: SvgPicture.asset(
+                                      "assets/strava-${_isStravaAuthenticated ? "enabled" : "disabled"}.svg",
+                                      semanticsLabel: 'logout',
+                                    ),
+                                    onPressed: _isStravaAuthenticated
+                                        ? testDeauth
+                                        : testAuthentication),
+                                IconButton(
+                                  icon: SvgPicture.asset(
+                                    "assets/logout.svg",
+                                    semanticsLabel: 'logout',
+                                  ),
+                                  onPressed: () => Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginPage(),
+                                    ),
+                                    (Route<dynamic> route) => false,
+                                  ),
+                                ),
+                              ])),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

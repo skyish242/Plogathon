@@ -443,34 +443,36 @@ class _ActivityPageState extends State<ActivityPage> {
             ),
           ),
           Expanded(
-            child: Stack(children: [
-              GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: _currentPosition ?? const LatLng(1.3521, 103.8198),
-                  zoom: 13,
-                ),
-                markers: {
-                  Marker(
-                    markerId: const MarkerId("_destinationLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: LatLng(widget.destLatitude, widget.destLongitude),
-                    infoWindow: InfoWindow(
-                        title: widget.destName,
-                        snippet: '${widget.distance} km away'),
+            child: Stack(
+              children: [
+                GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: _currentPosition ?? const LatLng(1.3521, 103.8198),
+                    zoom: 13,
                   ),
-                  ..._markers.values,
-                },
-                polylines: Set<Polyline>.of(_polylines.values),
-                onMapCreated: (GoogleMapController controller) {
-                  _mapController.complete(controller);
-                },
-                myLocationEnabled: true,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 24, left: 32, right: 32),
-                child: Column(
-                  children: [
-                    Card(
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId("_destinationLocation"),
+                      icon: BitmapDescriptor.defaultMarker,
+                      position:
+                          LatLng(widget.destLatitude, widget.destLongitude),
+                      infoWindow: InfoWindow(
+                          title: widget.destName,
+                          snippet: '${widget.distance} km away'),
+                    ),
+                    ..._markers.values,
+                  },
+                  polylines: Set<Polyline>.of(_polylines.values),
+                  onMapCreated: (GoogleMapController controller) {
+                    _mapController.complete(controller);
+                  },
+                  myLocationEnabled: true,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24, left: 32, right: 32),
+                  child: Column(
+                    children: [
+                      Card(
                         margin: const EdgeInsets.only(
                             left: 0, right: 0, bottom: 12),
                         color: Colors.white,
@@ -571,94 +573,100 @@ class _ActivityPageState extends State<ActivityPage> {
                                   ]
                                 : [
                                     Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Loading...",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelLarge
-                                                  ?.copyWith(
-                                                    fontWeight: FontWeight.w600,
-                                                  )),
-                                          const SizedBox(
-                                            height: 48,
-                                          )
-                                        ])
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Loading...",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                )),
+                                        const SizedBox(
+                                          height: 48,
+                                        )
+                                      ],
+                                    )
                                   ],
                           ),
-                        )),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 140,
-                          child: ElevatedButton(
-                              onPressed: _initialLoad
-                                  ? () => openCamera(context)
-                                  : null,
-                              style: ElevatedButton.styleFrom(
-                                elevation: 5,
-                                backgroundColor: Theme.of(context).primaryColor,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0)),
-                              ),
-                              child: Text("Take Picture",
-                                  style:
-                                      Theme.of(context).textTheme.labelLarge)),
                         ),
-                        SizedBox(
-                          width: 140,
-                          child: ElevatedButton(
-                            onPressed:
-                                _initialLoad ? () => showEndPrompt() : null,
-                            style: ElevatedButton.styleFrom(
-                              elevation: 5,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0)),
-                            ),
-                            child: Text(
-                              "End",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    _nearBin
-                        ? SizedBox(
-                            width: 280,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 140,
                             child: ElevatedButton(
-                              onPressed: _nearBin ? () => disposeTrash() : null,
+                                onPressed: _initialLoad
+                                    ? () => openCamera(context)
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 5,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                ),
+                                child: Text("Take Picture",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge)),
+                          ),
+                          SizedBox(
+                            width: 140,
+                            child: ElevatedButton(
+                              onPressed:
+                                  _initialLoad ? () => showEndPrompt() : null,
                               style: ElevatedButton.styleFrom(
                                 elevation: 5,
-                                backgroundColor: const Color(0xFFCCFA6E),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0)),
                               ),
                               child: Text(
-                                "Dispose!",
+                                "End",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge
-                                    ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
+                                    ?.copyWith(color: Colors.white),
                               ),
                             ),
-                          )
-                        : const SizedBox.shrink(),
-                  ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _nearBin
+                          ? SizedBox(
+                              width: 280,
+                              child: ElevatedButton(
+                                onPressed:
+                                    _nearBin ? () => disposeTrash() : null,
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 5,
+                                  backgroundColor: const Color(0xFFCCFA6E),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                ),
+                                child: Text(
+                                  "Dispose!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary),
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           )
         ],
       ),

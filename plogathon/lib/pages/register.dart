@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plogathon/pages/login.dart';
-import 'package:plogathon/services/userservice.dart';
+import 'package:plogathon/services/user_service.dart';
 import 'package:plogathon/services/grpc/user/user.pb.dart';
 
 class RegisterPage extends StatefulWidget {

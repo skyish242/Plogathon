@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/services/grpc/activity/activity.pb.dart';
-import 'package:plogathon/services/activityservice.dart';
+import 'package:plogathon/services/activity_service.dart';
 import 'package:plogathon/services/provider.dart';
-import 'package:plogathon/services/stravaservice.dart';
+import 'package:plogathon/services/strava_service.dart';
 import 'package:strava_client/strava_client.dart' as stravalib;
-
 
 class EndPage extends StatefulWidget {
   final int userID = Provider().userId;
@@ -32,8 +31,8 @@ class _EndPageState extends State<EndPage> {
   final activityService = ActivityService();
   final _thoughtsController = TextEditingController();
   final _activityNameController = TextEditingController();
-  final _activityTypeController = TextEditingController();
-  stravalib.ActivityTypeEnum _selectedActivityType = stravalib.ActivityTypeEnum.Run;
+  stravalib.ActivityTypeEnum _selectedActivityType =
+      stravalib.ActivityTypeEnum.Run;
 
   final _focusNode = FocusNode();
 
@@ -67,7 +66,6 @@ class _EndPageState extends State<EndPage> {
         _isUploading = true;
       });
 
-      
       final newActivity = Activity(
         userID: widget.userID,
         name: _activityNameController.text,
@@ -85,65 +83,68 @@ class _EndPageState extends State<EndPage> {
 
       // DB uploaded
       // Try to Upload Strava, if user is linked with strava
-      if(StravaService().checkStravaAuthenticated()){
-          StravaService().postAthleteActivity(
-                stravalib.CreateActivityRequest(
-                  _activityNameController.text, 
-                  _selectedActivityType, 
-                  DateTime.now(), 
-                  (widget.time / 1000).floor(), 
-                  _thoughtsController.text, 
-                  convertDistance(), 
-                  false, 
-                  false
-                )
-          ).catchError((onError){
-              throw onError;
-          });
-      };
+      if (StravaService().checkStravaAuthenticated()) {
+        StravaService()
+            .postAthleteActivity(stravalib.CreateActivityRequest(
+                _activityNameController.text,
+                _selectedActivityType,
+                DateTime.now(),
+                (widget.time / 1000).floor(),
+                _thoughtsController.text,
+                convertDistance(),
+                false,
+                false))
+            .catchError((onError) {
+          throw onError;
+        });
+      }
+      ;
       setState(() {
         _isUploading = false;
       });
 
-      
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Activity uploaded!',
-              style: TextStyle(color: Colors.white)),
-          content: const Text('Your activity has been successfully saved.',
-              style: TextStyle(color: Colors.white)),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                    (Route<dynamic> route) => false);
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Activity uploaded!',
+                style: TextStyle(color: Colors.white)),
+            content: const Text('Your activity has been successfully saved.',
+                style: TextStyle(color: Colors.white)),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                      (Route<dynamic> route) => false);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     } catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Upload Failed',
-              style: TextStyle(color: Colors.white)),
-          content:
-              Text(e.toString(), style: const TextStyle(color: Colors.white)),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Upload Failed',
+                style: TextStyle(color: Colors.white)),
+            content:
+                Text(e.toString(), style: const TextStyle(color: Colors.white)),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                },
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -291,7 +292,8 @@ class _EndPageState extends State<EndPage> {
                     child: SizedBox(
                       width: double.infinity,
                       height: 64,
-                      child: DropdownButtonFormField<stravalib.ActivityTypeEnum>(
+                      child:
+                          DropdownButtonFormField<stravalib.ActivityTypeEnum>(
                         value: _selectedActivityType,
                         onChanged: (stravalib.ActivityTypeEnum? newValue) {
                           setState(() {
@@ -300,9 +302,10 @@ class _EndPageState extends State<EndPage> {
                         },
                         // cursorColor: Theme.of(context).colorScheme.onPrimary,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          // Set the text color here
-                          color: const Color(0xFFB3B3B3), // Change it to the desired color
-                        ),
+                              // Set the text color here
+                              color: const Color(
+                                  0xFFB3B3B3), // Change it to the desired color
+                            ),
                         decoration: InputDecoration(
                           hintStyle:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -319,9 +322,11 @@ class _EndPageState extends State<EndPage> {
                             ),
                           ),
                         ),
-                        items: ['Walk','Run', 'Wheelchair', 'Workout'].map((String activityType) {
+                        items: ['Walk', 'Run', 'Wheelchair', 'Workout']
+                            .map((String activityType) {
                           return DropdownMenuItem<stravalib.ActivityTypeEnum>(
-                            value: stravalib.ActivityTypeEnumHelper.getType(activityType),
+                            value: stravalib.ActivityTypeEnumHelper.getType(
+                                activityType),
                             child: Text(activityType),
                           );
                         }).toList(),
@@ -385,21 +390,20 @@ class _EndPageState extends State<EndPage> {
                   SizedBox(
                     width: double.infinity,
                     height: 50.0,
-                    child: _isUploading ? 
-                      const Center(child:CircularProgressIndicator()) : 
-                    
-                    ElevatedButton(
-                      onPressed: () {
-                        convertTime();
-                        uploadActivity();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        backgroundColor: Theme.of(context).primaryColor,
-                      ),
-                      child: Text("Upload",
-                          style: Theme.of(context).textTheme.bodyMedium),
-                    ),
+                    child: _isUploading
+                        ? const Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            onPressed: () {
+                              convertTime();
+                              uploadActivity();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              elevation: 5,
+                              backgroundColor: Theme.of(context).primaryColor,
+                            ),
+                            child: Text("Upload",
+                                style: Theme.of(context).textTheme.bodyMedium),
+                          ),
                   ),
                 ],
               ),

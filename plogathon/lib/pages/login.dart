@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:plogathon/pages/home.dart';
 import 'package:plogathon/pages/register.dart';
 import 'package:plogathon/services/provider.dart';
-import 'package:plogathon/services/stravaservice.dart';
-import 'package:plogathon/services/userservice.dart';
-
-// Strava
+import 'package:plogathon/services/user_service.dart';
 import 'dart:async';
-import 'package:strava_client/strava_client.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,20 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-  }
-
-  FutureOr<Null> showErrorMessage(dynamic error, dynamic stackTrace) {
-    if (error is Fault) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Did Receive Fault"),
-              content: Text(
-                  "Message: ${error.message}\n-----------------\nErrors:\n${(error.errors ?? []).map((e) => "Code: ${e.code}\nResource: ${e.resource}\nField: ${e.field}\n").toList().join("\n----------\n")}"),
-            );
-          });
-    }
   }
 
   Future<void> _handleLogin() async {
@@ -70,23 +52,25 @@ class _LoginPageState extends State<LoginPage> {
         _enabledButtons = true;
       });
 
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title:
-              const Text('Login Failed', style: TextStyle(color: Colors.white)),
-          content:
-              Text(e.toString(), style: const TextStyle(color: Colors.white)),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Failed',
+                style: TextStyle(color: Colors.white)),
+            content:
+                Text(e.toString(), style: const TextStyle(color: Colors.white)),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 

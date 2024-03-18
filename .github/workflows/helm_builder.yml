@@ -1,4 +1,4 @@
-name: Build Helm Ship and Deploy to GKE2
+name: Build Helm Ship and Deploy to GKE
 
 on:
   push:

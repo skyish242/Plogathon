@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  APP_NAME: my-app
+  APP_NAME: plogathon
 
 jobs:
   deploy-staging:

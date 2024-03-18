@@ -73,11 +73,16 @@ class _HomePageState extends State<HomePage> {
       Activities fetchedActivities = await activityService.findAllActivities();
       List<ProtoActivity> activities = fetchedActivities.activities;
 
+      List<Future<ProtoUser>> userFetchOperations = activities
+          .map((activity) => userService.findOneUser(activity.userID))
+          .toList();
+
+      List<ProtoUser> tempUsers = await Future.wait(userFetchOperations);
+
       for (int i = activities.length - 1; i >= 0; i--) {
         ProtoActivity activity = activities[i];
-        ProtoUser tempUser = await userService.findOneUser(activity.userID);
 
-        if (tempUser.userID == widget.userID && !_initialLoad) {
+        if (tempUsers[i].userID == widget.userID && !_initialLoad) {
           _userWasteCount += activity.wasteCount;
           _userMileageCount += activity.distance;
         }
@@ -86,7 +91,7 @@ class _HomePageState extends State<HomePage> {
 
         cards.add(
           EntryCard(
-            name: "${tempUser.firstName} ${tempUser.lastName}",
+            name: "${tempUsers[i].firstName} ${tempUsers[i].lastName}",
             wasteCount: activity.wasteCount,
             distance: activity.distance,
             duration: activity.duration,
@@ -116,11 +121,16 @@ class _HomePageState extends State<HomePage> {
       Activities fetchedActivities = await activityService.findAllActivities();
       List<ProtoActivity> activities = fetchedActivities.activities;
 
+      List<Future<ProtoUser>> userFetchOperations = activities
+          .map((activity) => userService.findOneUser(activity.userID))
+          .toList();
+
+      List<ProtoUser> tempUsers = await Future.wait(userFetchOperations);
+
       for (int i = activities.length - 1; i >= 0; i--) {
         ProtoActivity activity = activities[i];
-        ProtoUser tempUser = await userService.findOneUser(activity.userID);
 
-        if (tempUser.userID == widget.userID) {
+        if (tempUsers[i].userID == widget.userID) {
           if (!_initialLoad) {
             _userWasteCount += activity.wasteCount;
             _userMileageCount += activity.distance;
@@ -130,7 +140,7 @@ class _HomePageState extends State<HomePage> {
 
           cards.add(
             EntryCard(
-              name: "${tempUser.firstName} ${tempUser.lastName}",
+              name: "${tempUsers[i].firstName} ${tempUsers[i].lastName}",
               wasteCount: activity.wasteCount,
               distance: activity.distance,
               duration: activity.duration,

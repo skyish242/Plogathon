@@ -342,6 +342,7 @@ class _ActivityPageState extends State<ActivityPage> {
     setState(() {
       _nearBin = false;
       _waypoints.removeLast();
+      _markers.clear();
       _wasteCount = _holdingCount;
       _holdingCount = 0;
     });
@@ -362,7 +363,7 @@ class _ActivityPageState extends State<ActivityPage> {
     );
 
     setState(() {
-      _nearBin = distance < 50;
+      _nearBin = distance < 500;
     });
   }
 

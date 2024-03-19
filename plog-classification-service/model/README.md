@@ -117,7 +117,7 @@ Metal: a photo of an object made of metal
 Others: a photo of an object made of anything other than paper, plastic, glass, or metal
 ```
 
-To further optimise CLIP for OMT classification, we propose the application of transfer learning by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This would enable the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance. However, due to the hardware requirements (A100 GPU) for fine-tuning or training a new classifier based on CLIP (as demonstrated [here](https://github.com/mlfoundations/open_clip/blob/main/docs/PRETRAINED.md)), we were unable to test this out. Source code demonstrating testing of the CLIP model can be found in the `archived/clip` folder.
+To further optimise CLIP for OMT classification, we propose the application of transfer learning by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This would enable the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance. However, due to the hardware requirements (A100 GPU) for fine-tuning or training a new classifier based on CLIP (as demonstrated [here](https://github.com/mlfoundations/open_clip/blob/main/docs/PRETRAINED.md)), we were unable to test this out. Source code demonstrating tests on the CLIP model can be found in the `archived/clip` folder.
 
 ![OMT Model](docs/clip-OMT-Model.png)
 *Adapted from OpenAI's CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
@@ -153,7 +153,7 @@ The final fine-tuned OMT model is available in the `/export` folder. However, yo
     ```
     python3 -m venv .venv
     ```
-2. Install the necessary project dependencies, including [PyTorch](https://pytorch.org/) (according to your machine's configuration):
+2. Install the necessary project dependencies, including [TensorFlow](https://www.tensorflow.org/install/pip) (according to your machine's configuration):
     ```
     pip3 install -r requirements.txt
     ```

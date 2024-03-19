@@ -12,41 +12,65 @@ After classification by the Object Material Type Classification (OMT) model, a s
 
 An overview of Plogathon's Classifier Service's workflow is illustrated below.
 
-![Plogathon Classifier Service](model/docs/classifier-workflow.png)
+![Plogathon Classifier Service](docs/classifier-workflow.png)
 
 ### Directory Structure
 ---
+- `/docs`
+    - Documentation images
 - `/flask`
     - Server used to provide classification services, and recycling instructions
 - `/model`
-    - Main model used for (1) object material type classification and (2) classification of its recyclability
+    - Main model used for (1) Object Material Type classification and (2) Recyclability Evaluation
+- `Dockerfile`
+    - Used to build classifier service as a Docker-based microservice
 
 ```
+/docs (contains documentation images)
+
 /flask
-    somthing here
+    data/ (contains exported models and serialised files)
+
+    templates/ (contains webpages to be served by the server)
+
+    uploads/ (contains user-uploaded images)
+
+    app.py (main Flask program)
+
+    config.py (configuration file)
+
+    utils.py (utility functions)
+
+    requirements.txt (Python dependencies for the Flask server)
 
 /model
+    archived/ (contains previous PoC models, specifically OpenAI's CLIP)
+
     dataset/ (contains dataset used for model training and testing)
 
-    docs/ (documentation images)
-
-    export/ (contains exported models)
+    export/ (contains exported models and serialised files)
 
     common.py (shared utility functions and variables used by the other programs)
 
+    utils.py (utility functions used by the OMT model)
+
     eda_datasets.ipynb (code for dataset preparation for OMT classification)
 
-    eda_recyclability.ipynb (code for dataset preparations for recyclability classification)
+    eda_recyclability.ipynb (code for dataset preparations for recyclability evaluation)
 
     mobilenet_omt.ipynb (code for training and testing the fine-tuned OMT model)
 
     model_performance.py (program to evaluate performance of the OMT model)
+
+    requirements.txt (Python dependencies for training/testing the OMT model)
+
+Dockerfile (used to run the classifier service within a Docker container for deployment as a microservice)
 ```
 
 ### Program Usage
 ---
 <ins>Model</ins><br>
-The final fine-tuned OMT model is available in the `model/export` folder. However, you can train or test the model by following the instructions below.
+The final fine-tuned OMT model is available in the `export` folder. However, you can train or test the model by following the instructions below.
 
 1. Create a Python `virtualenv` on your local environment:
     ```
@@ -68,7 +92,18 @@ To run the Flask server, you can either install and execute the program locally 
 2. Ensure that the Flask server is configured correctly. Modify the `config.py` file to set the desired configurations.
     ```
     # Configurations
-    pass
+    FLASK_HOST = "0.0.0.0"                              # Flask host (listen on all network interfaces to accept incoming connections from any IP address, change to your intended IP address if any)
+    FLASK_PORT = "80"                                   # Flask port (change this to your intended exposed port)
+    FLASK_THREADED = True                               # Flask threaded option (should be enabled for better performance)
+    FLASK_DEBUG = True                                  # Flask debug option (should set to False on production environments)
+
+    # Folders
+    DATA_FOLDER = './data'                              # Folder where the pre-trained model and class-mapping information are stored
+    UPLOAD_FOLDER = './uploads'                         # Folder to store uploaded images sent by users
+
+    # Files
+    class_name_file = f'{DATA_FOLDER}/class_names.pkl'  # Class-mapping information file
+    model_file = f'{DATA_FOLDER}/omt_model.keras'       # Pre-trained model
     ```
 3. Build the `classifier-server` Docker image by running the following command:
     ```
@@ -89,7 +124,7 @@ To run the Flask server, you can either install and execute the program locally 
 
 5. Start the web application and use a browser to test the server! 
 
-    If the default `/` endpoint has been enabled for testing, simply enter the classifier server's address on a browser to test the system.
+    If the default `/` endpoint has been enabled for testing, simply enter the classifier server's address on a browser to test the system. A demo of the OMT classifier deployed using Flask is available [here](https://youtu.be/1y3OX_k8ERI).
 
 #### Flask (Local Installation)
 1. Install all necessary programs and libraries (`Python` and `Pip`)
@@ -116,16 +151,24 @@ To run the Flask server, you can either install and execute the program locally 
 4. Ensure that the Flask server is configured correctly. Modify the `config.py` file to set the desired configurations.
     ```
     # Configurations
-    FLASK_HOST = "0.0.0.0"                                           # Flask host (listen on all network interfaces to accept incoming connections from any IP address, change to your intended IP address if any)
-    FLASK_PORT = "80"                                                # Flask port (change this to your intended exposed port)
-    FLASK_THREADED = True                                            # Flask threaded option (should be enabled for better performance)
-    FLASK_DEBUG = True                                               # Flask debug option (should set to False on production environments)
+    FLASK_HOST = "0.0.0.0"                              # Flask host (listen on all network interfaces to accept incoming connections from any IP address, change to your intended IP address if any)
+    FLASK_PORT = "80"                                   # Flask port (change this to your intended exposed port)
+    FLASK_THREADED = True                               # Flask threaded option (should be enabled for better performance)
+    FLASK_DEBUG = True                                  # Flask debug option (should set to False on production environments)
+
+    # Folders
+    DATA_FOLDER = './data'                              # Folder where the pre-trained model and class-mapping information are stored
+    UPLOAD_FOLDER = './uploads'                         # Folder to store uploaded images sent by users
+
+    # Files
+    class_name_file = f'{DATA_FOLDER}/class_names.pkl'  # Class-mapping information file
+    model_file = f'{DATA_FOLDER}/omt_model.keras'       # Pre-trained model
     ```
 5. Run the Flask server
     ```
     sudo python3 app.py
     ```
-6. If you are just testing the Flask server, navigate to the the `/` endpoint on a web browser to view the testing page. 
+6. If you are just testing the Flask server, navigate to the the `/` endpoint on a web browser to view the testing page. A demo of the OMT classifier deployed using Flask is available [here](https://youtu.be/1y3OX_k8ERI).
 
 ### Dataset
 ---
@@ -170,12 +213,12 @@ The combined dataset is available for download [here](https://gla-my.sharepoint.
 ### Object Material Type (OMT) Classifier
 The OMT classification model is built on Google's [MobileNetV3](https://blog.research.google/2019/11/introducing-next-generation-on-device.html) model, which is trained on the MobileNetV3 dataset, which consists of 1.4 million images, and capable of classifying more than 1000 object types. The MobileNetV3 model is optimised for computer vision applications in resource-constrained environments and boasts better performance, when compared to state-of-the-art models such as MnasNet and ProxylessNet.
 
-![MobileNetV3 Performance](model/docs/mobilenet-performance.png)
+![MobileNetV3 Performance](docs/mobilenet-performance.png)
 *Source: Google MobileNetV3 [(Howard et. al., 2019)](https://arxiv.org/pdf/1905.02244.pdf)*
 
 The OMT model is built by training and attaching a classification head on top of the MobileNet model, which serves as the Base Neural Network (BNN), to facilitate transfer learning. This enables the new classification head to leverage on the learnings of MobileNet as the BNN, allowing for faster training and better model performance. The BNN's pre-trained layers are frozen and function as intermediate layers to extract data features. These features are then fed onto the subsequent classification head's NN layers for further classification. An overview of the OMT model's architecture is provided below.
 
-![OMT Model](model/docs/mobilenet-OMT-Model.png)
+![OMT Model](docs/mobilenet-OMT-Model.png)
 *Adapted from Google's MobileNetV3 [(Howard et. al., 2019)](https://arxiv.org/pdf/1905.02244.pdf)*
 
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
@@ -205,7 +248,7 @@ The OMT model is built by training and attaching a classification head on top of
 └─────────────────────────────────┴────────────────────────┴───────────────┘
 </pre>
 
-Upon testing, the OMT model was able to produce a desirable training accuracy of `92.91%` and test accuracy of `92.43%`, along with the following metrics for both the train and test datasets:
+Upon testing, the OMT model was able to produce a desirable training accuracy of `92.91%` and test accuracy of `92.43%`. Other metrics measuring the model's peformance for both the train and test datasets are provided below.
 ```
 ~Test Dataset Results~
 Accuracy: 0.9242830616876418
@@ -272,7 +315,7 @@ weighted avg       0.94      0.93      0.93     19388
 ---
 Another alternative to the current OMT model would be to build the model on top of OpenAI's [CLIP](https://openai.com/research/clip) model using transfer learning for the multi-class classification of images of objects as `Paper`, `Plastic`, `Metal`, `Glass` and `Others`. CLIP is a multi-modal neural network trained on 400 million image-text (text caption) pairs from the Internet, making it suitable for multiple use-cases including image classification, generation and ranking. CLIP boasts on-par or better performance without prior training as a generalised zero-shot classifier, when compared against other traditionally trained supervised models.
 
-![CLIP Performance](model/docs/clip-performance.png)
+![CLIP Performance](docs/clip-performance.png)
 *Source: OpenAI CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
 
 However, CLIP was unable to produce desirable results for multi-class classification of object material types, which is likely due to its lack of generalisation to such images during its pre-training. Initial testing on the dataset resulted in the highest accuracy of *72.01%* and precision of *73.49%* when performing as a zero-shot classifier. 
@@ -335,7 +378,7 @@ Metal: a photo of an object made of metal
 Others: a photo of an object made of anything other than paper, plastic, glass, or metal
 ```
 
-To further optimise CLIP for OMT classification, we propose the application of transfer learning by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This would enable the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance. However, due to the hardware requirements (A100 GPU) for fine-tuning or training a new classifier based on CLIP (as demonstrated [here](https://github.com/mlfoundations/open_clip/blob/main/docs/PRETRAINED.md)), we were unable to test this out. Source code demonstrating tests on the CLIP model can be found in the `model/archived/clip` folder.
+To further optimise CLIP for OMT classification, we propose the application of transfer learning by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This would enable the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance. However, due to the hardware requirements (A100 GPU) for fine-tuning or training a new classifier based on CLIP (as demonstrated [here](https://github.com/mlfoundations/open_clip/blob/main/docs/PRETRAINED.md)), we were unable to test this out. Source code demonstrating tests on the CLIP model can be found in the `archived/clip` folder.
 
-![OMT Model](model/docs/clip-OMT-Model.png)
+![OMT Model](docs/clip-OMT-Model.png)
 *Adapted from OpenAI's CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*

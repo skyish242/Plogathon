@@ -7,12 +7,12 @@ class ActivityService {
   final ActivityServiceClient client;
   
   ActivityService(): channel = ClientChannel(
-        '34.23.233.168',
+        '34.73.192.194',
         port: 5001,
         options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
       ),
       client = ActivityServiceClient(ClientChannel(
-        '34.23.233.168',
+        '34.73.192.194',
         port: 5001,
         options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
   ));

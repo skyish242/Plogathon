@@ -1,5 +1,5 @@
 # Functions and variables shared by all programs in the folder
-import pickle, os
+import pickle, os, hashlib, re
 import tensorflow as tf
 from config import *
 from tensorflow import keras
@@ -19,6 +19,13 @@ def load_from_pickle(file_path):
     with open(file_path, 'rb') as file:
         loaded_data = pickle.load(file)
     return loaded_data
+
+# Function to calculate the SHA256 hash of a file or string
+def get_hash(object):
+    # Calculate hash of string
+    sha512 = hashlib.sha512()
+    sha512.update(object.encode())
+    return sha512.hexdigest()
 
 # Function to preprocess an image before feeding it to the model
 def preprocess_image(image_path, img_size):

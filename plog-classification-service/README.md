@@ -205,8 +205,39 @@ The OMT model is built by training and attaching a classification head on top of
 └─────────────────────────────────┴────────────────────────┴───────────────┘
 </pre>
 
-Upon testing, the OMT model was able to produce a desirable training accuracy of `95.62%` and test accuracy of `92.91%`, along with the following metrics for both the train and test datasets:
+Upon testing, the OMT model was able to produce a desirable training accuracy of `92.91%` and test accuracy of `92.43%`, along with the following metrics for both the train and test datasets:
 ```
+~Test Dataset Results~
+Accuracy: 0.9242830616876418
+Precision: 0.911117925278066
+Recall: 0.9000361772380904
+F1 Score: 0.8981108495712979
+Matthews Correlation Coefficient (MCC): 0.9016064870560931
+Cohen's Kappa: 0.899882465882997
+Hamming Loss: 0.07571693831235816
+
+Confusion Matrix:
+ [[ 448   75    1    5  114]
+ [   2  801    2    4   39]
+ [   7    3 1822    2   13]
+ [   1   29   18  845   21]
+ [   2   24    2    3  564]]
+
+Classification Report:
+               precision    recall  f1-score   support
+
+       Glass       0.97      0.70      0.81       643
+       Metal       0.86      0.94      0.90       848
+      Others       0.99      0.99      0.99      1847
+       Paper       0.98      0.92      0.95       914
+     Plastic       0.75      0.95      0.84       595
+
+    accuracy                           0.92      4847
+   macro avg       0.91      0.90      0.90      4847
+weighted avg       0.93      0.92      0.92      4847
+
+-------------------------------------------------------------
+
 ~Train Dataset Results~
 Accuracy: 0.9290798432019806
 Precision: 0.9158729171522368

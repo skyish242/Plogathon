@@ -1,49 +1,36 @@
 <head>
     <title>OMT Model</title>
     <!-- Import jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-        integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <div id="outer_container">
         <h2>Upload an image for Object Material Type Classification (Paper, Plastic, Metal, Glass, or Others)</h2>
         <!-- Form to get user's uploaded image -->
-        <form enctype="multipart/form-data">
-            <input type="file" id="uploaded_img" accept="image/*" />
+        <form id="upload_form" enctype="multipart/form-data">
+            <input type="file" id="upload_img" name="image" accept="image/*" />
             <button type="button" onclick="upload_image()">Upload Image</button>
         </form>
 
         <!-- Display uploaded image -->
         <div id="image_container" style="display: none;">
             <h2>Uploaded Image</h2>
-            <img id="uploadedImage" style="max-width: 100%;"/>
+            <img id="uploadedImage" style="max-width: 100%;" />
             <p id="results"></p>
         </div>
     </div>
-
 
     <script>
         // Constants
         const test_img = document.getElementById('uploadedImage');
         const results_txt = document.getElementById('results');
 
-        /* Functions */
-        // Function to perform multi-class classification on image
-        function classify_image() {
-            console.log("Classifying image...");
-            // Classify image
-            console.log("AJAX CALL!!!");
-            // Update results text
-            results_txt.textContent = 'Some material..';
-            console.log("Image classified!");
-        }
-
         /* Event Listeners */
         // Function for handling image upload
         async function upload_image() {
             // Get uploaded image
-            var input = document.getElementById('uploaded_img');
+            var input = document.getElementById('upload_img');
             var file = input.files[0];
             if(file) {
                 var reader = new FileReader();
@@ -58,7 +45,23 @@
                     $("#image_container").show();
 
                     // Classify image after it has been loaded
-                    classify_image();
+                    console.log("Classifying image...");
+                    // Classify image
+                    $.ajax({
+                        url: "/upload",
+                        type: "POST",
+                        data: new FormData($('#upload_form')[0]),
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            // Update results text
+                            results_txt.textContent = response.message;
+                            console.log(response);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
                 };
                 reader.readAsDataURL(file);
             }

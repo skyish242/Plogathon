@@ -14,6 +14,7 @@ recyclability_dataset_file = f'{PARENT_DATASET_FOLDER}/cgs_data.txt'
 recyclability_file = f'{EXPORT_FOLDER}/df_recyclability.pkl'
 dataset_file = f'{EXPORT_FOLDER}/df_dataset.pkl'
 material_items_file = f'{EXPORT_FOLDER}/dict_material_items.pkl'
+class_name_file = f'{EXPORT_FOLDER}/class_names.pkl'
 model_file = f'{EXPORT_FOLDER}/omt_model.keras'
 
 # Material-Class mapping

@@ -17,25 +17,20 @@ _oh ma gawd_
 
 ## Ports and IP Addresses
 
-### Recycling Classification Service 
+### Recycling Classification Service (Not Up)
 - **Service Name:** plog-classify-service
 - **IP Address:** 34.73.225.113
 - **Port:** 5000
 
 ### Activity Service 
 - **Service Name:** plog-activity-service
-- **IP Address:** 34.23.233.168
+- **IP Address:** 34.73.192.194
 - **Port:** 5001
 
 ### User Service 
 - **Service Name:** plog-user-service
-- **IP Address:** 34.73.60.176
+- **IP Address:** 35.196.43.2
 - **Port:** 5002
-
-### Strava Service 
-- **Service Name:** plog-strava-service
-- **IP Address:** 35.237.20.97
-- **Port:** 5003
 
 ## Project Setup
 

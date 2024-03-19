@@ -10,6 +10,38 @@ These classes were intentionally chosen to align with materials identified to be
 
 After classification by the Object Material Type Classification (OMT) model, a subsequent binary classification on the object's recyclability is performed. Instructions on how to prepare the object for recycling are also provided, where appropriate.
 
+### Directory Structure
+---
+```
+dataset/ (contains dataset used for model training and testing)
+
+docs/ (documentation images)
+
+export/ (contains exported models)
+
+common.py (shared utility functions and variables used by the other programs)
+
+eda_datasets.ipynb (code for dataset preparation for OMT classification)
+
+eda_recyclability.ipynb (code for dataset preparations for recyclability classification)
+
+mobilenet_omt.ipynb (code for training and testing the fine-tuned OMT model)
+```
+
+### Program Usage
+---
+The final fine-tuned OMT model is available in the `/export` folder. However, you can train or test the model by following the instructions below.
+
+1. Create a Python `virtualenv` on your local environment:
+    ```
+    python3 -m venv .venv
+    ```
+2. Install the necessary project dependencies, including [TensorFlow](https://www.tensorflow.org/install/pip) (according to your machine's configuration):
+    ```
+    pip3 install -r requirements.txt
+    ```
+3. Run the interactive Python notebook to train/test the OMT model, ensuring that you've linked the notebook to the correct Python `virtualenv`.
+
 ### Dataset
 ---
 The OMT model is trained on a combination of both the (1) [Garbage Classification](https://www.kaggle.com/datasets/mostafaabla/garbage-classification) and (2) [Recycle Classification](https://www.kaggle.com/datasets/jinfree/recycle-classification-dataset) datasets available on Kaggle. These datasets were combined together to fit into the five classes of materials available for classification by the OMT model.
@@ -50,7 +82,45 @@ Others     9232
 
 The combined dataset is available for download [here](https://gla-my.sharepoint.com/:u:/g/personal/2837303a_student_gla_ac_uk/Ed0pU32-uYNKuzjscVhZlPUBdGtgnoB8dJU5axo5vC_xiw?e=SqkfpJ) (password: `plogathon-2024`).
 
-### Reference: Classifier built on OpenAI's CLIP
+### OMT Classifier
+The OMT classification model is built on Google's [MobileNetV3](https://blog.research.google/2019/11/introducing-next-generation-on-device.html) model, which is trained on the MobileNetV3 dataset, which consists of 1.4 million images, and capable of classifying more than 1000 object types. The MobileNetV3 model is optimised for computer vision applications in resource-constrained environments and boasts better performance, when compared to state-of-the-art models such as MnasNet and ProxylessNet.
+
+![MobileNetV3 Performance](docs/mobilenet-performance.png)
+*Source: Google MobileNetV3 [(Howard et. al., 2019)](https://arxiv.org/pdf/1905.02244.pdf)*
+
+The OMT model is built by training and attaching a classification head on top of the MobileNet model, which serves as the Base Neural Network (BNN), to facilitate transfer learning. This enables the new classification head to leverage on the learnings of MobileNet as the BNN, allowing for faster training and better model performance. The BNN's pre-trained layers are frozen and function as intermediate layers to extract data features. These features are then fed onto the subsequent classification head's NN layers for further classification. An overview of the OMT model's architecture is provided below.
+
+![OMT Model](docs/mobilenet-OMT-Model.png)
+*Adapted from Google's MobileNetV3 [(Howard et. al., 2019)](https://arxiv.org/pdf/1905.02244.pdf)*
+
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃<span style="font-weight: bold"> Layer (type)                    </span>┃<span style="font-weight: bold"> Output Shape           </span>┃<span style="font-weight: bold">       Param # </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ input_layer_1 (<span style="color: #0087ff; text-decoration-color: #0087ff">InputLayer</span>)      │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">160</span>, <span style="color: #00af00; text-decoration-color: #00af00">160</span>, <span style="color: #00af00; text-decoration-color: #00af00">3</span>)    │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ sequential (<span style="color: #0087ff; text-decoration-color: #0087ff">Sequential</span>)         │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">160</span>, <span style="color: #00af00; text-decoration-color: #00af00">160</span>, <span style="color: #00af00; text-decoration-color: #00af00">3</span>)    │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ MobileNetV3small (<span style="color: #0087ff; text-decoration-color: #0087ff">Functional</span>)   │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">5</span>, <span style="color: #00af00; text-decoration-color: #00af00">5</span>, <span style="color: #00af00; text-decoration-color: #00af00">576</span>)      │       <span style="color: #00af00; text-decoration-color: #00af00">939,120</span> │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ global_average_pooling2d        │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">576</span>)            │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
+│ (<span style="color: #0087ff; text-decoration-color: #0087ff">GlobalAveragePooling2D</span>)        │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                   │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">1024</span>)           │       <span style="color: #00af00; text-decoration-color: #00af00">590,848</span> │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                 │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">1024</span>)           │     <span style="color: #00af00; text-decoration-color: #00af00">1,049,600</span> │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_2 (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                 │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">512</span>)            │       <span style="color: #00af00; text-decoration-color: #00af00">524,800</span> │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ batch_normalization             │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">512</span>)            │         <span style="color: #00af00; text-decoration-color: #00af00">2,048</span> │
+│ (<span style="color: #0087ff; text-decoration-color: #0087ff">BatchNormalization</span>)            │                        │               │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout (<span style="color: #0087ff; text-decoration-color: #0087ff">Dropout</span>)               │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">512</span>)            │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_3 (<span style="color: #0087ff; text-decoration-color: #0087ff">Dense</span>)                 │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">5</span>)              │         <span style="color: #00af00; text-decoration-color: #00af00">2,565</span> │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+</pre>
+
+### Alternative: OMT Classifier built on OpenAI's CLIP
 ---
 Another alternative to the current OMT model would be to build the model on top of OpenAI's [CLIP](https://openai.com/research/clip) model using transfer learning for the multi-class classification of images of objects as `Paper`, `Plastic`, `Metal`, `Glass` and `Others`. CLIP is a multi-modal neural network trained on 400 million image-text (text caption) pairs from the Internet, making it suitable for multiple use-cases including image classification, generation and ranking. CLIP boasts on-par or better performance without prior training as a generalised zero-shot classifier, when compared against other traditionally trained supervised models.
 
@@ -121,40 +191,3 @@ To further optimise CLIP for OMT classification, we propose the application of t
 
 ![OMT Model](docs/clip-OMT-Model.png)
 *Adapted from OpenAI's CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
-
-
-### Directory Structure
----
-```
-clip/ (contains base CLIP model)
-
-dataset/ (contains dataset used for model training and testing)
-
-docs/ (documentation images)
-
-export/ (contains exported models)
-
-common.py (shared utility functions and variables used by the other programs)
-
-eda_datasets.ipynb (code for dataset preparation for OMT classification)
-
-eda_recyclability.ipynb (code for dataset preparations for recyclability classification)
-
-zero_shot_performance.ipynb (code for evaluating the initial zero-shot performance of the CLIP model, without prior training for OMT classification)
-
-OMT_model.ipynb (code for training and testing the fine-tuned OMT model)
-```
-
-### Program Usage
----
-The final fine-tuned OMT model is available in the `/export` folder. However, you can train or test the model by following the instructions below.
-
-1. Create a Python `virtualenv` on your local environment:
-    ```
-    python3 -m venv .venv
-    ```
-2. Install the necessary project dependencies, including [TensorFlow](https://www.tensorflow.org/install/pip) (according to your machine's configuration):
-    ```
-    pip3 install -r requirements.txt
-    ```
-3. Run the interactive Python notebook to train/test the OMT model, ensuring that you've linked the notebook to the correct Python `virtualenv`.

@@ -9,7 +9,7 @@ Ryan Lai Wei Shao <br>
 
 ## Overview
 
-_oh ma gawd_
+Welcome to our innovative Plogathon application designed to revolutionize waste management and promote recycling through the engaging activity of plogging! Our app integrates cutting-edge machine learning 'Zero Shot' to classify recyclable items in real-time during your plogging sessions, then guiding you to nearby recycling bins for proper disposal. Developed using Flutter for seamless mobile experience and leveraging cloud-native computing for efficient data processing, our project aligns with several Sustainable Development Goals (SDGs), fostering a cleaner planet and advocating for good health and personal well-being. Join us in making a Cleaner World for tomorrow, One stride at a time!
 
 ## System Architecture
 

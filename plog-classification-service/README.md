@@ -12,7 +12,7 @@ After classification by the Object Material Type Classification (OMT) model, a s
 
 An overview of Plogathon's Classifier Service's workflow is illustrated below.
 
-![Plogathon Classifier Service](docs/classifier-workflow.png)
+![Plogathon Classifier Service](model/docs/classifier-workflow.png)
 
 ### Directory Structure
 ---
@@ -170,12 +170,12 @@ The combined dataset is available for download [here](https://gla-my.sharepoint.
 ### Object Material Type (OMT) Classifier
 The OMT classification model is built on Google's [MobileNetV3](https://blog.research.google/2019/11/introducing-next-generation-on-device.html) model, which is trained on the MobileNetV3 dataset, which consists of 1.4 million images, and capable of classifying more than 1000 object types. The MobileNetV3 model is optimised for computer vision applications in resource-constrained environments and boasts better performance, when compared to state-of-the-art models such as MnasNet and ProxylessNet.
 
-![MobileNetV3 Performance](docs/mobilenet-performance.png)
+![MobileNetV3 Performance](model/docs/mobilenet-performance.png)
 *Source: Google MobileNetV3 [(Howard et. al., 2019)](https://arxiv.org/pdf/1905.02244.pdf)*
 
 The OMT model is built by training and attaching a classification head on top of the MobileNet model, which serves as the Base Neural Network (BNN), to facilitate transfer learning. This enables the new classification head to leverage on the learnings of MobileNet as the BNN, allowing for faster training and better model performance. The BNN's pre-trained layers are frozen and function as intermediate layers to extract data features. These features are then fed onto the subsequent classification head's NN layers for further classification. An overview of the OMT model's architecture is provided below.
 
-![OMT Model](docs/mobilenet-OMT-Model.png)
+![OMT Model](model/docs/mobilenet-OMT-Model.png)
 *Adapted from Google's MobileNetV3 [(Howard et. al., 2019)](https://arxiv.org/pdf/1905.02244.pdf)*
 
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
@@ -214,7 +214,7 @@ RESULTS HERE
 ---
 Another alternative to the current OMT model would be to build the model on top of OpenAI's [CLIP](https://openai.com/research/clip) model using transfer learning for the multi-class classification of images of objects as `Paper`, `Plastic`, `Metal`, `Glass` and `Others`. CLIP is a multi-modal neural network trained on 400 million image-text (text caption) pairs from the Internet, making it suitable for multiple use-cases including image classification, generation and ranking. CLIP boasts on-par or better performance without prior training as a generalised zero-shot classifier, when compared against other traditionally trained supervised models.
 
-![CLIP Performance](docs/clip-performance.png)
+![CLIP Performance](model/docs/clip-performance.png)
 *Source: OpenAI CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*
 
 However, CLIP was unable to produce desirable results for multi-class classification of object material types, which is likely due to its lack of generalisation to such images during its pre-training. Initial testing on the dataset resulted in the highest accuracy of *72.01%* and precision of *73.49%* when performing as a zero-shot classifier. 
@@ -279,5 +279,5 @@ Others: a photo of an object made of anything other than paper, plastic, glass, 
 
 To further optimise CLIP for OMT classification, we propose the application of transfer learning by training and attaching a classification head on top of CLIP, which acts as the Base Neural Network (BNN). This would enable the new classification head to leverage on the learnings of CLIP as the BNN, allowing for faster training and better model performance. However, due to the hardware requirements (A100 GPU) for fine-tuning or training a new classifier based on CLIP (as demonstrated [here](https://github.com/mlfoundations/open_clip/blob/main/docs/PRETRAINED.md)), we were unable to test this out. Source code demonstrating tests on the CLIP model can be found in the `model/archived/clip` folder.
 
-![OMT Model](docs/clip-OMT-Model.png)
+![OMT Model](model/docs/clip-OMT-Model.png)
 *Adapted from OpenAI's CLIP [(Radford et. al., 2021)](https://arxiv.org/pdf/2103.00020.pdf)*

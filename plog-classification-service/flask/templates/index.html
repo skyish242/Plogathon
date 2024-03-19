@@ -1,0 +1,68 @@
+<head>
+    <title>OMT Model</title>
+    <!-- Import jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+        integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="outer_container">
+        <h2>Upload an image for Object Material Type Classification (Paper, Plastic, Metal, Glass, or Others)</h2>
+        <!-- Form to get user's uploaded image -->
+        <form enctype="multipart/form-data">
+            <input type="file" id="uploaded_img" accept="image/*" />
+            <button type="button" onclick="upload_image()">Upload Image</button>
+        </form>
+
+        <!-- Display uploaded image -->
+        <div id="image_container" style="display: none;">
+            <h2>Uploaded Image</h2>
+            <img id="uploadedImage" style="max-width: 100%;"/>
+            <p id="results"></p>
+        </div>
+    </div>
+
+
+    <script>
+        // Constants
+        const test_img = document.getElementById('uploadedImage');
+        const results_txt = document.getElementById('results');
+
+        /* Functions */
+        // Function to perform multi-class classification on image
+        function classify_image() {
+            console.log("Classifying image...");
+            // Classify image
+            console.log("AJAX CALL!!!");
+            // Update results text
+            results_txt.textContent = 'Some material..';
+            console.log("Image classified!");
+        }
+
+        /* Event Listeners */
+        // Function for handling image upload
+        async function upload_image() {
+            // Get uploaded image
+            var input = document.getElementById('uploaded_img');
+            var file = input.files[0];
+            if(file) {
+                var reader = new FileReader();
+                reader.onload = async function (e) {
+                    // Load test image
+                    test_img.src = e.target.result;
+
+                    // Ensure image is loaded before moving on
+                    await new Promise((resolve) => test_img.onload = resolve);
+
+                    // Display image container once it is loaded
+                    $("#image_container").show();
+
+                    // Classify image after it has been loaded
+                    classify_image();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+</body>

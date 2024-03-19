@@ -37,6 +37,7 @@ cm = training_results['cm']
 class_report = training_results['class_report']
 
 # Print results
+print("TRAINING DATASET")
 print("Accuracy:", accuracy)
 print("Precision:", precision)
 print("Recall:", recall)
@@ -48,18 +49,19 @@ print("Confusion Matrix:\n", cm, end="\n\n")
 print("Classification Report:\n", class_report, end="\n\n\n")
 
 # Get model's test performance
-test_results = multi_class_metrics(list(y_train), list_train_pred)
+test_results = multi_class_metrics(list(y_test), list_test_pred)
 accuracy = test_results['accuracy']
 precision = test_results['precision']
 recall = test_results['recall']
 f1 = test_results['f1']
 mcc = test_results['mcc']
 kappa = test_results['kappa']
-hamming_loss_val = training_results['hamming_loss_val']
+hamming_loss_val = test_results['hamming_loss_val']
 cm = test_results['cm']
 class_report = test_results['class_report']
 
 # Print results
+print("TEST DATASET")
 print("Accuracy:", accuracy)
 print("Precision:", precision)
 print("Recall:", recall)

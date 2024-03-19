@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 
 class RecylableDialog extends StatelessWidget {
   final String instruction;
+  final String material;
   final bool nearBinShown;
-  const RecylableDialog(
-      {super.key, required this.instruction, required this.nearBinShown});
+  const RecylableDialog({
+    super.key,
+    required this.instruction,
+    required this.nearBinShown,
+    required this.material,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       actionsAlignment: MainAxisAlignment.center,
-      title: Text("Good job! Item is recylable!",
+      title: Text("Good job! $material is recylable!",
           style: Theme.of(context)
               .textTheme
               .bodyMedium

@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:plogathon/services/classification_service.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({
@@ -70,99 +70,117 @@ class CameraPageState extends State<CameraPage> {
             ),
           ),
           Flexible(
-              child: Stack(
-            children: [
-              SizedBox(
-                height: double.infinity,
-                child: FutureBuilder<void>(
-                  future: _initializeControllerFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return SizedBox(
-                          width: size.width,
-                          height: (size.height - 24),
-                          child: FittedBox(
-                            fit: BoxFit.cover,
-                            child: SizedBox(
-                              width: 100,
-                              child: CameraPreview(_controller),
-                            ),
-                          ));
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  padding: const EdgeInsets.only(top: 28, right: 28),
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _flashOn = !_flashOn;
-                      });
-                    },
-                    iconSize: 48.0,
-                    color: _flashOn
-                        ? const Color(0xFFEDFB92)
-                        : const Color(0xFF747474),
-                    icon: const Icon(
-                      Icons.bolt,
-                      semanticLabel: 'Toggle Flash',
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  padding: const EdgeInsets.only(bottom: 72),
-                  child: IconButton(
-                    icon: SvgPicture.asset("assets/camera.svg",
-                        semanticsLabel: 'Take Picture'),
-                    onPressed: () async {
-                      try {
-                        await _initializeControllerFuture;
-                        _controller.setFlashMode(
-                            _flashOn ? FlashMode.always : FlashMode.off);
-                        final image = await _controller.takePicture();
-
-                        if (!context.mounted) return;
-
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => DisplayPictureScreen(
-                              imagePath: image.path,
-                            ),
-                          ),
-                        );
-                      } catch (e) {
-                        // ignore: avoid_print
-                        print(e);
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: double.infinity,
+                  child: FutureBuilder<void>(
+                    future: _initializeControllerFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return SizedBox(
+                            width: size.width,
+                            height: (size.height - 24),
+                            child: FittedBox(
+                              fit: BoxFit.cover,
+                              child: SizedBox(
+                                width: 100,
+                                child: CameraPreview(_controller),
+                              ),
+                            ));
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
                       }
                     },
                   ),
                 ),
-              )
-            ],
-          )),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 28, right: 28),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _flashOn = !_flashOn;
+                        });
+                      },
+                      iconSize: 48.0,
+                      color: _flashOn
+                          ? const Color(0xFFEDFB92)
+                          : const Color(0xFF747474),
+                      icon: const Icon(
+                        Icons.bolt,
+                        semanticLabel: 'Toggle Flash',
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: const EdgeInsets.only(bottom: 72),
+                    child: IconButton(
+                      icon: SvgPicture.asset("assets/camera.svg",
+                          semanticsLabel: 'Take Picture'),
+                      onPressed: () async {
+                        try {
+                          await _initializeControllerFuture;
+                          _controller.setFlashMode(
+                              _flashOn ? FlashMode.always : FlashMode.off);
+                          final image = await _controller.takePicture();
+
+                          if (!context.mounted) return;
+
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DisplayPictureScreen(
+                                imagePath: image.path,
+                              ),
+                            ),
+                          );
+                        } catch (e) {
+                          // ignore: avoid_print
+                          print(e);
+                        }
+                      },
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
-
+class DisplayPictureScreen extends StatefulWidget {
   const DisplayPictureScreen({super.key, required this.imagePath});
 
-  Future<String> fileToBase64(File file) async {
-    final bytes = await file.readAsBytes();
-    final base64Str = base64Encode(bytes);
-    return base64Str;
+  final String imagePath;
+
+  @override
+  DisplayPictureScreenState createState() => DisplayPictureScreenState();
+}
+
+class DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  final classificationService = ClassificationService();
+
+  void classify() async {
+    final classificationResponse =
+        await classificationService.classify(File(widget.imagePath));
+
+    if (classificationResponse != null) {
+      if (mounted && classificationResponse.status) {
+        Navigator.pop(context);
+        Navigator.pop(context, {
+          'recylable': classificationResponse.Recyclability,
+          'instruction': classificationResponse.message,
+          'material': classificationResponse.OMT,
+        });
+      }
+    }
   }
 
   @override
@@ -172,7 +190,8 @@ class DisplayPictureScreen extends StatelessWidget {
       child: Stack(
         children: [
           Align(
-              alignment: Alignment.center, child: Image.file(File(imagePath))),
+              alignment: Alignment.center,
+              child: Image.file(File(widget.imagePath))),
           Align(
             alignment: Alignment.topLeft,
             child: Container(
@@ -201,35 +220,21 @@ class DisplayPictureScreen extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-                padding: const EdgeInsets.only(bottom: 64, left: 64, right: 64),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50.0,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      File imageFile = File(imagePath);
-                      fileToBase64(imageFile).then((base64Str) {
-                        // PETERRRR
-                        const uploadResult = true;
-                        const instruction =
-                            "Before recycling a Tetra Pak, ensure that it is empty, rinse it out, and flatten it to save space in the recycling bin.";
-
-                        Navigator.pop(context);
-
-                        Navigator.pop(context, {
-                          'recylable': uploadResult,
-                          'instruction': instruction
-                        });
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                        elevation: 5, backgroundColor: const Color(0xFFBFECC6)),
-                    child: Text(
-                      "Upload",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+              padding: const EdgeInsets.only(bottom: 64, left: 64, right: 64),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50.0,
+                child: ElevatedButton(
+                  onPressed: classify,
+                  style: ElevatedButton.styleFrom(
+                      elevation: 5, backgroundColor: const Color(0xFFBFECC6)),
+                  child: Text(
+                    "Upload",
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                )),
+                ),
+              ),
+            ),
           )
         ],
       ),

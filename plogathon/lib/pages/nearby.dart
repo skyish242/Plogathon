@@ -20,7 +20,7 @@ class NearbyPage extends StatefulWidget {
 
 class _NearbyPageState extends State<NearbyPage> {
   final List<Location> _locations = [];
-  final _radiusController = TextEditingController(text: "2");
+  final _radiusController = TextEditingController(text: "5");
 
   bool _listView = true;
   bool _locationServiceEnabled = false;
@@ -164,6 +164,7 @@ class _NearbyPageState extends State<NearbyPage> {
                           cursorColor: Theme.of(context).colorScheme.onPrimary,
                           style: Theme.of(context).textTheme.bodyMedium,
                           decoration: InputDecoration(
+                            suffixText: "km",
                             hintStyle: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -181,6 +182,7 @@ class _NearbyPageState extends State<NearbyPage> {
                           ),
                         ),
                       ),
+                      const SizedBox(width: 36),
                       ElevatedButton(
                         onPressed: () async {
                           FocusScope.of(context).unfocus();

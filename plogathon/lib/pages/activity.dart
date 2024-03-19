@@ -97,6 +97,7 @@ class _ActivityPageState extends State<ActivityPage> {
             context: context,
             builder: (BuildContext context) {
               return RecylableDialog(
+                  material: result['material'],
                   instruction: result['instruction'],
                   nearBinShown: _waypoints.isNotEmpty);
             },

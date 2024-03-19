@@ -1,47 +1,68 @@
+import 'dart:io';
+
+import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ImageClassifier {
+class ClassificationService {
+  // ignore: constant_identifier_names
   static const String BASE_URL = 'http://34.73.225.113:5000';
 
-  Future<ClassificationResponse?> classify(String image) async {
-    final Uri uri = Uri.parse("$BASE_URL/classify");
+  Future<ClassificationResponse?> classify(File image) async {
+    final Uri uri = Uri.parse("$BASE_URL/upload");
 
-    final response = await http.post(
-      uri,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({'image': image}),
-    );
+    // Open a bytestream
+    http.ByteStream stream = http.ByteStream(image.openRead().cast());
 
-    if (response.statusCode == 200) {
-      return ClassificationResponse.fromJson(
-          jsonDecode(response.body) as Map<String, dynamic>);
-    }
-    return null;
+    // Get file length
+    int length = await image.length();
+
+    http.MultipartRequest request = http.MultipartRequest("POST", uri);
+
+    // Multipart that takes file
+    var multipartFile = http.MultipartFile('image', stream, length,
+        filename: basename(image.path));
+
+    // Add file to multipart
+    request.files.add(multipartFile);
+
+    // Send
+    final streamedResponse = await request.send();
+
+    String body = await streamedResponse.stream.bytesToString();
+
+    // Convert the body to JSON
+    return ClassificationResponse.fromJson(
+        jsonDecode(body) as Map<String, dynamic>);
   }
 }
 
 class ClassificationResponse {
-  final bool recylable;
-  final String instructions;
+  final bool status;
+  final String OMT;
+  final bool Recyclability;
+  final String message;
 
   const ClassificationResponse({
-    required this.recylable,
-    required this.instructions,
+    required this.status,
+    required this.OMT,
+    required this.Recyclability,
+    required this.message,
   });
 
   factory ClassificationResponse.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'recylable': bool recylable,
-        'instructions': String instructions,
+        'status': bool status,
+        'OMT': String OMT,
+        'Recylability': bool Recyclability,
+        'message': String message,
       } =>
         ClassificationResponse(
-          recylable: recylable,
-          instructions: instructions,
-        ),
+            status: status,
+            OMT: OMT,
+            Recyclability: Recyclability,
+            message: message),
       _ =>
         throw const FormatException('Failed to load classification response.'),
     };

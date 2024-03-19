@@ -6,7 +6,7 @@
 
 <body>
     <div id="outer_container">
-        <h2>Upload an image for Object Material Type Classification (Paper, Plastic, Metal, Glass, or Others)</h2>
+        <h2>Upload an image for Object Material Type (OMT) Classification <br>(📄Paper, 🧋Plastic, 🥫Metal, 🍶Glass, or 🗑️Others)</h2>
         <!-- Form to get user's uploaded image -->
         <form id="upload_form" enctype="multipart/form-data">
             <input type="file" id="upload_img" name="image" accept="image/*" />
@@ -17,14 +17,18 @@
         <div id="image_container" style="display: none;">
             <h2>Uploaded Image</h2>
             <img id="uploadedImage" style="max-width: 100%;" />
-            <p id="results"></p>
+            <p id="material"></p>
+            <p id="recyclability"></p>
+            <p id="message"></p>
         </div>
     </div>
 
     <script>
         // Constants
         const test_img = document.getElementById('uploadedImage');
-        const results_txt = document.getElementById('results');
+        const material_txt = document.getElementById('material');
+        const recyclability = document.getElementById('recyclability');
+        const message_txt = document.getElementById('message');
 
         /* Event Listeners */
         // Function for handling image upload
@@ -44,8 +48,6 @@
                     // Display image container once it is loaded
                     $("#image_container").show();
 
-                    // Classify image after it has been loaded
-                    console.log("Classifying image...");
                     // Classify image
                     $.ajax({
                         url: "/upload",
@@ -54,9 +56,18 @@
                         processData: false,
                         contentType: false,
                         success: function (response) {
-                            // Update results text
-                            results_txt.textContent = response.message;
-                            console.log(response);
+                            if(response.status) {
+                                // Update results text
+                                material_txt.textContent = `Material: ${response.omt}`;
+                                recyclability.textContent = `Recyclability: ${response.recyclability}`;
+                                message_txt.textContent = `Instructions: ${response.message}`;
+                            }
+                            else {
+                                console.log("ERROR!");
+                                console.log(response);
+                                message_txt.textContent = response.message;
+                            }
+                           
                         },
                         error: function (xhr, status, error) {
                             console.error(xhr.responseText);

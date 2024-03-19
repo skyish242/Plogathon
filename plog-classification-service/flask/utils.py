@@ -4,9 +4,14 @@ import tensorflow as tf
 from config import *
 from tensorflow import keras
 
-# Material-Class mapping
-material_class_mapping = {0: 'Others', 1: 'Paper', 2: 'Plastic', 3: 'Glass', 4: 'Metal'}
-inverse_material_class_mapping = {v: k for k, v in material_class_mapping.items()}
+# Variables
+disposal_instructions = {
+    'Paper': "Please flatten before recycling. For food packaging, make sure to empty and rinse as well.",
+    'Plastic': "Please empty and rinse before recycling.",
+    'Metal': "Please empty and rinse before recycling. Rusted metals should be disposed as general waste.",
+    'Glass': "Please empty and rinse before recycling.",
+    'Others': "Please dispose as general waste."
+}
 
 """ Functions """
 # Function to serialise an object into a pickle file

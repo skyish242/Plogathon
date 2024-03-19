@@ -9,7 +9,5 @@ DATA_FOLDER = './data'
 UPLOAD_FOLDER = './uploads'
 
 # Files
-recyclability_file = f'{DATA_FOLDER}/df_recyclability.pkl'
-material_items_file = f'{DATA_FOLDER}/dict_material_items.pkl'
 class_name_file = f'{DATA_FOLDER}/class_names.pkl'
 model_file = f'{DATA_FOLDER}/omt_model.keras'

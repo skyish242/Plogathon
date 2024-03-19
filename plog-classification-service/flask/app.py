@@ -12,36 +12,44 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    # Initialise response
-    response = {
-      'status': False,
-      'OMT': None,
-      'Recyclability': None,
-      'message': "Erroneous response"
-    }
-    
-    # Ensure file is provided
-    if('image' not in request.files):
-        response['message'] = "No image provided"
-        return jsonify(response)
-    else:
-      file = request.files['image']
-      if file:
-        # Save file
-        file_ext = re.match(r'.+(\..+)', file.filename).group(1)
-        filename = get_hash(file.filename) + file_ext
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-        
-        # Get OMT classification
-        material_class = predict_class(file_path, model, class_names, (224, 224))
-        
-        # Update response
-        response['status'] = True
-        response['OMT'] = material_class
-        response['message'] = material_class
-        
-        return jsonify(response)
+  # Initialise response
+  response = {
+    'status': False,
+    'OMT': None,
+    'Recyclability': None,
+    'message': "Erroneous response"
+  }
+  
+  # Ensure file is provided
+  if('image' not in request.files):
+      response['message'] = "No image provided"
+      # Return response
+      return jsonify(response)
+  else:
+    file = request.files['image']
+    if file:
+      # Save file
+      file_ext = re.match(r'.+(\..+)', file.filename).group(1)
+      filename = get_hash(file.filename) + file_ext
+      file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+      file.save(file_path)
+      
+      # Get OMT classification
+      material_class = predict_class(file_path, model, class_names, (224, 224))
+      
+      # Delete file after classification is completed
+      if os.path.exists(file_path):
+        # Remove the file
+        os.remove(file_path)
+      
+      # Update response
+      response['status'] = True
+      response['omt'] = material_class
+      response['recyclability'] = True if material_class != 'Others' else False
+      response['message'] = disposal_instructions[material_class]
+      
+      # Return response
+      return jsonify(response)
 
 if __name__ == '__main__':
   # Load the trained model

@@ -1,4 +1,13 @@
-## Plogathon Classifier Service
+## Table of Contents
+1. [Overview](#plogathon-classifier-service)
+2. [Directory Structure](#directory-structure)
+3. [Program Usage](#program-usage)
+4. [Dataset](#dataset)
+5. [Object Material Type Classifier](#object-material-type-omt-classifier)
+6. [Other Work](#alternative-omt-classifier-built-on-openais-clip)
+
+### Plogathon Classifier Service
+---
 This section documents the workflow for Plogathon's Classifier Service, and contains source code used for the multi-class classification of images into their corresponding Object Material Type (OMT) classes:
 - Paper
 - Plastic
@@ -211,7 +220,7 @@ Others     9232
 The combined dataset is available for download [here](https://gla-my.sharepoint.com/:u:/g/personal/2837303a_student_gla_ac_uk/Ed0pU32-uYNKuzjscVhZlPUBdGtgnoB8dJU5axo5vC_xiw?e=SqkfpJ) (password: `plogathon-2024`).
 
 ### Object Material Type (OMT) Classifier
-The OMT classification model is built on Google's [MobileNetV3](https://blog.research.google/2019/11/introducing-next-generation-on-device.html) model, which is trained on the MobileNetV3 dataset, which consists of 1.4 million images, and capable of classifying more than 1000 object types. The MobileNetV3 model is optimised for computer vision applications in resource-constrained environments and boasts better performance, when compared to state-of-the-art models such as MnasNet and ProxylessNet.
+The OMT classification model is built on Google's [MobileNetV3](https://blog.research.google/2019/11/introducing-next-generation-on-device.html) model, which is trained on the ImageNet dataset, which consists of 1.4 million images, and capable of classifying more than 1000 object types. The MobileNetV3 model is optimised for computer vision applications in resource-constrained environments and boasts better performance, when compared to state-of-the-art models such as MnasNet and ProxylessNet.
 
 ![MobileNetV3 Performance](docs/mobilenet-performance.png)
 *Source: Google MobileNetV3 [(Howard et. al., 2019)](https://arxiv.org/pdf/1905.02244.pdf)*
@@ -224,11 +233,11 @@ The OMT model is built by training and attaching a classification head on top of
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
 ┃<span style="font-weight: bold"> Layer (type)                    </span>┃<span style="font-weight: bold"> Output Shape           </span>┃<span style="font-weight: bold">       Param # </span>┃
 ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-│ input_layer_1 (<span style="color: #0087ff; text-decoration-color: #0087ff">InputLayer</span>)      │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">160</span>, <span style="color: #00af00; text-decoration-color: #00af00">160</span>, <span style="color: #00af00; text-decoration-color: #00af00">3</span>)    │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
+│ input_layer_1 (<span style="color: #0087ff; text-decoration-color: #0087ff">InputLayer</span>)      │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">224</span>, <span style="color: #00af00; text-decoration-color: #00af00">224</span>, <span style="color: #00af00; text-decoration-color: #00af00">3</span>)    │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
 ├─────────────────────────────────┼────────────────────────┼───────────────┤
-│ sequential (<span style="color: #0087ff; text-decoration-color: #0087ff">Sequential</span>)         │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">160</span>, <span style="color: #00af00; text-decoration-color: #00af00">160</span>, <span style="color: #00af00; text-decoration-color: #00af00">3</span>)    │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
+│ sequential (<span style="color: #0087ff; text-decoration-color: #0087ff">Sequential</span>)         │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">224</span>, <span style="color: #00af00; text-decoration-color: #00af00">224</span>, <span style="color: #00af00; text-decoration-color: #00af00">3</span>)    │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
 ├─────────────────────────────────┼────────────────────────┼───────────────┤
-│ MobileNetV3small (<span style="color: #0087ff; text-decoration-color: #0087ff">Functional</span>)   │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">5</span>, <span style="color: #00af00; text-decoration-color: #00af00">5</span>, <span style="color: #00af00; text-decoration-color: #00af00">576</span>)      │       <span style="color: #00af00; text-decoration-color: #00af00">939,120</span> │
+│ MobilenetV3small (<span style="color: #0087ff; text-decoration-color: #0087ff">Functional</span>)   │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">7</span>, <span style="color: #00af00; text-decoration-color: #00af00">7</span>, <span style="color: #00af00; text-decoration-color: #00af00">576</span>)      │       <span style="color: #00af00; text-decoration-color: #00af00">939,120</span> │
 ├─────────────────────────────────┼────────────────────────┼───────────────┤
 │ global_average_pooling2d        │ (<span style="color: #00d7ff; text-decoration-color: #00d7ff">None</span>, <span style="color: #00af00; text-decoration-color: #00af00">576</span>)            │             <span style="color: #00af00; text-decoration-color: #00af00">0</span> │
 │ (<span style="color: #0087ff; text-decoration-color: #0087ff">GlobalAveragePooling2D</span>)        │                        │               │

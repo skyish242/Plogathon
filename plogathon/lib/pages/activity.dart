@@ -114,7 +114,7 @@ class _ActivityPageState extends State<ActivityPage> {
                     desiredAccuracy: geolocator.LocationAccuracy.high);
             //2)Load JSON
             String binsJson = await DefaultAssetBundle.of(context)
-                .loadString('assets/CashForTrashGEOJSON.geojson');
+                .loadString('assets/RecyclingBins.geojson');
             Map<String, dynamic> binsData = jsonDecode(binsJson);
             //3) Search thru json and compare
             double minDistance = double.infinity;

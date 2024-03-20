@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +7,50 @@ import 'package:plogathon/model/location.dart';
 import 'package:plogathon/widgets/nearby_list_view.dart';
 import 'package:plogathon/widgets/nearby_map_view.dart';
 import 'dart:convert';
+
+Map<String, dynamic> loadGeoJson(String binsJson) {
+  return jsonDecode(binsJson);
+}
+
+List<Location> processBinsData(Map<String, dynamic> params) {
+  final binsData = params['binsData'];
+  final double currLat = params['currLat'];
+  final double currLong = params['currLong'];
+  final double minKm = params['minSearchRadius'];
+  final double maxKm = params['maxSearchRadius'];
+  const double walkingSpeedKmph = 4.5;
+
+  List<Location> locations = [];
+
+  RegExp regExp = RegExp(r'<th>ADDRESSSTREETNAME<\/th>\s*<td>([^<]+)<\/td>');
+
+  binsData['features'].forEach((bin) {
+    double lat = bin['geometry']['coordinates'][1];
+    double long = bin['geometry']['coordinates'][0];
+    String descriptionHtml = bin['properties']['Description'];
+
+    Match? match = regExp.firstMatch(descriptionHtml);
+    String locationName = match?.group(1) ?? 'Unknown Location';
+    double distance = double.parse(
+        (Geolocator.distanceBetween(currLat, currLong, lat, long) / 1000)
+            .toStringAsFixed(2));
+    double timeRequired =
+        double.parse((distance / walkingSpeedKmph).toStringAsFixed(2));
+
+    if (distance <= maxKm && distance >= minKm) {
+      locations.add(Location(
+        locationName: locationName,
+        long: long,
+        lat: lat,
+        distance: distance,
+        timeRequired: timeRequired,
+      ));
+    }
+  });
+  // Sort locations by distance
+  locations.sort((a, b) => a.distance.compareTo(b.distance));
+  return locations;
+}
 
 class NearbyPage extends StatefulWidget {
   final int userID;
@@ -20,7 +65,8 @@ class NearbyPage extends StatefulWidget {
 
 class _NearbyPageState extends State<NearbyPage> {
   final List<Location> _locations = [];
-  final _radiusController = TextEditingController(text: "5");
+  final _minRadiusController = TextEditingController(text: "5");
+  final _maxRadiusController = TextEditingController(text: "6");
 
   bool _listView = true;
   bool _locationServiceEnabled = false;
@@ -59,64 +105,44 @@ class _NearbyPageState extends State<NearbyPage> {
   }
 
   Future<void> _fetchNearbyBins() async {
+    setState(() {
+      _locations.clear();
+      _noBinsMessage = null;
+    });
+
+    if (double.parse(_minRadiusController.text) >
+        double.parse(_maxRadiusController.text)) {
+      setState(() {
+        _noBinsMessage =
+            "Ensure that your maximum search radius is lower than your minimum search radius!";
+      });
+      return;
+    }
+
     Position userCurrentPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
     String binsJson = await DefaultAssetBundle.of(context)
-        .loadString('assets/CashForTrashGEOJSON.geojson');
-    Map<String, dynamic> binsData = jsonDecode(binsJson);
-    bool binsFound = false;
-    const double walkingSpeedKmph = 4.5;
+        .loadString('assets/RecyclingBins.geojson');
+
+    final Map<String, dynamic> binsData = await compute(loadGeoJson, binsJson);
+
+    final params = {
+      'binsData': binsData,
+      'currLat': userCurrentPosition.latitude,
+      'currLong': userCurrentPosition.longitude,
+      'minSearchRadius': double.parse(_minRadiusController.text),
+      'maxSearchRadius': double.parse(_maxRadiusController.text),
+    };
+
+    final List<Location> locations = await compute(processBinsData, params);
 
     setState(() {
-      _locations.clear();
+      _locations.addAll(locations);
+      _noBinsMessage = locations.isEmpty
+          ? 'There are no available bins within your current location'
+          : '';
     });
-
-    binsData['features'].forEach((bin) {
-      double lat = bin['geometry']['coordinates'][1];
-      double long = bin['geometry']['coordinates'][0];
-      String descriptionHtml = bin['properties']['Description'];
-      RegExp regExp =
-          RegExp(r'<th>ADDRESSSTREETNAME<\/th>\s*<td>([^<]+)<\/td>');
-      Match? match = regExp.firstMatch(descriptionHtml);
-      String locationName = match?.group(1) ?? 'Unknown Location';
-      double distance = double.parse((Geolocator.distanceBetween(
-                  userCurrentPosition.latitude,
-                  userCurrentPosition.longitude,
-                  lat,
-                  long) /
-              1000)
-          .toStringAsFixed(2));
-      //in hours
-      double timeRequired =
-          double.parse((distance / walkingSpeedKmph).toStringAsFixed(2));
-
-      print(
-          'Location: $locationName, Latitude: $lat, Longitude: $long, Distance: $distance, TimeRequired:$timeRequired');
-      print('User location: $userCurrentPosition');
-
-      double km = double.parse(_radiusController.text);
-
-      if (distance <= km) {
-        setState(() {
-          _locations.add(Location(
-            locationName: locationName,
-            long: long,
-            lat: lat,
-            distance: distance,
-            timeRequired: timeRequired,
-          ));
-        });
-        binsFound = true;
-      }
-    });
-    _locations.sort((a, b) => a.distance.compareTo(b.distance));
-    if (!binsFound) {
-      setState(() {
-        _noBinsMessage =
-            'There are no available bins within your current location';
-      });
-    }
   }
 
   @override
@@ -152,37 +178,109 @@ class _NearbyPageState extends State<NearbyPage> {
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Row(
                     children: [
-                      Text("Radius: ",
-                          style: Theme.of(context).textTheme.bodyMedium),
                       Expanded(
-                        child: TextField(
-                          controller: _radiusController,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(4),
-                          ],
-                          keyboardType: TextInputType.number,
-                          cursorColor: Theme.of(context).colorScheme.onPrimary,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          decoration: InputDecoration(
-                            suffixText: "km",
-                            hintStyle: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  color: const Color(0xFFB3B3B3),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: Text("Min Radius: ",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
                                 ),
-                            fillColor: const Color(0xFFEEEEEE),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _minRadiusController,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(4),
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'^[0-9]+.?[0-9]*'))
+                                    ],
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    cursorColor:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 0),
+                                      suffixText: "km",
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            color: const Color(0xFFB3B3B3),
+                                          ),
+                                      fillColor: const Color(0xFFEEEEEE),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: const BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: Text("Max Radius: ",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _maxRadiusController,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(4),
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp(r'^[0-9]+.?[0-9]*'))
+                                    ],
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    cursorColor:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 0),
+                                      suffixText: "km",
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            color: const Color(0xFFB3B3B3),
+                                          ),
+                                      fillColor: const Color(0xFFEEEEEE),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: const BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 36),
+                      const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () async {
                           FocusScope.of(context).unfocus();
@@ -270,6 +368,7 @@ class _NearbyPageState extends State<NearbyPage> {
                           child: Text(
                             _noBinsMessage!,
                             style: const TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
                           ),
                         )
                       : const Center(child: CircularProgressIndicator()))

@@ -88,7 +88,7 @@ flutter:
     - assets/run.svg
     - assets/logout.svg
     - assets/trash.png
-    - assets/CashForTrashGEOJSON.geojson
+    - assets/RecyclingBins.geojson
     - assets/strava-disabled.svg
     - assets/strava-enabled.svg
 

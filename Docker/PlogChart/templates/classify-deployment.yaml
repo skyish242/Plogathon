@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+spec:
+  replicas: {{ .Values.replicas.classify }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name.classify }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name.classify }}
+    spec:
+      containers:
+        - name: {{ .Values.app_name.classify }}
+          image: {{ .Values.image.classify }}
+          ports:
+            - containerPort: {{ .Values.ports.classify }}
+          resources:
+            requests:
+              memory: "64Mi"   # Minimum memory required by the container
+              cpu: "250m"      # Minimum CPU required by the container
+            limits:
+              memory: "128Mi"  # Maximum memory allowed by the container
+              cpu: "500m"      # Maximum CPU allowed by the container
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: plog-classify-service
+spec:
+  # Only can work in google cloud
+  type: LoadBalancer
+  selector:
+    app: {{ .Values.app_name.classify }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.ports.classify }}
+      targetPort: {{ .Values.ports.classify }}

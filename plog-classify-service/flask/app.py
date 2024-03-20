@@ -59,4 +59,4 @@ if __name__ == '__main__':
   class_names = load_from_pickle(class_name_file)
   
   # Start Flask app
-  app.run(host=FLASK_HOST, port=FLASK_PORT, threaded=FLASK_THREADED, debug=FLASK_DEBUG,)
+  app.run(host=FLASK_HOST, port=FLASK_PORT, threaded=FLASK_THREADED, debug=FLASK_DEBUG)

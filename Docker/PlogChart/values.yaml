@@ -5,16 +5,20 @@
 image:
   activity: skyish/plog-activity:latest
   user: skyish/plog-user:latest
+  classify: skyish/plog-classify:latest
 
 app_name:
   activity: plog-activity
   user: plog-user
+  classify: plog-classify
   
 replicas:
   activity: 2
   user: 2
+  classify: 2
 
 ports:
+  classify: 5000
   activity: 5001
   user: 5002
 

@@ -175,9 +175,9 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       if (mounted && classificationResponse.status) {
         Navigator.pop(context);
         Navigator.pop(context, {
-          'recylable': classificationResponse.Recyclability,
+          'recylable': classificationResponse.recyclability,
           'instruction': classificationResponse.message,
-          'material': classificationResponse.OMT,
+          'material': classificationResponse.omt,
         });
       }
     }

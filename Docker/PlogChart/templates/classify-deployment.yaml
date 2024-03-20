@@ -15,6 +15,7 @@ spec:
       containers:
         - name: {{ .Values.app_name.classify }}
           image: {{ .Values.image.classify }}
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.ports.classify }}
           resources:

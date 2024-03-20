@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                                         fontWeight: FontWeight.w600,
                                       ),
                                 ),
-                                const SizedBox(width: 100),
+                                const SizedBox(width: 50),
                                 IconButton(
                                     icon: SvgPicture.asset(
                                       "assets/strava-${_isStravaAuthenticated ? "enabled" : "disabled"}.svg",

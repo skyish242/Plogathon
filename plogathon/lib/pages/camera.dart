@@ -166,8 +166,12 @@ class DisplayPictureScreen extends StatefulWidget {
 
 class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   final classificationService = ClassificationService();
+  bool _isUploading = false;
 
   void classify() async {
+    setState(() {
+      _isUploading = true;
+    });
     final classificationResponse =
         await classificationService.classify(File(widget.imagePath));
 
@@ -200,10 +204,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               color: Theme.of(context).colorScheme.surface,
               child: Row(
                 children: <Widget>[
-                  IconButton(
-                      icon: SvgPicture.asset("assets/back.svg",
-                          semanticsLabel: 'Navigate Back'),
-                      onPressed: () => Navigator.pop(context)),
+                  _isUploading
+                      ? const SizedBox(width: 24)
+                      : IconButton(
+                          icon: SvgPicture.asset("assets/back.svg",
+                              semanticsLabel: 'Navigate Back'),
+                          onPressed: () => Navigator.pop(context)),
                   const SizedBox(
                     width: 14,
                   ),
@@ -224,15 +230,20 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               child: SizedBox(
                 width: double.infinity,
                 height: 50.0,
-                child: ElevatedButton(
-                  onPressed: classify,
-                  style: ElevatedButton.styleFrom(
-                      elevation: 5, backgroundColor: const Color(0xFFBFECC6)),
-                  child: Text(
-                    "Upload",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
+                child: _isUploading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ElevatedButton(
+                        onPressed: classify,
+                        style: ElevatedButton.styleFrom(
+                            elevation: 5,
+                            backgroundColor: const Color(0xFFBFECC6)),
+                        child: Text(
+                          "Upload",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
               ),
             ),
           )

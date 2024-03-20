@@ -31,6 +31,7 @@ class ClassificationService {
 
     String body = await streamedResponse.stream.bytesToString();
 
+    print(body);
     // Convert the body to JSON
     return ClassificationResponse.fromJson(
         jsonDecode(body) as Map<String, dynamic>);
@@ -53,10 +54,10 @@ class ClassificationResponse {
   factory ClassificationResponse.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'status': bool status,
-        'omt': String omt,
-        'recyclability': bool recyclability,
         'message': String message,
+        'omt': String omt,
+        'status': bool status,
+        'recyclability': bool recyclability,
       } =>
         ClassificationResponse(
             status: status,

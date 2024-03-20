@@ -6,12 +6,19 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
 
+# Load the trained model
+model = keras.models.load_model(model_file)
+
+# Load class names
+class_names = load_from_pickle(class_name_file)
+
 @app.route('/')
 def index():
   return render_template("index.html")
 
 @app.route('/upload', methods=['POST'])
 def upload():
+  print("here")
   # Initialise response
   response = {
     'status': False,
@@ -52,11 +59,6 @@ def upload():
       return jsonify(response)
 
 if __name__ == '__main__':
-  # Load the trained model
-  model = keras.models.load_model(model_file)
-
-  # Load class names
-  class_names = load_from_pickle(class_name_file)
   
   # Start Flask app
   app.run(host=FLASK_HOST, port=FLASK_PORT, threaded=FLASK_THREADED, debug=FLASK_DEBUG)

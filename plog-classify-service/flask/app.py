@@ -18,12 +18,11 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-  print("here")
   # Initialise response
   response = {
     'status': False,
-    'OMT': None,
-    'Recyclability': None,
+    'omt': None,
+    'recyclability': None,
     'message': "Erroneous response"
   }
   

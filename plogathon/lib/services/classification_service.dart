@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class ClassificationService {
   // ignore: constant_identifier_names
-  static const String BASE_URL = 'http://34.73.225.113:5000';
+  static const String BASE_URL = 'http://34.74.255.72:5000';
 
   Future<ClassificationResponse?> classify(File image) async {
     final Uri uri = Uri.parse("$BASE_URL/upload");

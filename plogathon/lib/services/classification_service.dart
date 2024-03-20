@@ -55,7 +55,7 @@ class ClassificationResponse {
       {
         'status': bool status,
         'omt': String omt,
-        'recylability': bool recyclability,
+        'recyclability': bool recyclability,
         'message': String message,
       } =>
         ClassificationResponse(

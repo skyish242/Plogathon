@@ -37,7 +37,7 @@ metadata:
   name: plog-activity-service
 spec:
   # Only can work in google cloud
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: {{ .Values.app_name.activity }}
   ports:

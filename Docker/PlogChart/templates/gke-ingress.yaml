@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: plog-gke-ing
+  annotations:
+    kubernetes.io/ingress.class: gce
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /upload
+        pathType: Prefix
+        backend:
+          service:
+            name: plog-classify-service
+            port:
+              number: {{ .Values.ports.classify }}
+      - path: /user
+        pathType: Prefix
+        backend:
+          service:
+            name: plog-user-service
+            port:
+              number: {{ .Values.ports.user }}
+      - path: /activity
+        pathType: Prefix
+        backend:
+          service:
+            name: plog-activity-service
+            port:
+              number: {{ .Values.ports.activity }}

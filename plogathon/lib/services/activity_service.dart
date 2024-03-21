@@ -7,11 +7,11 @@ class ActivityService {
   final ActivityServiceClient client;
   
   ActivityService(): channel = ClientChannel(
-        'http://34.149.243.172/activity',
+        'http://34.149.243.172',
         options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
       ),
       client = ActivityServiceClient(ClientChannel(
-        'http://34.149.243.172/activity',
+        'http://34.149.243.172',
         options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
   ));
 

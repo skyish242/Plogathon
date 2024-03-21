@@ -33,7 +33,7 @@ metadata:
   name: plog-classify-service
 spec:
   # Only can work in google cloud
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: {{ .Values.app_name.classify }}
   ports:

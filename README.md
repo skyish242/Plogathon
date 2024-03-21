@@ -1,6 +1,15 @@
 ![image](https://github.com/skyish242/CSC2102-PSD2/assets/99416793/cf865b91-f40c-4f87-a310-c6bbcefa53c4)
 
-## Plogathon
+## Table of Contents
+1. [Meet the Team](#plogathon-team)
+2. [Overview](#overview)
+3. [System Architecture](#system-architecture)
+4. [Features](#features)
+5. [Demo](#presentation-and-demo)
+6. [Repository Structure](#repository-structure)
+7. [Getting Started](#getting-started)
+
+## Plogathon Team
 - Pang Zi Jian Adrian (*2200692*)
 - Peter Febrianto Afandy (*2200959*)
 - Muhammad Nur Dinie Bin Aziz (*2200936*)
@@ -23,34 +32,55 @@ Plogathon aligns with several of the United Nations' Sustainable Development Goa
 |  <img src="https://github.com/skyish242/CSC2102-PSD2/assets/99416793/e5e72add-e005-4e94-bf99-8b1bff4e9722" alt="drawing" width="200"/> | _**Responsible Consumption and Production**_<br>Plogathon promotes responsible consumption and production by encouraging users to pick up and properly dispose of litter and recylables. By teaching users how to recycle various materials correctly, Plogathon helps reduce waste and promote recycling, leading to more sustainable consumption patterns. Moreover, by highlighting available recycling bins, Plogathon makes recycling more accessible and convenient, encouraging users to incorporate waste reduction practices into their daily lives. |
 |   <img src="https://github.com/skyish242/CSC2102-PSD2/assets/99416793/8a5542ae-3f26-419d-bbe2-464e1b101d42" alt="drawing" width="200"/> | _**Climate Action**_<br>By reducing litter and promoting recycling, Plogathon helps decrease the amount of waste that ends up in landfills and incinerators, which are significant sources of greenhouse gas emissions. Moreover, by fostering a culture of sustainability and environmental responsibility, Plogathon can inspire users and communities to adopt more eco-friendly practices in other areas of their lives, contributing to broader efforts to combat climate change. |
 
-<br>
 <p align="center"><i>Join us in creating a Cleaner World for tomorrow, One stride at a time!</i></p>
 
 ## System Architecture
+Plogathon adopts a microservices-based architecture for better scalability, reliability and performance. It consists of three microservices that are orchestrated together using Docker, and Kubernetes. These microservices work in tandem to support the Plogathon mobile application's operations.
+
+These microservices include:
+- Activity Microservice (For Strava operations)
+- User Microservice (For user authentication and CRUD operations)
+- Classifier Microservice (For maching learning classification of items' materials and their recyclability)
 
 ![image](https://github.com/ptrpfa/CSC2102-PSD2/assets/49118372/391c82aa-7c34-4211-9ff1-ea08b9b9eadc)
 
+
 ## Features
+<ins>Microservices-based Architecture</ins><br>
+Some info on microservices...
 
-## Ports and IP Addresses
+<ins>Cloud-Native</ins><br>
+Some info on cloud native...
 
-### Recycling Classification Service (Not Up)
-- **Service Name:** plog-classify-service
-- **IP Address:** 34.73.225.113
-- **Port:** 5000
+<ins>Community Engagement (Integration with Strava)</ins><br>
+Strava is one of the most popular applications used for tracking users' physical activity. Add more stuff...
 
-### Activity Service 
-- **Service Name:** plog-activity-service
-- **IP Address:** 34.73.192.194
-- **Port:** 5001
+<ins>Recyclability Classifier (Machine Learning)</ins><br>
+Some info on ML...
 
-### User Service 
-- **Service Name:** plog-user-service
-- **IP Address:** 35.196.43.2
-- **Port:** 5002
+## Presentation and Demo
+To see a walkthrough and demonstration of Plogathon, click [here](), or scan the QR code below!
 
-## Project Setup
+![QR Code]()
 
+## Repository Structure
+```
+Docker/ (Docker and Kubernetes files)
+
+plog-activity-service/ (code for Activity Microservice)
+
+plog-classify-service/ (code for Classification Microservice)
+
+plog-user-service/ (code for User Microservice)
+
+plogathon/ (code for Flutter-based mobile applciation)
+
+plogathon.sql (SQL migration file for Plogathon's database)
+
+README.md (this file)
+```
+
+## Getting Started
 ### Flutter
 
 1. `cd` into `plogathon` folder
@@ -83,7 +113,24 @@ _To install as an APK._
 flutter run --dart-define-from-file env/config.json --release
 ```
 
-# Archive
+### Ports and IP Addresses
+
+#### Recycling Classification Service
+- **Service Name:** plog-classify-service
+- **IP Address:** 34.73.225.113
+- **Port:** 5000
+
+#### Activity Service 
+- **Service Name:** plog-activity-service
+- **IP Address:** 34.73.192.194
+- **Port:** 5001
+
+#### User Service 
+- **Service Name:** plog-user-service
+- **IP Address:** 35.196.43.2
+- **Port:** 5002
+
+# Archive (TO BE REMOVED)
 _This section contains archived content._
 
 ### Activity Service (runs on port 5001)

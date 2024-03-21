@@ -18,8 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   final _userService = UserService();
   final _formKey = GlobalKey<FormState>();
 
-  final _usernameController = TextEditingController(text: "ishowmeat");
-  final _passwordController = TextEditingController(text: "testest1");
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   bool _enabledButtons = true;
   @override

@@ -8,12 +8,14 @@ class UserService {
 
   UserService()
       : channel = ClientChannel(
-          'http://34.149.243.172/user',
+          '35.227.46.182',
+          port:5002,
           options:
               const ChannelOptions(credentials: ChannelCredentials.insecure()),
         ),
         client = UserServiceClient(ClientChannel(
-          'http://34.149.243.172/user',
+          '35.227.46.182',
+          port:5002,
           options:
               const ChannelOptions(credentials: ChannelCredentials.insecure()),
         ));

@@ -1,17 +1,20 @@
 ![image](https://github.com/skyish242/CSC2102-PSD2/assets/99416793/cf865b91-f40c-4f87-a310-c6bbcefa53c4)
 
 ## Plogathon
-
-Pang Zi Jian Adrian <br>
-Peter Febrianto Afandy <br>
-Tng Jian Rong <br>
-Muhammad Nur Dinie Bin Aziz <br>
-Lionel Sim Wei Xian <br>
-Ryan Lai Wei Shao <br>
+- Pang Zi Jian Adrian (*2200692*)
+- Peter Febrianto Afandy (*2200959*)
+- Muhammad Nur Dinie Bin Aziz (*2200936*)
+- Tng Jian Rong (*2201014*)
+- Lionel Sim Wei Xian (*2201132*)
+- Ryan Lai Wei Shao (*2201159*)
 
 ## Overview
+Plogathon is an innovative mobile application designed to revolutionize waste management and promote recycling through plogging - an exercise introduced in Sweden back in 2016 that combines both jogging and picking up litter. Despite the [increased interest](https://www.straitstimes.com/singapore/environment/plogging-more-keeping-fit-while-clearing-litter) of plogging in Singapore, activities are currently organised using manual means such as Facebook groups. Plogathon aims to streamline this process to promote the adoption of plogging, together with recycling.
 
-Welcome to our innovative Plogathon application designed to revolutionize waste management and promote recycling through the engaging activity of plogging! Our app integrates cutting-edge machine learning 'Zero Shot' to classify recyclable items in real-time during your plogging sessions, then guiding you to nearby recycling bins for proper disposal. Developed using Flutter for seamless mobile experience and leveraging cloud-native computing for efficient data processing, our project aligns with several Sustainable Development Goals (SDGs), fostering a cleaner planet and advocating for good health and personal well-being. Join us in making a Cleaner World for tomorrow, One stride at a time!
+Plogathon integrates cutting-edge technologies to guide users to nearby recycling bins for proper waste disposal, as well as machine learning to determine the recyclability of items in real-time during plogging sessions. The mobile application is developed using Flutter to provide a seamless mobile experience, and leverages on cloud-native computing for efficient data processing.
+
+Plogathon aligns with several of the United Nations' Sustainable Development Goals (SDGs), fostering a cleaner planet and advocating for good health and personal well-being. 
+
 
 | Goal   |      Implementation      | 
 |----------|-------------|
@@ -20,10 +23,8 @@ Welcome to our innovative Plogathon application designed to revolutionize waste 
 |  <img src="https://github.com/skyish242/CSC2102-PSD2/assets/99416793/e5e72add-e005-4e94-bf99-8b1bff4e9722" alt="drawing" width="200"/> | _**Responsible Consumption and Production**_<br>Plogathon promotes responsible consumption and production by encouraging users to pick up and properly dispose of litter and recylables. By teaching users how to recycle various materials correctly, Plogathon helps reduce waste and promote recycling, leading to more sustainable consumption patterns. Moreover, by highlighting available recycling bins, Plogathon makes recycling more accessible and convenient, encouraging users to incorporate waste reduction practices into their daily lives. |
 |   <img src="https://github.com/skyish242/CSC2102-PSD2/assets/99416793/8a5542ae-3f26-419d-bbe2-464e1b101d42" alt="drawing" width="200"/> | _**Climate Action**_<br>By reducing litter and promoting recycling, Plogathon helps decrease the amount of waste that ends up in landfills and incinerators, which are significant sources of greenhouse gas emissions. Moreover, by fostering a culture of sustainability and environmental responsibility, Plogathon can inspire users and communities to adopt more eco-friendly practices in other areas of their lives, contributing to broader efforts to combat climate change. |
 
-
-
-
-
+<br>
+<p align="center"><i>Join us in creating a Cleaner World for tomorrow, One stride at a time!</i></p>
 
 ## System Architecture
 

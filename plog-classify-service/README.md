@@ -258,6 +258,10 @@ The OMT model is built by training and attaching a classification head on top of
 </pre>
 
 Upon testing, the OMT model was able to produce a desirable training accuracy of `92.91%` and test accuracy of `92.43%`. Other metrics measuring the model's peformance for both the train and test datasets are provided below.
+
+![Validation Dataset Confusion Matrix](docs/validationset.png)
+![Validation Dataset Metrics](docs/validationsetstats.png)
+
 ```
 ~Test Dataset Results~
 Accuracy: 0.9242830616876418

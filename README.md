@@ -47,13 +47,13 @@ These microservices include:
 
 ## Features
 <ins>Microservices-based Architecture</ins><br>
-Some info on microservices...
+Plogathon's adoption of a microservices-based architecture for its backend infrastructure provides several strategic advantages in terms of reliability, scalability, and overall system efficiency. Communication between the frontend and both the user and activity services employs [gRPC](https://grpc.io/), while HTTP is utilized for the interaction between the frontend and the classification service. 
 
 <ins>Cloud-Native</ins><br>
 Some info on cloud native...
 
 <ins>Community Engagement (Integration with Strava)</ins><br>
-Strava is one of the most popular applications used for tracking users' physical activity. Add more stuff...
+Strava is one of the most popular applications used for tracking users' physical activity. Plogathon supports Strava Single Sign On (SSO) login to allow users to track and share their plogging activities onto Strava. A Plogathon club has been created in Strava to allow users to initiate group activities and to further engage the community.
 
 <ins>Recyclability Classifier (Machine Learning)</ins><br>
 Some info on ML...

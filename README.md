@@ -42,8 +42,9 @@ These microservices include:
 - User Microservice (For user authentication and CRUD operations)
 - Classifier Microservice (For maching learning classification of items' materials and their recyclability)
 
-![image](https://github.com/ptrpfa/CSC2102-PSD2/assets/49118372/391c82aa-7c34-4211-9ff1-ea08b9b9eadc)
-
+<div align="center">
+  <img width="65%" alt="architecture" align="center" src="https://github.com/skyish242/CSC2102-PSD2/assets/99416793/8ef3d214-d286-4933-8339-6eb16c545d9c">
+</div>
 
 ## Features
 <ins>Microservices-based Architecture</ins><br>
@@ -81,37 +82,52 @@ README.md (this file)
 ```
 
 ## Getting Started
+### Database Migration
+To setup your own MySQL database for this project, follow the instructions below:
+
+1. Ensure that you have MySQL installed on your computing environment. Install MySQL [here](https://dev.mysql.com/downloads/installer/).
+2. Run the following command to import the empty MySQL database that has the necessary tables for Plogathon:
+    ```
+    mysql -u<username> -p < plogathon.sql
+    ```
+    This command will automatically create the `plogathon` database schema. If you plan on using a different schema (ensure that it is created), run the following command instead:
+    ```
+    mysql -u<username> -p <schema name> < plogathon.sql
+    ```
+
 ### Flutter
+1. Follow the [instructions](https://docs.flutter.dev/get-started/install) to install Flutter.
 
-1. `cd` into `plogathon` folder
+2. `cd` into `plogathon` folder
 
-```
-cd plogathon
-```
+    ```
+    cd plogathon
+    ```
 
-2. Copy config file
+3. Copy config file
 
-```
-cp env/config-example.json env/config.json
-```
+    ```
+    cp env/config-example.json env/config.json
+    ```
 
-3. Edit `env/config.json` and add google maps api key
-4. Install dependencies
+4. Edit `env/config.json` and add google maps api key
+5. Install dependencies
 
-```
-flutter pub get
-```
+    ```
+    flutter pub get
+    ```
 
-5. Select your device and run flutter referencing the config file
+6. Select your device and run flutter referencing the config file
 
-```
-flutter run --dart-define-from-file env/config.json
-```
+    ```
+    flutter run --dart-define-from-file env/config.json
+    ```
 
-_To install as an APK._
-```
-flutter run --dart-define-from-file env/config.json --release
-```
+7. (Optional) To run in [release mode](https://docs.flutter.dev/testing/build-modes#release)
+
+    ```
+    flutter run --dart-define-from-file env/config.json --release
+    ```
 
 ### Ports and IP Addresses
 

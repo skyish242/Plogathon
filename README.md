@@ -44,7 +44,7 @@ These microservices include:
 
 - Activity Microservice (For Strava operations)
 - User Microservice (For user authentication and CRUD operations)
-- Classifier Microservice (For maching learning classification of items' materials and their recyclability)
+- Classifier Microservice (For machine learning classification of items' materials and their recyclability)
 
 <div align="center">
   <img width="65%" alt="architecture" align="center" src="docs/architecture.png">

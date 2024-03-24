@@ -1,4 +1,4 @@
-import 'package:plogathon/pages/secret-lionel.dart';
+import 'package:plogathon/pages/secret.dart';
 import 'package:strava_client/strava_client.dart';
 
 class Provider {

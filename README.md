@@ -51,7 +51,7 @@ These microservices include:
 Plogathon's adoption of a microservices-based architecture for its backend infrastructure provides several strategic advantages in terms of reliability, scalability, and overall system efficiency. Communication between the frontend and both the user and activity services employs [gRPC](https://grpc.io/), while HTTP is utilized for the interaction between the frontend and the classification service. 
 
 <ins>Cloud-Native</ins><br>
-Some info on cloud native...
+Google Kubernetes Engine (GKE) by Google Cloud facilitated the hosting of our Cloud Native Kubernetes Deployment, enabling rapid cluster creation and deployment. Leveraging the cloud platform, it offers centralized server development for the Plogathon project, particularly advantageous for developing mobile Flutter applications where mobility is essential for testing. This approach enhances collaboration and efficiency within the development team. 
 
 <ins>Community Engagement (Integration with Strava)</ins><br>
 Strava is one of the most popular applications used for tracking users' physical activity. Plogathon supports Strava Single Sign On (SSO) login to allow users to track and share their plogging activities onto Strava. A Plogathon club has been created in Strava to allow users to initiate group activities and to further engage the community.
@@ -129,11 +129,27 @@ To setup your own MySQL database for this project, follow the instructions below
     flutter run --dart-define-from-file env/config.json --release
     ```
 
-### Ports and IP Addresses
+### Kubernetes Deployment
+_Disclaimer: This deployment requires a cloud server to provide external endpoints to the 3 core services. Sugesstion: Google Kubernetes Engine(GKE)_
+
+**Prerequistes
+-> Have Helm Installed 
+-> Have Kubernetes and Docker Installed
+
+1. Package Helm Chart for deployment
+  ```
+  helm package Docker/PlogChart
+  ```
+2. Install and Deploy
+   ```
+   helm install <name-of-deployment> <packaged-file-name>.tgz
+   ```
+   
+### Ports and IP Addresses on Google Kubernetes Engine
 
 #### Recycling Classification Service
 - **Service Name:** plog-classify-service
-- **IP Address:** 34.73.225.113
+- **IP Address:** 34.74.255.72
 - **Port:** 5000
 
 #### Activity Service 
@@ -143,48 +159,9 @@ To setup your own MySQL database for this project, follow the instructions below
 
 #### User Service 
 - **Service Name:** plog-user-service
-- **IP Address:** 35.196.43.2
+- **IP Address:** 35.227.46.182
 - **Port:** 5002
 
-# Archive (TO BE REMOVED)
-_This section contains archived content._
+### Configuration and Environment Variables
 
-### Activity Service (runs on port 5001)
-
-1. `cd` into `activity-service` folder
-
-```
-cd activity-service
-```
-
-2. Install dependencies
-
-```
-npm install
-```
-
-3. Run `server.js` referencing `.env` file
-
-```
-node --env-file=.env server.js
-```
-
-### User Service (runs on port 5002)
-
-1. `cd` into `user-service` folder
-
-```
-cd user-service
-```
-
-2. Install dependencies
-
-```
-npm install
-```
-
-3. Run `server.js` referencing `.env` file
-
-```
-node --env-file=.env server.js
-```
+1. Variables are stored in Config Map and Secrets in the Kubernetes Cluster

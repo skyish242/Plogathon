@@ -69,9 +69,9 @@ The recyclability classifier is aimed at improving users’ recycling knowledge 
 
 ## Presentation and Demo
 
-To see a walkthrough and demonstration of Plogathon, click [here](), or scan the QR code below!
+To see a walkthrough and demonstration of Plogathon, click [here](https://www.youtube.com/watch?v=xCcQqMIoK5c), or scan the QR code below!
 
-![QR Code]()
+![QR Code](docs/qr.png)
 
 ## Repository Structure
 

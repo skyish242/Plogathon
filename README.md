@@ -132,14 +132,15 @@ To setup your own MySQL database for this project, follow the instructions below
 ### Kubernetes Deployment
 _Disclaimer: This deployment requires a cloud server to provide external endpoints to the 3 core services. Sugesstion: Google Kubernetes Engine(GKE)_
 
-**Prerequistes
--> Have Helm Installed 
--> Have Kubernetes and Docker Installed
+**Prerequistes**
+- Have Helm Installed 
+- Have Kubernetes and Docker Installed
 
 1. Package Helm Chart for deployment
-  ```
-  helm package Docker/PlogChart
-  ```
+    ```
+    helm package Docker/PlogChart
+    ```
+    
 2. Install and Deploy
    ```
    helm install <name-of-deployment> <packaged-file-name>.tgz

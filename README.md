@@ -11,7 +11,7 @@
 7. [Getting Started](#getting-started)
 
 ## Plogathon Team
-Group 21
+<ins>Group 21</ins>
 - Pang Zi Jian Adrian (_2200692_)
 - Peter Febrianto Afandy (_2200959_)
 - Muhammad Nur Dinie Bin Aziz (_2200936_)

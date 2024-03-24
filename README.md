@@ -65,7 +65,7 @@ Google's direction service API is integrated into Plogathon to provide navigatio
 Strava is one of the most popular applications used for tracking users' physical activity. Plogathon supports Strava Single Sign On (SSO) login to allow users to track and share their plogging activities onto Strava. A Plogathon club has been created in Strava to allow users to initiate group activities and to further engage the community.
 
 <ins>Recyclability Classifier (Machine Learning)</ins><br>
-Some info on ML...
+The recyclability classifier is aimed at improving users’ recycling knowledge and educating them on what is recyclable. It takes in an image of a potential recyclable provided by the end user, and outputs the item’s recyclability and proper waste disposal instructions. It consists of two components, the Object Material Type (OMT) classifier, as well as recyclability evaluator. These components work in tandem to provide users with up to date recycling knowledge, educating and aiding them in performing proper waste disposal.
 
 ## Presentation and Demo
 

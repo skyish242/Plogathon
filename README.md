@@ -53,6 +53,9 @@ Plogathon's adoption of a microservices-based architecture for its backend infra
 <ins>Cloud-Native</ins><br>
 Google Kubernetes Engine (GKE) by Google Cloud facilitated the hosting of our Cloud Native Kubernetes Deployment, enabling rapid cluster creation and deployment. Leveraging the cloud platform, it offers centralized server development for the Plogathon project, particularly advantageous for developing mobile Flutter applications where mobility is essential for testing. This approach enhances collaboration and efficiency within the development team. 
 
+<ins>Integration with Google's Direction Service API</ins><br>
+Google's direction service API is integrated into Plogathon to provide navigation to the nearest recycling bin locations. Leveraging on the robust capabilities of Google Maps API, it calculates the optimal plogging path to guide users towards designated recycling bins where they can recycle materials. Additionally, users can view nearby bins plotted as markers on the map before commencing the plogging activity. During plogging, after picking up a recyclable material, users can also opt to reroute to the nearest bin, enhancing user experience.
+
 <ins>Community Engagement (Integration with Strava)</ins><br>
 Strava is one of the most popular applications used for tracking users' physical activity. Plogathon supports Strava Single Sign On (SSO) login to allow users to track and share their plogging activities onto Strava. A Plogathon club has been created in Strava to allow users to initiate group activities and to further engage the community.
 
@@ -97,33 +100,34 @@ To setup your own MySQL database for this project, follow the instructions below
 
 ### Flutter
 1. Follow the [instructions](https://docs.flutter.dev/get-started/install) to install Flutter.
+2. Install ([`Git LFS`](https://github.com/git-lfs/git-lfs?utm_source=gitlfs_site&utm_medium=installation_link&utm_campaign=gitlfs#installing))
 
-2. `cd` into `plogathon` folder
+3. `cd` into `plogathon` folder
 
     ```
     cd plogathon
     ```
 
-3. Copy config file
+4. Copy config file
 
     ```
     cp env/config-example.json env/config.json
     ```
 
-4. Edit `env/config.json` and add google maps api key
-5. Install dependencies
+5. Edit `env/config.json` and add google maps api key
+6. Install dependencies
 
     ```
     flutter pub get
     ```
 
-6. Select your device and run flutter referencing the config file
+7. Select your device and run flutter referencing the config file
 
     ```
     flutter run --dart-define-from-file env/config.json
     ```
 
-7. (Optional) To run in [release mode](https://docs.flutter.dev/testing/build-modes#release)
+8. (Optional) To run in [release mode](https://docs.flutter.dev/testing/build-modes#release)
 
     ```
     flutter run --dart-define-from-file env/config.json --release
@@ -165,4 +169,4 @@ _Disclaimer: This deployment requires a cloud server to provide external endpoin
 
 ### Configuration and Environment Variables
 
-1. Variables are stored in Config Map and Secrets in the Kubernetes Cluster
+Variables are stored in Config Map and Secrets in the Kubernetes Cluster

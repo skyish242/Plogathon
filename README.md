@@ -11,7 +11,7 @@
 7. [Getting Started](#getting-started)
 
 ## Plogathon Team
-
+<ins>Group 21</ins>
 - Pang Zi Jian Adrian (_2200692_)
 - Peter Febrianto Afandy (_2200959_)
 - Muhammad Nur Dinie Bin Aziz (_2200936_)
@@ -44,7 +44,7 @@ These microservices include:
 
 - Activity Microservice (For Strava operations)
 - User Microservice (For user authentication and CRUD operations)
-- Classifier Microservice (For maching learning classification of items' materials and their recyclability)
+- Classifier Microservice (For machine learning classification of items' materials and their recyclability)
 
 <div align="center">
   <img width="65%" alt="architecture" align="center" src="docs/architecture.png">
@@ -65,13 +65,13 @@ Google's direction service API is integrated into Plogathon to provide navigatio
 Strava is one of the most popular applications used for tracking users' physical activity. Plogathon supports Strava Single Sign On (SSO) login to allow users to track and share their plogging activities onto Strava. A Plogathon club has been created in Strava to allow users to initiate group activities and to further engage the community.
 
 <ins>Recyclability Classifier (Machine Learning)</ins><br>
-Some info on ML...
+The recyclability classifier is aimed at improving users’ recycling knowledge and educating them on what is recyclable. It takes in an image of a potential recyclable provided by the end user, and outputs the item’s recyclability and proper waste disposal instructions. It consists of two components, the Object Material Type (OMT) classifier, as well as recyclability evaluator. These components work in tandem to provide users with up to date recycling knowledge, educating and aiding them in performing proper waste disposal.
 
 ## Presentation and Demo
 
-To see a walkthrough and demonstration of Plogathon, click [here](), or scan the QR code below!
+To see a walkthrough and demonstration of Plogathon, click [here](https://www.youtube.com/watch?v=xCcQqMIoK5c), or scan the QR code below!
 
-![QR Code]()
+![QR Code](docs/qr.png)
 
 ## Repository Structure
 

@@ -126,21 +126,64 @@ class _LoginPageState extends State<LoginPage> {
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 64,
+                            TextFormField(
+                              controller: _usernameController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your username';
+                                }
+                                return null;
+                              },
+                              cursorColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              decoration: InputDecoration(
+                                constraints:
+                                    const BoxConstraints(minHeight: 64),
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: const Color(0xFFB3B3B3),
+                                    ),
+                                fillColor: const Color(0xFFEEEEEE),
+                                filled: true,
+                                hintText: 'Username',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                    width: 0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 20.0, bottom: 80.0),
                               child: TextFormField(
-                                controller: _usernameController,
+                                controller: _passwordController,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter your username';
+                                    return 'Please enter your password';
                                   }
                                   return null;
                                 },
                                 cursorColor:
                                     Theme.of(context).colorScheme.onPrimary,
                                 style: Theme.of(context).textTheme.bodyMedium,
+                                obscureText: true,
                                 decoration: InputDecoration(
+                                  constraints:
+                                      const BoxConstraints(minHeight: 64),
+                                  helperText: " ",
                                   hintStyle: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
@@ -149,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                   fillColor: const Color(0xFFEEEEEE),
                                   filled: true,
-                                  hintText: 'Username',
+                                  hintText: 'Password',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: const BorderSide(
@@ -162,52 +205,6 @@ class _LoginPageState extends State<LoginPage> {
                                     borderSide: const BorderSide(
                                       color: Colors.red,
                                       width: 0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 20.0, bottom: 80.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 64,
-                                child: TextFormField(
-                                  controller: _passwordController,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter your password';
-                                    }
-                                    return null;
-                                  },
-                                  cursorColor:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintStyle: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: const Color(0xFFB3B3B3),
-                                        ),
-                                    fillColor: const Color(0xFFEEEEEE),
-                                    filled: true,
-                                    hintText: 'Password',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      ),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                        color: Colors.red,
-                                        width: 0,
-                                      ),
                                     ),
                                   ),
                                 ),

@@ -12,12 +12,12 @@
 
 ## Plogathon Team
 <ins>Group 21</ins>
-- Pang Zi Jian Adrian (_2200692_)
-- Peter Febrianto Afandy (_2200959_)
-- Muhammad Nur Dinie Bin Aziz (_2200936_)
-- Tng Jian Rong (_2201014_)
-- Lionel Sim Wei Xian (_2201132_)
-- Ryan Lai Wei Shao (_2201159_)
+- Pang Zi Jian Adrian 
+- Peter Febrianto Afandy
+- Muhammad Nur Dinie Bin Aziz 
+- Tng Jian Rong 
+- Lionel Sim Wei Xian 
+- Ryan Lai Wei Shao 
 
 ## Overview
 

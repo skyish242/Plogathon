@@ -163,23 +163,7 @@ _Disclaimer: This deployment requires a cloud server to provide external endpoin
 
 ### Ports and IP Addresses on Google Kubernetes Engine
 
-#### Recycling Classification Service
-
-- **Service Name:** plog-classify-service
-- **IP Address:** 34.74.255.72
-- **Port:** 5000
-
-#### Activity Service
-
-- **Service Name:** plog-activity-service
-- **IP Address:** 34.73.192.194
-- **Port:** 5001
-
-#### User Service
-
-- **Service Name:** plog-user-service
-- **IP Address:** 35.227.46.182
-- **Port:** 5002
+_Archived and stored_ 
 
 ### Configuration and Environment Variables
 
